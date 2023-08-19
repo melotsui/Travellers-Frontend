@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/BelieveIt-DvLE.ttf",
+      "sha1": "5c63a5c0f0235d1a6bbe24ee0fab5a2fdfd3e4a5"
+    },
+    {
+      "path": "src/assets/fonts/MergeOne-Regular.ttf",
+      "sha1": "66d672040fc8bc8ba7448aaac788db57b3b71535"
+    }
+  ]
+}
