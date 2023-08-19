@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import React, { useState } from 'react'
 import GradientButton from '../../components/atoms/gradient_button';
 import SeparateLine from '../../components/atoms/separate_line';
@@ -23,36 +23,37 @@ const Login: React.FC<Props<'Login'>> = (props) => {
     };
 
     return (
-        <View style={styles.container}>
-            <Image
-                source={require('../../assets/logo.png')}
-                style={styles.image}
-                resizeMode="contain"
-            />
-            <View style={styles.space} />
-            <TextField hint={'username'}></TextField>
-            <View style={styles.space} />
-            <TextField hint={'password'}></TextField>
-            <View style={styles.longSpace} />
-            <GradientButton
-                title="Login"
-                onPress={handleButtonPress}
-            />
-            <View style={styles.longSpace} />
-            <SeparateLine isTextInclude={true} ></SeparateLine>
-            <View style={styles.space} />
-            <ThirdPartyLogin />
-            <View style={styles.space} />
-            <TextButton text={"Register"} onPress={() => props.navigation.navigate('Register')}></TextButton>
-            <View style={styles.space} />
-            <View style={g_STYLE.row}>
-                <CustomText data={'forget password?'}   />
-            <TextButton text={"click here"} onPress={function (): void {
-                throw new Error('Function not implemented.');
-            }}></TextButton>
+        <ScrollView style={{height: '100%'}}>
+            <View style={[styles.container, {flex: 1,}]}>
+                <Image
+                    source={require('../../assets/logo.png')}
+                    style={styles.image}
+                    resizeMode="contain"
+                />
             </View>
-
-        </View>
+            <View style={[styles.container, {flex: 2,}]}>
+                <View style={styles.space} />
+                <TextField hint={'username'}></TextField>
+                <View style={styles.space} />
+                <TextField hint={'password'}></TextField>
+                <View style={styles.longSpace} />
+                <GradientButton
+                    title="Login"
+                    onPress={handleButtonPress}
+                />
+                <View style={styles.longSpace} />
+                <SeparateLine isTextInclude={true} ></SeparateLine>
+                <View style={styles.space} />
+                <ThirdPartyLogin />
+                <View style={styles.space} />
+                <TextButton text={"Register"} onPress={() => props.navigation.navigate('Register')}></TextButton>
+                <View style={styles.space} />
+                <View style={g_STYLE.row}>
+                    <CustomText data={'forget password?'} />
+                    <TextButton text={"click here"} onPress={function (): void {throw new Error('Function not implemented.');}} />
+                </View>
+            </View>
+        </ScrollView>
     );
 
 
@@ -60,8 +61,6 @@ const Login: React.FC<Props<'Login'>> = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        color: 'white',
         alignItems: 'center',
         justifyContent: 'center',
     },

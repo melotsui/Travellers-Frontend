@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react'
 import GradientButton from '../../components/atoms/gradient_button';
 import SeparateLine from '../../components/atoms/separate_line';
@@ -23,12 +23,15 @@ const Register: React.FC<Props<'Register'>> = (props) => {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={{height: '100%'}}>
+            <View style={[styles.container, {flex: 1,}]}>
             <Image
                 source={require('../../assets/logo.png')}
                 style={styles.image}
                 resizeMode="contain"
             />
+            </View>
+            <View style={[styles.container, {flex: 2,}]}>
             <TextField hint={'username'}></TextField>
             <View style={styles.space} />
             <TextField hint={'password'}></TextField>
@@ -39,8 +42,9 @@ const Register: React.FC<Props<'Register'>> = (props) => {
                 title="Sign-up"
                 onPress={handleButtonPress}
             />
+            </View>
 
-        </View>
+        </ScrollView>
     );
 
 
@@ -56,7 +60,7 @@ const styles = StyleSheet.create({
         height: screenHeight * 0.02,
     },
     longSpace: {
-        height: screenHeight * 0.04,
+        height: screenHeight * 0.08,
     },
     image: {
         width: screenWidth * 0.5,

@@ -6,13 +6,15 @@ import CustomText from './text';
 interface TextButtonProps {
     text: string;
     onPress: () => void;
+    color?: string;
+    size?: number;
 } 
 
-const TextButton: React.FC<TextButtonProps> = ({text, onPress}) => {
+const TextButton: React.FC<TextButtonProps> = ({text, onPress, color, size}) => {
 
     return (
             <TouchableOpacity onPress={onPress}>
-                <CustomText data={text} color={g_THEME.colors.secondary} />
+                <CustomText size={size} data={text} color={color ?? g_THEME.colors.secondary} />
             </TouchableOpacity>
     );
 
