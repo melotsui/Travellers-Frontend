@@ -1,11 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react'
-import GradientButton from '../../components/atoms/gradient_button';
-import SeparateLine from '../../components/atoms/separate_line';
+import GradientButton from '../../components/molecules/gradient_button';
 import TextField from '../../components/atoms/text_field';
-import ThirdPartyLogin from './third_party_login';
 import TextButton from '../../components/atoms/text_button';
-import g_STYLE from '../../styles/styles';
 import CustomText from '../../components/atoms/text';
 import Props from '../../constants/types';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
@@ -24,6 +21,18 @@ const EmailVerification: React.FC<Props<'EmailVerification'>> = (props) => {
         setError(error);
     };
 
+    const [seconds, setSeconds] = useState(0);
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setSeconds((prevSeconds) => prevSeconds + 1);
+      }, 1000);
+  
+      return () => {
+        clearInterval(interval);
+      };
+    }, []);
+
     return (
         <ScrollView style={{ height: '100%' }}>
             <View style={[styles.container, { flex: 1, }]}>
@@ -34,22 +43,24 @@ const EmailVerification: React.FC<Props<'EmailVerification'>> = (props) => {
                 />
             </View>
             <View style={[styles.container, { flex: 2, }]}>
-                <CustomText data='Bind your email to Travellers' size={22}></CustomText>
+                <CustomText size={22}>Bind your email to Travellers</CustomText>
                 <View style={styles.space} />
-                <TextField hint={'email'}></TextField>
+                <TextField hint={'email'} text={''} error={''} onChange={function (value: string): void {
+                    throw new Error('Function not implemented.');
+                } }></TextField>
                 <View style={styles.space} />
                 <SendVerificationCode hint={'verification code'} id={''} />
                 <View style={styles.longSpace} />
-                <CustomText data='Can be re-sent in 20 seconds' size={12} color={g_THEME.colors.grey}></CustomText>
+                <CustomText size={12} color={g_THEME.colors.grey}>Can be re-sent in 20 seconds</CustomText>
                 <View style={styles.longSpace} />
                 <View style={styles.longSpace} />
                 <GradientButton
                     title="Confirm"
                     onPress={handleButtonPress}
                 />
-                <TextButton text={'Skip'} onPress={function (): void {
+                <TextButton onPress={function (): void {
                     throw new Error('Function not implemented.');
-                } } color={g_THEME.colors.grey} size={22}/>
+                } } color={g_THEME.colors.grey} size={22}>Skip</TextButton>
             </View>
         </ScrollView>
     );
@@ -76,3 +87,7 @@ const styles = StyleSheet.create({
 });
 
 export default EmailVerification;
+function useEffect(arg0: () => () => void, arg1: never[]) {
+    throw new Error('Function not implemented.');
+}
+

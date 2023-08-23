@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import React, { useState } from 'react'
-import GradientButton from '../../components/atoms/gradient_button';
+import GradientButton from '../../components/molecules/gradient_button';
 import SeparateLine from '../../components/atoms/separate_line';
 import TextField from '../../components/atoms/text_field';
 import ThirdPartyLogin from './third_party_login';
@@ -9,48 +9,63 @@ import g_STYLE from '../../styles/styles';
 import CustomText from '../../components/atoms/text';
 import Props from '../../constants/types';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
+import AuthApi from '../../api/auth_api';
+import apis from '../../api/api_service';
 
 
 const Login: React.FC<Props<'Login'>> = (props) => {
-    const handleButtonPress = () => {
-        console.log('Login');
-    };
-
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const handleError = (error: string) => {
-        setError(error);
+    const handleUsernameChange = (value: string) => {
+        setUsername(value);
     };
 
+    const handlePasswordChange = (value: string) => {
+        setPassword(value);
+    };
+
+    const handleLogin = async () => {
+        apis.auth.login(username, password)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+                setError(error);
+            });
+    }
+
     return (
-        <ScrollView style={{height: '100%'}}>
-            <View style={[styles.container, {flex: 1,}]}>
+        <ScrollView style={{ height: '100%' }}>
+            <View style={[styles.container, { flex: 1, }]}>
                 <Image
                     source={require('../../assets/logo.png')}
                     style={styles.image}
                     resizeMode="contain"
                 />
             </View>
-            <View style={[styles.container, {flex: 2,}]}>
+            <View style={[styles.container, { flex: 2, }]}>
                 <View style={styles.space} />
-                <TextField hint={'username'}></TextField>
+                <TextField hint={'username'} text={username} onChange={handleUsernameChange}></TextField>
                 <View style={styles.space} />
-                <TextField hint={'password'}></TextField>
+                <TextField hint={'password'} text={password} onChange={handlePasswordChange} secure={true}></TextField>
                 <View style={styles.longSpace} />
                 <GradientButton
                     title="Login"
-                    onPress={handleButtonPress}
+                    onPress={handleLogin}
                 />
                 <View style={styles.longSpace} />
                 <SeparateLine isTextInclude={true} ></SeparateLine>
                 <View style={styles.space} />
                 <ThirdPartyLogin />
                 <View style={styles.space} />
-                <TextButton text={"Register"} onPress={() => props.navigation.navigate('Register')}></TextButton>
+                <TextButton onPress={() => props.navigation.navigate('Register')}>Register</TextButton>
                 <View style={styles.space} />
                 <View style={g_STYLE.row}>
-                    <CustomText data={'forget password?'} />
-                    <TextButton text={"click here"} onPress={function (): void {throw new Error('Function not implemented.');}} />
+                    <CustomText>forget password?</CustomText>
+                    <TextButton onPress={function (): void { throw new Error('Function not implemented.'); }}>click here</TextButton>
                 </View>
             </View>
         </ScrollView>

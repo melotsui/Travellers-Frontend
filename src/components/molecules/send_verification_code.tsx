@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet } from 'react-native';
 import g_STYLE from '../../styles/styles';
 import { screenWidth, screenHeight } from '../../constants/screen_dimension';
 import g_THEME from '../../theme/theme';
-import GradientButton from '../atoms/gradient_button';
+import GradientButton from './gradient_button';
 
 interface SendVerificationCodeProps {
     hint: string;

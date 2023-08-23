@@ -1,32 +1,40 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import g_THEME from '../../theme/theme';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import g_STYLE from '../../styles/styles';
+import CustomText from './text';
 
 interface TextFieldProps {
     hint: string;
-  }
-  
-const TextField: React.FC<TextFieldProps> = ({hint}) => {
-    const [text, setText] = useState('');
+    text: string;
+    onChange: (value: string) => void;
+    error?: string;
+    secure?: boolean;
+}
 
-    const handleTextChange = (text: string) => {
-        setText(text);
+const TextField: React.FC<TextFieldProps> = ({ hint, text, onChange, error, secure }) => {
+
+    const handleInputChange = (text: string) => {
+        onChange(text);
     };
 
     return (
-    <View style={{ overflow: 'hidden', paddingBottom: 5, borderRadius: 25}}>
-        <View style={[g_STYLE.textFieldContainer, g_STYLE.textFieldShadowProp]}>
-            <TextInput
-                style={[styles.input]}
-                value={text}
-                onChangeText={handleTextChange}
-                placeholder={hint}
-                placeholderTextColor={'rgba(0, 0, 0, 0.21)'}
-            />
+        <View style={{ overflow: 'hidden', paddingBottom: 5, borderRadius: 25 }}>
+            <View style={[g_STYLE.textFieldContainer, g_STYLE.textFieldShadowProp]}>
+                <TextInput
+                    style={[styles.input]}
+                    value={text}
+                    onChangeText={handleInputChange}
+                    placeholder={hint}
+                    placeholderTextColor={'rgba(0, 0, 0, 0.21)'}
+                    secureTextEntry={secure}
+                />
+            </View>
+            <View style={{ paddingLeft: 15 }}>
+                {error != null && <CustomText color='red' size={12}>{error}</CustomText>}
+            </View>
         </View>
-    </View>
     );
 };
 
@@ -41,7 +49,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(172, 224, 246, 0.17)',
         borderColor: 'rgba(172, 224, 246, 0.17)',
         borderWidth: 1,
-
     }
 });
 

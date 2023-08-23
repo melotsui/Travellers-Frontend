@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react'
-import GradientButton from '../../components/atoms/gradient_button';
+import GradientButton from '../../components/molecules/gradient_button';
 import SeparateLine from '../../components/atoms/separate_line';
 import TextField from '../../components/atoms/text_field';
 import ThirdPartyLogin from './third_party_login';
@@ -32,11 +32,17 @@ const Register: React.FC<Props<'Register'>> = (props) => {
             />
             </View>
             <View style={[styles.container, {flex: 2,}]}>
-            <TextField hint={'username'}></TextField>
+            <TextField hint={'username'} text={''} error={''} onChange={function (value: string): void {
+                    throw new Error('Function not implemented.');
+                } }></TextField>
             <View style={styles.space} />
-            <TextField hint={'password'}></TextField>
+            <TextField hint={'password'} text={''} error={''} onChange={function (value: string): void {
+                    throw new Error('Function not implemented.');
+                } }></TextField>
             <View style={styles.space} />
-            <TextField hint={'confirm password'}></TextField>
+            <TextField hint={'confirm password'} text={''} error={''} onChange={function (value: string): void {
+                    throw new Error('Function not implemented.');
+                } }></TextField>
             <View style={styles.longSpace} />
             <GradientButton
                 title="Sign-up"
