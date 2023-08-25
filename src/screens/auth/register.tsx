@@ -1,23 +1,22 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
-import SeparateLine from '../../components/atoms/separate_line';
 import TextField from '../../components/atoms/text_field';
-import ThirdPartyLogin from './third_party_login';
-import TextButton from '../../components/atoms/text_button';
-import g_STYLE from '../../styles/styles';
-import CustomText from '../../components/atoms/text';
 import Props from '../../constants/types';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';
+import { useDispatch } from 'react-redux';
+import { updateProfile } from '../../actions/profile_actions';
 
 const Register: React.FC<Props<'Register'>> = (props) => {
+    const dispatch = useDispatch();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [confirmpasswordError, setConfirmPasswordError] = useState('');
 
     const handleUsernameChange = (value: string) => {
         setUsername(value);
@@ -32,19 +31,35 @@ const Register: React.FC<Props<'Register'>> = (props) => {
     }
 
     const handleRegister = async () => {
-        if (password == confirmPassword) {
-            apis.auth.register(username, password)
-                .then((response) => {
-                    console.log('EmailVerification');
-                    console.log(response);
-                    props.navigation.navigate('EmailVerification');
-                })
-                .catch((error) => {
-                    setUsernameError(error);
-                });
-        } else {
-            setPasswordError('Password not match');
+        if (username == '') {
+            setUsernameError('Username cannot be empty');
+            return;
         }
+        if (password == '') {
+            setPasswordError('Password cannot be empty');
+            return;
+        }
+        if (confirmPassword == '') {
+            setConfirmPasswordError('Confirm password cannot be empty');
+            return;
+        }
+        if (password != confirmPassword) {
+            setConfirmPasswordError('Password not match');
+            return;
+        }
+        await apis.auth.register(username, password)
+            .then((response) => {
+                console.log('success to register');
+                props.navigation.navigate('EmailVerification');
+            })
+            .catch((error) => {
+                setUsernameError(error.message);
+            });
+        await apis.auth.getMyProfile().then((response) => {
+            console.log('success to get profile');
+            dispatch(updateProfile(response));
+        });
+
     };
 
     return (
@@ -59,9 +74,9 @@ const Register: React.FC<Props<'Register'>> = (props) => {
             <View style={[styles.container, { flex: 2, }]}>
                 <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange} />
                 <View style={styles.space} />
-                <TextField hint={'password'} text={password} onChange={handlePasswordChange} />
+                <TextField hint={'password'} text={password} error={passwordError} onChange={handlePasswordChange} secure={true}/>
                 <View style={styles.space} />
-                <TextField hint={'confirm password'} text={confirmPassword} error={passwordError} onChange={handleConfirmPasswordChange} />
+                <TextField hint={'confirm password'} text={confirmPassword} error={confirmpasswordError} onChange={handleConfirmPasswordChange} secure={true}/>
                 <View style={styles.longSpace} />
                 <GradientButton
                     title="Sign-up"

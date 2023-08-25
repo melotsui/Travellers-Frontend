@@ -1,5 +1,5 @@
-export interface Response {
+export type Response<T> = {
     code: number;
     message: string;
-    data: Record<string, any>;
+    data: T;
   }

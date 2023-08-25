@@ -10,34 +10,52 @@ import CustomText from '../../components/atoms/text';
 import Props from '../../constants/types';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';
+import { updateProfile } from '../../actions/profile_actions';
+import { useDispatch } from 'react-redux';
 
 
 const Login: React.FC<Props<'Login'>> = (props) => {
+    const dispatch = useDispatch();
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [usernameError, setUsernameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
     const handleUsernameChange = (value: string) => {
-        setError('');
+        setUsernameError('');
         setUsername(value);
     };
 
     const handlePasswordChange = (value: string) => {
-        setError('');
+        setPasswordError('');
         setPassword(value);
     };
 
     const handleLogin = async () => {
+        if (username == '') {
+            setUsernameError('Username cannot be empty');
+            return;
+        }
+        if (password == '') {
+            setPasswordError('Password cannot be empty');
+            return;
+        }
         await apis.auth.login(username, password)
             .then((response) => {
-                console.log(response);
+                console.log('success to login');
             })
             .catch((error) => {
-                console.log(error);
-                setError(error);
+                console.log('failed to login');
+                setPasswordError(error);
             });
-        apis.auth.getMyProfile().then((response) => {console.log(response);});
+        await apis.auth.getMyProfile().then((response) => {
+            console.log('success to get profile');
+            dispatch(updateProfile(response));
+        });
     }
+
+
 
     return (
         <ScrollView style={{ height: '100%' }}>
@@ -50,9 +68,9 @@ const Login: React.FC<Props<'Login'>> = (props) => {
             </View>
             <View style={[styles.container, { flex: 2, }]}>
                 <View style={styles.space} />
-                <TextField hint={'username'} text={username} onChange={handleUsernameChange}></TextField>
+                <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange}></TextField>
                 <View style={styles.space} />
-                <TextField hint={'password'} text={password} error={error} onChange={handlePasswordChange} secure={true}></TextField>
+                <TextField hint={'password'} text={password} error={passwordError} onChange={handlePasswordChange} secure={true}></TextField>
                 <View style={styles.longSpace} />
                 <GradientButton
                     title="Login"

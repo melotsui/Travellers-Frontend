@@ -1,4 +1,5 @@
 import { User } from '../models/user';
+import { Response } from '../models/reponse';
 import { AxiosInstance, AxiosResponse } from 'axios';
 import APIs from './api';
 import apis from './api_service';
@@ -10,7 +11,7 @@ class AuthApi {
         this.auth = auth;
     }
 
-    login = async (username: string, password: string): Promise<Response> => {
+    login = async (username: string, password: string): Promise<string> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const jsonData = {
@@ -20,11 +21,13 @@ class AuthApi {
 
                 await this.auth.api.post('/login', jsonData)
                     .then((response) => {
-                        resolve(response.data);
-                        apis.setToken(response.data['data']['access_token']);
+                        const result = response.data;
+                        resolve(result.data['access_token']);
+                        apis.setToken(result.data['access_token']);
                     })
                     .catch((error) => {
-                        reject(error.response.data['message']);
+                        const result = error.response.data;
+                        reject(result.message);
                     });
             } catch (error) {
                 reject(error);
@@ -32,7 +35,7 @@ class AuthApi {
         });
     }
 
-    register = async (username: string, password: string): Promise<Response> => {
+    register = async (username: string, password: string): Promise<Response<string>> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const jsonData = {
@@ -42,10 +45,13 @@ class AuthApi {
 
                 await this.auth.api.post('/register', jsonData)
                     .then((response) => {
-                        resolve(response.data)
+                        const result = response.data;
+                        resolve(result.data['access_token']);
+                        apis.setToken(result.data['access_token']);
                     })
                     .catch((error) => {
-                        reject(error.response.data['message'])
+                        const result = error.response.data;
+                        reject(result.message);
                     });
             } catch (error) {
                 reject(error);
@@ -53,15 +59,17 @@ class AuthApi {
         });
     }
 
-    getMyProfile = async (): Promise<Response> => {
-        return new Promise(async (resolve, reject) => {
+    getMyProfile = async (): Promise<User> => {
+        return new Promise<User>(async (resolve, reject) => {
             try {
                 await this.auth.api.post('/me')
                     .then((response) => {
-                        resolve(response.data)
+                        const result = response.data;
+                        resolve(result.data)
                     })
                     .catch((error) => {
-                        reject(error.response.data['message'])
+                        const result = error.response.data;
+                        reject(result.message);
                     });
             } catch (error) {
                 reject(error);

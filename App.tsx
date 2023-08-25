@@ -7,8 +7,14 @@
 
 import React from 'react';
 import StackNavigation from './src/navigation/stack_navigation';
+import { Provider } from 'react-redux';
+import store from './src/store/store';
 
 const App = () => {
-  return (<StackNavigation />)}
+  return (
+    <Provider store={store}>
+      <StackNavigation />
+    </Provider>)
+}
 
 export default App;
