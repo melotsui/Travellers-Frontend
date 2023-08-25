@@ -15,7 +15,7 @@ interface TextFieldProps {
 }
 
 const TextField: React.FC<TextFieldProps> = ({ hint, text, onChange, error, secure}) => {
-    const [isSecure, setIsSecure] = useState(false);
+    const [isSecure, setIsSecure] = useState(true);
 
     const handleInputChange = (text: string) => {
         onChange(text);
