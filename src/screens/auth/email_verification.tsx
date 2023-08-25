@@ -1,5 +1,5 @@
 import { StyleSheet, View, Image, ScrollView } from 'react-native';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
 import TextField from '../../components/atoms/text_field';
 import TextButton from '../../components/atoms/text_button';
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        paddingTop: screenHeight * 0.02,
     },
     space: {
         height: screenHeight * 0.02,
@@ -87,7 +88,3 @@ const styles = StyleSheet.create({
 });
 
 export default EmailVerification;
-function useEffect(arg0: () => () => void, arg1: never[]) {
-    throw new Error('Function not implemented.');
-}
-

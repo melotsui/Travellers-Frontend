@@ -31,9 +31,9 @@ const TextField: React.FC<TextFieldProps> = ({ hint, text, onChange, error, secu
                     secureTextEntry={secure}
                 />
             </View>
-            <View style={{ paddingLeft: 15 }}>
-                {error != null && <CustomText color='red' size={12}>{error}</CustomText>}
-            </View>
+            {error != null && error.length != 0 && <View style={{ paddingLeft: 15 }}>
+                <CustomText color='red' size={12}>{error}</CustomText>
+            </View>}
         </View>
     );
 };

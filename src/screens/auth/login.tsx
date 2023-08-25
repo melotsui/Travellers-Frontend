@@ -9,7 +9,6 @@ import g_STYLE from '../../styles/styles';
 import CustomText from '../../components/atoms/text';
 import Props from '../../constants/types';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
-import AuthApi from '../../api/auth_api';
 import apis from '../../api/api_service';
 
 
@@ -19,15 +18,17 @@ const Login: React.FC<Props<'Login'>> = (props) => {
     const [error, setError] = useState('');
 
     const handleUsernameChange = (value: string) => {
+        setError('');
         setUsername(value);
     };
 
     const handlePasswordChange = (value: string) => {
+        setError('');
         setPassword(value);
     };
 
     const handleLogin = async () => {
-        apis.auth.login(username, password)
+        await apis.auth.login(username, password)
             .then((response) => {
                 console.log(response);
             })
@@ -35,6 +36,7 @@ const Login: React.FC<Props<'Login'>> = (props) => {
                 console.log(error);
                 setError(error);
             });
+        apis.auth.getMyProfile().then((response) => {console.log(response);});
     }
 
     return (
@@ -50,7 +52,7 @@ const Login: React.FC<Props<'Login'>> = (props) => {
                 <View style={styles.space} />
                 <TextField hint={'username'} text={username} onChange={handleUsernameChange}></TextField>
                 <View style={styles.space} />
-                <TextField hint={'password'} text={password} onChange={handlePasswordChange} secure={true}></TextField>
+                <TextField hint={'password'} text={password} error={error} onChange={handlePasswordChange} secure={true}></TextField>
                 <View style={styles.longSpace} />
                 <GradientButton
                     title="Login"
@@ -78,6 +80,7 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',
+        paddingTop: screenHeight * 0.02,
     },
     space: {
         height: screenHeight * 0.02,
