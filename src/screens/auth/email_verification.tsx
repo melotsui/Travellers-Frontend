@@ -8,20 +8,13 @@ import Props from '../../constants/types';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import SendVerificationCode from '../../components/molecules/send_verification_code';
 import g_THEME from '../../theme/theme';
+import apis from '../../api/api_service';
 
 const EmailVerification: React.FC<Props<'EmailVerification'>> = (props) => {
-    const handleButtonPress = () => {
-        console.log('Register');
-        props.navigation.navigate('Register');
-    };
-
-    const [error, setError] = useState('');
-
-    const handleError = (error: string) => {
-        setError(error);
-    };
 
     const [seconds, setSeconds] = useState(0);
+    const [error, setError] = useState('');
+    const [text, setText] = useState('');
 
     useEffect(() => {
       const interval = setInterval(() => {
@@ -32,6 +25,18 @@ const EmailVerification: React.FC<Props<'EmailVerification'>> = (props) => {
         clearInterval(interval);
       };
     }, []);
+    
+
+    const handleError = (error: string) => {
+        setError(error);
+    };
+
+    
+    const handleEmailVerification = async () => {
+        await apis.user.sendVerifyEmail(text);
+        console.log('Register');
+        props.navigation.navigate('Register');
+    };
 
     return (
         <ScrollView style={{ height: '100%' }}>
@@ -56,7 +61,7 @@ const EmailVerification: React.FC<Props<'EmailVerification'>> = (props) => {
                 <View style={styles.longSpace} />
                 <GradientButton
                     title="Confirm"
-                    onPress={handleButtonPress}
+                    onPress={handleEmailVerification}
                 />
                 <TextButton onPress={function (): void {
                     throw new Error('Function not implemented.');

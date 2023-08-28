@@ -35,7 +35,7 @@ const TextField: React.FC<TextFieldProps> = ({ hint, text, onChange, error, secu
                     onChangeText={handleInputChange}
                     placeholder={hint}
                     placeholderTextColor={'rgba(0, 0, 0, 0.21)'}
-                    secureTextEntry={isSecure}
+                    secureTextEntry={secure != null ? isSecure : false}
                 />
                 {secure != null && 
                 <TouchableOpacity onPress={handleSecureToggle}>

@@ -1,6 +1,5 @@
 import { User } from '../models/user';
 import { Response } from '../models/reponse';
-import { AxiosInstance, AxiosResponse } from 'axios';
 import APIs from './api';
 import apis from './api_service';
 
@@ -66,6 +65,24 @@ class AuthApi {
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data)
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    refreshToken = async (): Promise<string> => {
+        return new Promise<string>(async (resolve, reject) => {
+            try {
+                await this.auth.api.post('/refresh')
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data['access_token'])
                     })
                     .catch((error) => {
                         const result = error.response.data;

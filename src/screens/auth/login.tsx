@@ -52,7 +52,10 @@ const Login: React.FC<Props<'Login'>> = (props) => {
         await apis.auth.getMyProfile().then((response) => {
             console.log('success to get profile');
             dispatch(updateProfile(response));
-        });
+        }).catch((error) => {
+            console.log('failed to get profile');
+        }
+        );
     }
 
 
