@@ -10,11 +10,13 @@ interface TextFieldProps {
     hint: string;
     text: string;
     onChange: (value: string) => void;
+    onPress?: () => void;
+    suffixIcon?: string;
     error?: string;
     secure?: boolean;
 }
 
-const TextField: React.FC<TextFieldProps> = ({ hint, text, onChange, error, secure }) => {
+const TextField: React.FC<TextFieldProps> = ({ hint, text, onChange, onPress, suffixIcon, error, secure }) => {
     const [isSecure, setIsSecure] = useState(true);
 
     const handleInputChange = (text: string) => {
@@ -23,6 +25,12 @@ const TextField: React.FC<TextFieldProps> = ({ hint, text, onChange, error, secu
 
     const handleSecureToggle = () => {
         setIsSecure(!isSecure);
+    }
+
+    const handleSuffixIcon = () => {
+        if (onPress != null) {
+            onPress();
+        }
     }
 
     return (
@@ -37,6 +45,10 @@ const TextField: React.FC<TextFieldProps> = ({ hint, text, onChange, error, secu
                         placeholderTextColor={'rgba(0, 0, 0, 0.21)'}
                         secureTextEntry={secure != null ? isSecure : false}
                     />
+                    {suffixIcon != null &&
+                        <TouchableOpacity onPress={handleSuffixIcon}>
+                            <Icon name={suffixIcon} size={24} color={g_THEME.colors.secondary} />
+                        </TouchableOpacity>}
                     {secure != null &&
                         <TouchableOpacity onPress={handleSecureToggle}>
                             <Icon name={isSecure ? 'visibility' : 'visibility-off'} size={24} color={'grey'} />
@@ -67,8 +79,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: g_THEME.fonts.regular,
         borderRadius: 25,
-        backgroundColor: 'rgba(172, 224, 246, 0.17)',
-        borderColor: 'rgba(172, 224, 246, 0.17)',
+        backgroundColor: g_THEME.colors.lightBlue,
+        borderColor: g_THEME.colors.lightBlue,
         borderWidth: 1,
     },
 });

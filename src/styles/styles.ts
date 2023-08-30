@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
+import g_THEME from '../theme/theme';
 
 const g_STYLE = StyleSheet.create({
+    column: {
+        flexDirection: 'column',
+    },
     row: {
         flexDirection: 'row',
     },
@@ -9,7 +13,7 @@ const g_STYLE = StyleSheet.create({
         borderRadius: 25,
     },
     textFieldShadowProp: {
-        shadowColor: 'rgba(177, 205, 253, 1)',
+        shadowColor: g_THEME.colors.shadowBlue,
         elevation: 10,
     },
   });
