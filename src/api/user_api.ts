@@ -51,6 +51,51 @@ class UserApi {
             }
         });
     }
+
+    forgetPassword = async (username: string): Promise<string> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const jsonData = {
+                    "username": username
+                };
+
+                await this.user.api.post('/users/forgotPassword', jsonData)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    resetPassword = async (username: string, password: string): Promise<string> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const jsonData = {
+                    "username": username,
+                    "password": password,
+                };
+
+                await this.user.api.post('/users/resetPassword', jsonData)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
 }
 
 export default UserApi;

@@ -4,38 +4,46 @@ import g_STYLE from '../../styles/styles';
 import { screenWidth, screenHeight } from '../../constants/screen_dimension';
 import g_THEME from '../../theme/theme';
 import GradientButton from './gradient_button';
+import Container from '../atoms/container';
+import CustomText from '../atoms/text';
 
 interface SendVerificationCodeProps {
+    text: string;
     hint: string;
-    id: string;
-  }
-  
-const SendVerificationCode: React.FC<SendVerificationCodeProps> = ({hint, id}) => {
-    const [text, setText] = useState('');
+    onChange: (value: string) => void;
+    onPress: () => void;
+    error?: string;
+}
 
+const SendVerificationCode: React.FC<SendVerificationCodeProps> = ({ text, hint, onChange, onPress, error }) => {
     const handleTextChange = (text: string) => {
-        setText(text);
+        onChange(text);
     };
     const sendCode = () => {
+        onPress();
         console.log('send verification code');
     }
     return (
-        <View style={{ overflow: 'hidden', borderRadius: 25}}>
-            <View style={[g_STYLE.textFieldContainer, g_STYLE.textFieldShadowProp]}>
+        <View>
+            <Container>
                 <View style={[styles.container, g_STYLE.row]}>
-                <GradientButton title={'Send'} onPress={() => sendCode} radius={20} width={0.25}/>
-                <TextInput
-                    style={[styles.input]}
-                    value={text}
-                    onChangeText={handleTextChange}
-                    placeholder={hint}
-                    placeholderTextColor={'rgba(0, 0, 0, 0.21)'}
-                />
+                    <GradientButton title={'Send'} onPress={sendCode} radius={20} width={0.25} />
+                    <TextInput
+                        style={[styles.input]}
+                        value={text}
+                        onChangeText={handleTextChange}
+                        placeholder={hint}
+                        placeholderTextColor={'rgba(0, 0, 0, 0.21)'}
+                    />
                 </View>
-            </View>
+            </Container>
+            {error != null && error.length != 0 &&
+                <View style={{ paddingLeft: 15 }}>
+                    <CustomText color='red' size={12}>{error}</CustomText>
+                </View>}
         </View>
-        );
-    
+    );
+
 };
 
 const styles = StyleSheet.create({

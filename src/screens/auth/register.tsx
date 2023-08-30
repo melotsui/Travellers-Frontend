@@ -1,7 +1,7 @@
 import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
-import TextField from '../../components/atoms/text_field';
+import TextField from '../../components/molecules/text_field';
 import Props from '../../constants/types';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';

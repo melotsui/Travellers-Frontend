@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Image, KeyboardAvoidingView, 
 import React, { useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
 import SeparateLine from '../../components/atoms/separate_line';
-import TextField from '../../components/atoms/text_field';
+import TextField from '../../components/molecules/text_field';
 import ThirdPartyLogin from './third_party_login';
 import TextButton from '../../components/atoms/text_button';
 import g_STYLE from '../../styles/styles';
@@ -57,8 +57,10 @@ const Login: React.FC<Props<'Login'>> = (props) => {
         }
         );
     }
-
-
+    
+    const handleForgetPassword = () => {
+        props.navigation.navigate('ResetPassword');
+    };
 
     return (
         <ScrollView style={{ height: '100%' }}>
@@ -88,7 +90,7 @@ const Login: React.FC<Props<'Login'>> = (props) => {
                 <View style={styles.space} />
                 <View style={g_STYLE.row}>
                     <CustomText>forget password?</CustomText>
-                    <TextButton onPress={function (): void { throw new Error('Function not implemented.'); }}>click here</TextButton>
+                    <TextButton onPress={handleForgetPassword}>click here</TextButton>
                 </View>
             </View>
         </ScrollView>

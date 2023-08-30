@@ -4,11 +4,13 @@ import Login from '../screens/auth/login';
 import Register from '../screens/auth/register';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import EmailVerification from '../screens/auth/email_verification';
+import ResetPassword from '../screens/auth/reset_password';
 
 export type RootStackParamList = {
     Login: undefined;
     Register: undefined;
     EmailVerification: undefined;
+    ResetPassword: undefined;
   };
   
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -20,6 +22,7 @@ export type RootStackParamList = {
           <Stack.Screen name="Login" component={Login}/>
           <Stack.Screen name="Register" component={Register}/>
           <Stack.Screen name="EmailVerification" component={EmailVerification}/>
+          <Stack.Screen name="ResetPassword" component={ResetPassword}/>
         </Stack.Navigator>
       </NavigationContainer>
     );

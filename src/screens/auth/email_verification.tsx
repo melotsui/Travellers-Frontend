@@ -1,7 +1,7 @@
 import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
-import TextField from '../../components/atoms/text_field';
+import TextField from '../../components/molecules/text_field';
 import TextButton from '../../components/atoms/text_button';
 import CustomText from '../../components/atoms/text';
 import Props from '../../constants/types';
@@ -13,28 +13,69 @@ import apis from '../../api/api_service';
 const EmailVerification: React.FC<Props<'EmailVerification'>> = (props) => {
 
     const [seconds, setSeconds] = useState(0);
-    const [error, setError] = useState('');
-    const [text, setText] = useState('');
+    const [username, setUsername] = useState('');
+    const [code, setCode] = useState('');
+    const [usernameError, setUsernameError] = useState('');
+    const [codeError, setCodeError] = useState('');
 
     useEffect(() => {
-      const interval = setInterval(() => {
-        setSeconds((prevSeconds) => prevSeconds + 1);
-      }, 1000);
-  
-      return () => {
-        clearInterval(interval);
-      };
-    }, []);
-    
+        const interval = setInterval(() => {
+            setSeconds((prevSeconds) => prevSeconds + 1);
+        }, 1000);
 
-    const handleError = (error: string) => {
-        setError(error);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
+    const handleUsernameChange = (value: string) => {
+        setUsername(value);
+        setUsernameError('');
     };
 
-    
+    const handleCodeChange = (value: string) => {
+        setCode(value);
+        setCodeError('');
+    };
+
+    const handleSendCode = async () => {
+        if(username == '') {
+            setUsernameError('Username cannot be empty');
+            return;
+        }
+        await apis.user.sendVerifyEmail(username)
+        .then((response) => {
+            console.log('success to send code');
+            props.navigation.navigate('Register');
+        })
+        .catch((error) => {
+            console.log('failed to send code');
+            setCodeError(error);
+        });
+    };
+
     const handleEmailVerification = async () => {
-        await apis.user.sendVerifyEmail(text);
-        console.log('Register');
+        if(username == '') {
+            setUsernameError('Username cannot be empty');
+            return;
+        }
+        if(code == '') {
+            setCodeError('Verification code cannot be empty');
+            return;
+        }
+
+        await apis.user.verifyEmail(username, code)
+        .then((response) => {
+            console.log('success to verify');
+            props.navigation.navigate('Register');
+        })
+        .catch((error) => {
+            console.log('failed to verify');
+            setCodeError(error);
+        });
+    };
+
+    const handleSkip = () => {
         props.navigation.navigate('Register');
     };
 
@@ -50,11 +91,9 @@ const EmailVerification: React.FC<Props<'EmailVerification'>> = (props) => {
             <View style={[styles.container, { flex: 2, }]}>
                 <CustomText size={22}>Bind your email to Travellers</CustomText>
                 <View style={styles.space} />
-                <TextField hint={'email'} text={''} error={''} onChange={function (value: string): void {
-                    throw new Error('Function not implemented.');
-                } }></TextField>
+                <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange}></TextField>
                 <View style={styles.space} />
-                <SendVerificationCode hint={'verification code'} id={''} />
+                <SendVerificationCode hint={'verification code'} text={code} error={codeError} onChange={handleCodeChange} onPress={handleSendCode} />
                 <View style={styles.longSpace} />
                 <CustomText size={12} color={g_THEME.colors.grey}>Can be re-sent in 20 seconds</CustomText>
                 <View style={styles.longSpace} />
@@ -63,9 +102,7 @@ const EmailVerification: React.FC<Props<'EmailVerification'>> = (props) => {
                     title="Confirm"
                     onPress={handleEmailVerification}
                 />
-                <TextButton onPress={function (): void {
-                    throw new Error('Function not implemented.');
-                } } color={g_THEME.colors.grey} size={22}>Skip</TextButton>
+                <TextButton onPress={handleSkip} color={g_THEME.colors.grey} size={22}>Skip</TextButton>
             </View>
         </ScrollView>
     );
