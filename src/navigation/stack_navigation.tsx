@@ -1,28 +1,48 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import Login from '../screens/auth/login';
-import Register from '../screens/auth/register';
+import { NavigationContainer, RouteProp } from '@react-navigation/native';
+import RegisterScreen from '../screens/auth/register';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import EmailVerification from '../screens/auth/email_verification';
-import ResetPassword from '../screens/auth/reset_password';
+import EmailVerificationScreen from '../screens/auth/email_verification';
+import ResetPasswordScreen from '../screens/auth/reset_password';
+import LoginScreen from '../screens/auth/login';
+import { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/types';
+import TabNavigation from './tab_navigation';
 
-export type RootStackParamList = {
-    Login: undefined;
-    Register: undefined;
-    EmailVerification: undefined;
-    ResetPassword: undefined;
-  };
+type ScreenNavigationProp<
+  T extends keyof RootStackParamList
+> = StackNavigationProp<RootStackParamList, T>;
+
+type ScreenRouteProp<T extends keyof RootStackParamList> = RouteProp<
+  RootStackParamList,
+  T
+>;
+
+type RootProps<T extends keyof RootStackParamList> = {
+  route: ScreenRouteProp<T>;
+  navigation: ScreenNavigationProp<T>;
+};
+
+type RootStackParamList = {
+  Login: undefined;
+  Register: undefined;
+  EmailVerification: undefined;
+  ResetPassword: undefined;
+  HomeBottomBarNavigation: undefined;
+};
+
+export type {RootProps, RootStackParamList};
   
   const Stack = createNativeStackNavigator<RootStackParamList>();
   
   const StackNavigation = () : JSX.Element  => {
     return (
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ contentStyle: {backgroundColor: 'white'}, headerShown: false}}>
-          <Stack.Screen name="Login" component={Login}/>
-          <Stack.Screen name="Register" component={Register}/>
-          <Stack.Screen name="EmailVerification" component={EmailVerification}/>
-          <Stack.Screen name="ResetPassword" component={ResetPassword}/>
+        <Stack.Navigator screenOptions={{ contentStyle: {backgroundColor: 'white'}, headerShown: false}} initialRouteName='Login'>
+          <Stack.Screen name="Login" component={LoginScreen}/>
+          <Stack.Screen name="Register" component={RegisterScreen}/>
+          <Stack.Screen name="EmailVerification" component={EmailVerificationScreen}/>
+          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
+          <Stack.Screen name="HomeBottomBarNavigation" component={TabNavigation}/>
         </Stack.Navigator>
       </NavigationContainer>
     );

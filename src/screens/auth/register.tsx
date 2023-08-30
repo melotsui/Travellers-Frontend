@@ -2,13 +2,13 @@ import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
 import TextField from '../../components/molecules/text_field';
-import Props from '../../constants/types';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';
 import { useDispatch } from 'react-redux';
 import { updateProfile } from '../../actions/profile_actions';
+import { RootProps } from '../../navigation/stack_navigation';
 
-const Register: React.FC<Props<'Register'>> = (props) => {
+const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
     const dispatch = useDispatch();
 
     const [username, setUsername] = useState('');
@@ -109,4 +109,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Register;
+export default RegisterScreen;

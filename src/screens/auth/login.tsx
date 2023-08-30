@@ -7,14 +7,14 @@ import ThirdPartyLogin from './third_party_login';
 import TextButton from '../../components/atoms/text_button';
 import g_STYLE from '../../styles/styles';
 import CustomText from '../../components/atoms/text';
-import Props from '../../constants/types';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';
 import { updateProfile } from '../../actions/profile_actions';
 import { useDispatch } from 'react-redux';
+import { RootProps } from '../../navigation/stack_navigation';
 
 
-const Login: React.FC<Props<'Login'>> = (props) => {
+const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
     const dispatch = useDispatch();
 
     const [username, setUsername] = useState('');
@@ -59,7 +59,8 @@ const Login: React.FC<Props<'Login'>> = (props) => {
     }
     
     const handleForgetPassword = () => {
-        props.navigation.navigate('ResetPassword');
+        //props.navigation.navigate('ResetPassword');
+        props.navigation.navigate('HomeBottomBarNavigation');
     };
 
     return (
@@ -117,4 +118,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Login;
+export default LoginScreen;

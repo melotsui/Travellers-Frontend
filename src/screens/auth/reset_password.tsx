@@ -2,15 +2,14 @@ import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
 import TextField from '../../components/molecules/text_field';
-import TextButton from '../../components/atoms/text_button';
 import CustomText from '../../components/atoms/text';
-import Props from '../../constants/types';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import SendVerificationCode from '../../components/molecules/send_verification_code';
 import g_THEME from '../../theme/theme';
 import apis from '../../api/api_service';
+import { RootProps } from '../../navigation/stack_navigation';
 
-const ResetPassword: React.FC<Props<'ResetPassword'>> = (props) => {
+const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
 
     const [seconds, setSeconds] = useState(0);
     const [username, setUsername] = useState('');
@@ -150,4 +149,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ResetPassword;
+export default ResetPasswordScreen;

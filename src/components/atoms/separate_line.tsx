@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import g_THEME from '../../theme/theme';
-import { screenHeight, screenWidth } from '../../constants/screen_dimension';
+import { screenWidth } from '../../constants/screen_dimension';
 
 interface SeparateLineProps {
   isTextInclude: boolean;

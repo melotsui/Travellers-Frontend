@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
-import React, { useState } from 'react'
+import { TouchableOpacity } from 'react-native';
+import React from 'react'
 import g_THEME from '../../theme/theme';
 import CustomText from './text';
 
