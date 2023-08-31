@@ -72,12 +72,14 @@ const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
                 />
             </View>
             <View style={[styles.container, { flex: 2, }]}>
-                <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange} />
-                <View style={styles.space} />
-                <TextField hint={'password'} text={password} error={passwordError} onChange={handlePasswordChange} secure={true}/>
-                <View style={styles.space} />
-                <TextField hint={'confirm password'} text={confirmPassword} error={confirmpasswordError} onChange={handleConfirmPasswordChange} secure={true}/>
-                <View style={styles.longSpace} />
+                <View style={styles.text}>
+                    <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange} />
+                    <View style={styles.space} />
+                    <TextField hint={'password'} text={password} error={passwordError} onChange={handlePasswordChange} secure={true} />
+                    <View style={styles.space} />
+                    <TextField hint={'confirm password'} text={confirmPassword} error={confirmpasswordError} onChange={handleConfirmPasswordChange} secure={true} />
+                    <View style={styles.longSpace} />
+                </View>
                 <GradientButton
                     title="Sign-up"
                     onPress={handleRegister}
@@ -96,6 +98,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: screenHeight * 0.02,
+    },
+    text: {
+        paddingHorizontal: screenWidth * 0.05,
     },
     space: {
         height: screenHeight * 0.02,

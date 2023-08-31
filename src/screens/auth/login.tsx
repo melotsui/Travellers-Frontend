@@ -73,11 +73,13 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
                 />
             </View>
             <View style={[styles.container, { flex: 2, }]}>
+                <View style={styles.text}>
                 <View style={styles.space} />
                 <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange}></TextField>
                 <View style={styles.space} />
                 <TextField hint={'password'} text={password} error={passwordError} onChange={handlePasswordChange} secure={true}></TextField>
                 <View style={styles.longSpace} />
+                </View>
                 <GradientButton
                     title="Login"
                     onPress={handleLogin}
@@ -105,6 +107,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: screenHeight * 0.02,
+    },
+    text: {
+        paddingHorizontal: screenWidth * 0.05,
     },
     space: {
         height: screenHeight * 0.02,

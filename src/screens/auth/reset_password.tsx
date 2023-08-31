@@ -108,17 +108,19 @@ const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
             </View>
             <View style={[styles.container, { flex: 2, }]}>
                 <CustomText size={22}>Reset Password</CustomText>
-                <View style={styles.space} />
-                <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange} />
-                <View style={styles.space} />
-                <SendVerificationCode hint={'verification code'} text={code} error={codeError} onChange={handleCodeChange} onPress={handleForgetPassword} />
-                <View style={styles.space} />
-                <CustomText size={12} color={g_THEME.colors.grey}>Can be re-sent in 20 seconds</CustomText>
-                <View style={styles.space} />
-                <TextField hint={'new password'} text={password} error={passwordError} onChange={handlePasswordChange} />
-                <View style={styles.space} />
-                <TextField hint={'confirm new password'} text={confirmPassword} error={confirmPasswordError} onChange={handleConfirmPasswordChange} />
-                <View style={styles.space} />
+                <View style={styles.text}>
+                    <View style={styles.space} />
+                    <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange} />
+                    <View style={styles.space} />
+                    <SendVerificationCode hint={'verification code'} text={code} error={codeError} onChange={handleCodeChange} onPress={handleForgetPassword} />
+                    <View style={styles.space} />
+                    <CustomText size={12} color={g_THEME.colors.grey}>Can be re-sent in 20 seconds</CustomText>
+                    <View style={styles.space} />
+                    <TextField hint={'new password'} text={password} error={passwordError} onChange={handlePasswordChange} />
+                    <View style={styles.space} />
+                    <TextField hint={'confirm new password'} text={confirmPassword} error={confirmPasswordError} onChange={handleConfirmPasswordChange} />
+                    <View style={styles.space} />
+                </View>
                 <GradientButton
                     title="Confirm"
                     onPress={handleResetPassword}
@@ -136,6 +138,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: screenHeight * 0.02,
+    },
+    text: {
+        paddingHorizontal: screenWidth * 0.05,
     },
     space: {
         height: screenHeight * 0.02,

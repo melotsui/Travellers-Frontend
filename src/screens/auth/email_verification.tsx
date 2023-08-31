@@ -39,40 +39,40 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
     };
 
     const handleSendCode = async () => {
-        if(username == '') {
+        if (username == '') {
             setUsernameError('Username cannot be empty');
             return;
         }
         await apis.user.sendVerifyEmail(username)
-        .then((response) => {
-            console.log('success to send code');
-            props.navigation.navigate('Register');
-        })
-        .catch((error) => {
-            console.log('failed to send code');
-            setCodeError(error);
-        });
+            .then((response) => {
+                console.log('success to send code');
+                props.navigation.navigate('Register');
+            })
+            .catch((error) => {
+                console.log('failed to send code');
+                setCodeError(error);
+            });
     };
 
     const handleEmailVerification = async () => {
-        if(username == '') {
+        if (username == '') {
             setUsernameError('Username cannot be empty');
             return;
         }
-        if(code == '') {
+        if (code == '') {
             setCodeError('Verification code cannot be empty');
             return;
         }
 
         await apis.user.verifyEmail(username, code)
-        .then((response) => {
-            console.log('success to verify');
-            props.navigation.navigate('Register');
-        })
-        .catch((error) => {
-            console.log('failed to verify');
-            setCodeError(error);
-        });
+            .then((response) => {
+                console.log('success to verify');
+                props.navigation.navigate('Register');
+            })
+            .catch((error) => {
+                console.log('failed to verify');
+                setCodeError(error);
+            });
     };
 
     const handleSkip = () => {
@@ -90,14 +90,16 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
             </View>
             <View style={[styles.container, { flex: 2, }]}>
                 <CustomText size={22}>Bind your email to Travellers</CustomText>
-                <View style={styles.space} />
-                <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange}></TextField>
-                <View style={styles.space} />
-                <SendVerificationCode hint={'verification code'} text={code} error={codeError} onChange={handleCodeChange} onPress={handleSendCode} />
-                <View style={styles.longSpace} />
-                <CustomText size={12} color={g_THEME.colors.grey}>Can be re-sent in 20 seconds</CustomText>
-                <View style={styles.longSpace} />
-                <View style={styles.longSpace} />
+                <View style={styles.text}>
+                    <View style={styles.space} />
+                    <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange}></TextField>
+                    <View style={styles.space} />
+                    <SendVerificationCode hint={'verification code'} text={code} error={codeError} onChange={handleCodeChange} onPress={handleSendCode} />
+                    <View style={styles.longSpace} />
+                    <CustomText size={12} color={g_THEME.colors.grey}>Can be re-sent in 20 seconds</CustomText>
+                    <View style={styles.longSpace} />
+                    <View style={styles.longSpace} />
+                </View>
                 <GradientButton
                     title="Confirm"
                     onPress={handleEmailVerification}
@@ -116,6 +118,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: screenHeight * 0.02,
+    },
+    text: {
+        paddingHorizontal: screenWidth * 0.05,
     },
     space: {
         height: screenHeight * 0.02,

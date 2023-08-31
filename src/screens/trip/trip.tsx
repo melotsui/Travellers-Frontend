@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TextField from "../../components/molecules/text_field";
 import TripTile from "../../components/organisms/trip_tile";
-import { screenHeight } from "../../constants/screen_dimension";
+import { screenHeight, screenWidth } from "../../constants/screen_dimension";
 import { HomeProps } from "../../navigation/stack_navigations/trip_stack_navigation";
 import CustomHeader from "../../components/molecules/header";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -23,7 +23,9 @@ const TripSearchScreen: React.FC<HomeProps<'TripSearch'>> = (props) => {
         <View>
             <CustomHeader title={"Trip"}></CustomHeader>
             <View style={styles.container}>
-                <TextField hint={"Trip title, type and place"} text={searchText} onChange={handleSearchTextChange} suffixIcon={'search'} />
+                <View style={styles.text}>
+                    <TextField hint={"Trip title, type and place"} text={searchText} onChange={handleSearchTextChange} suffixIcon={'search'} />
+                </View>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
@@ -44,6 +46,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: screenHeight * 0.02,
+    },
+    text: {
+        paddingHorizontal: screenWidth * 0.05,
     },
 });
 

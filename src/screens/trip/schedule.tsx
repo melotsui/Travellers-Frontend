@@ -44,7 +44,7 @@ const ScheduleScreen: React.FC<HomeProps<'Schedule'>> = (props) => {
     }
 
     return (
-        <PaperProvider>
+        <View>
             <CustomHeader title={"Japan Gogo"}>
                 <IconButton onPress={handleEdit} icon={"edit"} />
             </CustomHeader>
@@ -119,7 +119,7 @@ const ScheduleScreen: React.FC<HomeProps<'Schedule'>> = (props) => {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
-        </PaperProvider>
+        </View>
     );
 
 }
