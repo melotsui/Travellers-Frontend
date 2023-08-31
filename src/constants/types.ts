@@ -7,3 +7,9 @@ export enum ActivityTypes {
     NIGHTLIFT = 'nightlife',
     OTHER = 'other'
 }
+
+export enum MediaTypes {
+    IMAGE = 'image',
+    VIDEO = 'video',
+    AUDIO = 'audio'
+}

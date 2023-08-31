@@ -15,7 +15,7 @@ const CustomMenuItem: React.FC<CustomMenuItemProps> = ({
     icon }
 ) => {
     return (
-        <TouchableOpacity onPress={onPress} style={styles.menuItem}>
+        <TouchableOpacity onPress={onPress}>
             <View style={styles.menuItem}>
                 <MaterialIcons name={icon} size={20} color={'white'} />
                 <View style={{width: 10}}></View>
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     menuItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 5,
+        paddingVertical: 8,
         paddingHorizontal: 8,
     },
 });

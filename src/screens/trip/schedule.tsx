@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { View, StyleSheet, FlatList, Button } from "react-native";
+import { RectButton, ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { screenWidth } from "../../constants/screen_dimension";
 import { HomeProps } from "../../navigation/stack_navigations/trip_stack_navigation";
 import g_STYLE from "../../styles/styles";
@@ -15,62 +15,66 @@ import { ActivityTypes, MediaTypes } from "../../constants/types";
 import CustomHeader from "../../components/molecules/header";
 import IconButton from "../../components/atoms/icon_button";
 import { PaperProvider } from "react-native-paper";
-import GradientPopupMenu from "../../components/molecules/gradient_popup";
-import CustomMenuItem from "../../components/atoms/custom_menu_item";
+import RoundButton from "../../components/atoms/round_button";
+import ImageTile from "../../components/molecules/image_tile";
+import getActivityIcon from "../../helpers/activity_icon";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
+const ScheduleScreen: React.FC<HomeProps<'Schedule'>> = (props) => {
     const [schedules, setSchedules] = useState(['a']);
 
     const handleEdit = () => {
-        console.log("edit trip");
-        //props.navigation.navigate('TripDetail');
-    }
-    const handleAddSchedule = () => {
-        console.log("add schdule");
-        //props.navigation.navigate('TripDetail');
-    }
-    const handleShare = () => {
-        console.log("share trip");
-        //props.navigation.navigate('TripDetail');
-    }
-    const handleDelete = () => {
-        console.log("delete trip");
+        console.log("edit Schdule");
         //props.navigation.navigate('TripDetail');
     }
 
-    const handleScheduleTileChange = () => {
-        props.navigation.navigate('Schedule');
+    const handleNavigation = () => {
+        console.log("navigate");
+        //props.navigation.navigate('TripDetail');
+    }
+
+    const handleReminder = () => {
+        console.log("set reminder");
+        //props.navigation.navigate('TripDetail');
+    }
+
+    const handleDelete = () => {
+        console.log("delete Schdule");
+        //props.navigation.navigate('TripDetail');
     }
 
     return (
         <PaperProvider>
             <CustomHeader title={"Japan Gogo"}>
-                <IconButton onPress={function (): void {
-                    throw new Error("Function not implemented.");
-                }} icon={"pin-drop"} />
-                <View style={{ width: 10 }}></View>
-                <GradientPopupMenu>
-                    <CustomMenuItem title={"Edit"} onPress={handleEdit} icon={"edit"} />
-                    <CustomMenuItem title={"Add Schedule"} onPress={handleAddSchedule} icon={"edit-calendar"} />
-                    <CustomMenuItem title={"Share"} onPress={handleShare} icon={"share"} />
-                    <CustomMenuItem title={"Delete"} onPress={handleDelete} icon={"delete-outline"} />
-                </GradientPopupMenu>
+                <IconButton onPress={handleEdit} icon={"edit"} />
             </CustomHeader>
             <ScrollView>
                 <View style={[styles.container, g_STYLE.col]}>
                     <View>
                         <View style={g_STYLE.row}>
                             <View style={[g_STYLE.col, styles.leftContainer]}>
-                                <CustomText size={25}>Osaka</CustomText>
-                                <CustomText>20/12/2023 - 25/12/2023</CustomText>
+                                <CustomText size={25}>Dotombori District</CustomText>
+                                <CustomText>Sushiro</CustomText>
+                                <CustomText>20/12/2023 10:00 - 12:00 (2hrs)</CustomText>
                             </View>
                             <View style={styles.rightContainer}>
                                 <CircularImage size={screenWidth * 0.15} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'} />
                                 {/*<Image source={{ uri: 'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png' }} style={styles.image} />*/}
+                                <RoundButton icon={getActivityIcon(ActivityTypes.FOOD)} title="Food"></RoundButton>
                             </View>
                         </View>
                         <View style={styles.description}>
-                            <CustomText>Trip of Samoyed Meme and Master Vivi</CustomText>
+                            <CustomText>
+                                Remember to eat salmon!!!!!{'\n'}
+                                Remember to eat ice cream!!!!!{'\n'}
+                                Remember to eat tamagoyaki!!!!!{'\n'}
+                                Remember to eat wagyu!!!!!{'\n'}
+                                Remember to eat cake!!!!!
+                            </CustomText>
+                        </View>
+                        <View style={[styles.buttonContainer, g_STYLE.row]}>
+                            <GradientButton title={"Navigate Now"} onPress={handleNavigation} width={0.43} size={20}></GradientButton>
+                            <GradientButton title={"Set Reminder"} onPress={handleReminder} width={0.43} size={20}></GradientButton>
                         </View>
                         <FlatList
                             showsHorizontalScrollIndicator={false}
@@ -80,7 +84,7 @@ const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
                             }
                             data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
                             renderItem={({ item }) => (
-                                <RoundRectImage type={MediaTypes.VIDEO} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'}></RoundRectImage>
+                                <RoundRectImage type={MediaTypes.AUDIO} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'}></RoundRectImage>
                             )}
                         ></FlatList>
                     </View>
@@ -91,9 +95,11 @@ const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
                         <View style={styles.lowerContainer}>
                             <CustomText size={25} textAlign={'center'}>Your Trip is empty{'\n'}Let's add schedule !!</CustomText>
                             <View style={styles.space}></View>
-                            <GradientButton size={20} title={"Add Schedule"} radius={35} onPress={handleAddSchedule} />
+                            <GradientButton size={20} title={"Add Schedule"} radius={35} onPress={function (): void {
+                                throw new Error("Function not implemented.");
+                            }} />
                         </View>}
-
+                    <CustomText size={20}>Partners</CustomText>
                     <FlatList
                         scrollEnabled={false}
                         showsVerticalScrollIndicator={false}
@@ -102,17 +108,15 @@ const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
                         }
                         data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
                         renderItem={({ item, index }) => (
-                            <ScheduleTile
-                                step={index}
-                                title={"Dotombori District"}
-                                subTitle={"Sushiro"}
-                                date={"20/12/2023"}
-                                time={"10:00 - 12:00"}
-                                type={ActivityTypes.FOOD}
-                                transportTime={"15 mins"}
-                                onPress={handleScheduleTileChange} />
+                            <ImageTile title={"Samoyed Meme"} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'}></ImageTile>
                         )}>
                     </FlatList>
+                    <TouchableOpacity onPress={handleDelete}>
+                        <View style={[styles.deleteButton, g_STYLE.row]}>
+                            <MaterialIcons name={"delete-outline"} color={g_THEME.colors.error} size={25} ></MaterialIcons>
+                            <CustomText color={g_THEME.colors.error} size={22}>Delete</CustomText>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </PaperProvider>
@@ -131,11 +135,15 @@ const styles = StyleSheet.create({
     },
     leftContainer: {
         flex: 3,
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
     },
     rightContainer: {
         flex: 1,
         alignItems: 'flex-end',
+    },
+    buttonContainer: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     space: {
         height: 10,
@@ -144,7 +152,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexGrow: 1,
+    },
+    deleteButton: {
+        marginTop: 40,
+        marginBottom: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 });
 
-export default TripDetailScreen;
+export default ScheduleScreen;

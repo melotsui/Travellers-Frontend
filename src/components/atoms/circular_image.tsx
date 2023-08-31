@@ -6,9 +6,10 @@ import React from "react";
 interface CircularImageProps {
     size: number;
     uri: string;
+    borderWidth?: number;
 }
 
-const CircularImage: React.FC<CircularImageProps> = ({ size, uri }) => {
+const CircularImage: React.FC<CircularImageProps> = ({ size, uri, borderWidth }) => {
 
     const styles = StyleSheet.create({
         container: {

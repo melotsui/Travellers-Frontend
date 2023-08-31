@@ -5,6 +5,7 @@ import TripDetailScreen from "../../screens/trip/trip_detail";
 import CustomHeader from "../../components/molecules/header";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import g_THEME from "../../theme/theme";
+import ScheduleScreen from "../../screens/trip/schedule";
 
 type ScreenNavigationProp<
   T extends keyof HomeStackParamList
@@ -40,6 +41,7 @@ export const TripStackNavigation = () => {
     })} initialRouteName="TripSearch">
       <HomeStack.Screen name="TripSearch" component={TripSearchScreen} />
       <HomeStack.Screen name="TripDetail" component={TripDetailScreen} />
+      <HomeStack.Screen name="Schedule" component={ScheduleScreen} />
     </HomeStack.Navigator>
   );
 }
