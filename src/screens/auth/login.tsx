@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: screenHeight * 0.02,
+        padding: screenHeight * 0.02,
     },
     space: {
         height: screenHeight * 0.02,

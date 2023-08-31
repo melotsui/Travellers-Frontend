@@ -20,18 +20,8 @@ export default function TabNavigation() {
       style={styles.linearGradient}
     ><Tab.Navigator
       screenOptions={({ route }) => ({
-        header: ({ navigation }) => {
-          const title = getName(route.name);
-
-          return <CustomHeader title={title}>
-            {title == 'Note' && 
-            <MaterialIcons 
-              name="bookmark-border"
-              color= {g_THEME.colors.secondary}
-              size={30}
-            />}
-          </CustomHeader>;
-        },
+        cardStyle: { backgroundColor: 'white', opacity: 1},
+        headerShown: false,
         tabBarStyle: {
           backgroundColor: 'transparent',
           elevation: 0,
@@ -57,7 +47,7 @@ export default function TabNavigation() {
       })}
       initialRouteName="TripStack"
     >
-        <Tab.Screen name="TripStack" component={TripStackNavigation} ></Tab.Screen>
+        <Tab.Screen name="TripStack" component={TripStackNavigation}></Tab.Screen>
         <Tab.Screen name="NoteStack" component={TripStackNavigation}></Tab.Screen>
         <Tab.Screen name="AddTrip" component={TripStackNavigation}></Tab.Screen>
         <Tab.Screen name="Notification" component={TripStackNavigation}></Tab.Screen>

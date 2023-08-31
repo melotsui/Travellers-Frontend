@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import g_THEME from '../theme/theme';
 
 const g_STYLE = StyleSheet.create({
-    column: {
+    col: {
         flexDirection: 'column',
     },
     row: {

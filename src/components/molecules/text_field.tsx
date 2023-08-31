@@ -5,6 +5,7 @@ import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import CustomText from '../atoms/text';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Container from '../atoms/container';
+import IconButton from '../atoms/icon_button';
 
 interface TextFieldProps {
     hint: string;
@@ -46,9 +47,7 @@ const TextField: React.FC<TextFieldProps> = ({ hint, text, onChange, onPress, su
                         secureTextEntry={secure != null ? isSecure : false}
                     />
                     {suffixIcon != null &&
-                        <TouchableOpacity onPress={handleSuffixIcon}>
-                            <Icon name={suffixIcon} size={24} color={g_THEME.colors.secondary} />
-                        </TouchableOpacity>}
+                        <IconButton onPress={handleSuffixIcon} icon={suffixIcon} size={24} />}
                     {secure != null &&
                         <TouchableOpacity onPress={handleSecureToggle}>
                             <Icon name={isSecure ? 'visibility' : 'visibility-off'} size={24} color={'grey'} />

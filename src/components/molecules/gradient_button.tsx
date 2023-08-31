@@ -9,6 +9,7 @@ interface GradientButtonProps {
   onPress: () => void;
   radius?: number;
   width?: number;
+  size?: number;
 }
 
 const GradientButton: React.FC<GradientButtonProps> = ({
@@ -16,6 +17,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   onPress,
   radius,
   width,
+  size,
 }) => {
 
   const styles = StyleSheet.create({
@@ -28,7 +30,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
     },
     buttonText: {
       color: 'white',
-      fontSize: 25,
+      fontSize: size ? size : 25,
       fontFamily: g_THEME.fonts.regular,
       textAlign: 'center',
       paddingVertical: screenHeight * 0.01,

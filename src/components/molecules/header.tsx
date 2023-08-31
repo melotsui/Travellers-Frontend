@@ -20,7 +20,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
                 resizeMode="contain"
             />
             <CustomText size={30}>{title}</CustomText>
-            <View style={styles.headerButton}>
+            <View style={[styles.headerButton, g_STYLE.row]}>
                 {children}
             </View>
         </View>
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
         height: 60,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'white',
 
     },
     headerButton: {
