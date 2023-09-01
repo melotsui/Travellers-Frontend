@@ -1,8 +1,9 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import g_THEME from '../../theme/theme';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import GradientContainer from '../atoms/gradient_container';
+import CustomText from '../atoms/text';
 
 interface GradientButtonProps {
   title: string;
@@ -10,6 +11,7 @@ interface GradientButtonProps {
   radius?: number;
   width?: number;
   size?: number;
+  color?: string;
 }
 
 const GradientButton: React.FC<GradientButtonProps> = ({
@@ -18,6 +20,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   radius,
   width,
   size,
+  color,
 }) => {
 
   const styles = StyleSheet.create({
@@ -26,13 +29,13 @@ const GradientButton: React.FC<GradientButtonProps> = ({
       overflow: 'hidden',
       width: screenWidth * (width ?? 0.3),
       marginVertical: screenHeight * 0.01,
-      marginHorizontal: screenWidth * 0.01
+      marginHorizontal: screenWidth * 0.01,
+      backgroundColor: color ? color : 'transparent',
     },
     buttonText: {
       color: 'white',
-      fontSize: size ? size : 25,
       fontFamily: g_THEME.fonts.regular,
-      textAlign: 'center',
+      alignItems: 'center',
       paddingVertical: screenHeight * 0.01,
       paddingHorizontal: screenWidth * 0.01,
     },
@@ -40,9 +43,16 @@ const GradientButton: React.FC<GradientButtonProps> = ({
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.button}>
-      <GradientContainer>
-        <Text style={styles.buttonText}>{title}</Text>
-      </GradientContainer>
+      {color == null ?
+        <GradientContainer>
+          <View style={styles.buttonText}>
+            <CustomText size={size ? size : 25} color='white'>{title}</CustomText>
+          </View>
+        </GradientContainer> :
+        <View style={styles.buttonText}>
+          <CustomText size={size ? size : 25} color='white'>{title}</CustomText>
+        </View>
+      }
     </TouchableOpacity>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import { screenWidth } from "../../constants/screen_dimension";
 import { HomeProps } from "../../navigation/stack_navigations/trip_stack_navigation";
 import g_STYLE from "../../styles/styles";
@@ -15,7 +15,7 @@ import { ActivityTypes, MediaTypes } from "../../constants/types";
 import CustomHeader from "../../components/molecules/header";
 import IconButton from "../../components/atoms/icon_button";
 import { PaperProvider } from "react-native-paper";
-import GradientPopupMenu from "../../components/molecules/gradient_popup";
+import GradientPopupMenu from "../../components/molecules/gradient_menu";
 import CustomMenuItem from "../../components/atoms/custom_menu_item";
 
 const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {

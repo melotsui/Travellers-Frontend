@@ -1,12 +1,8 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, View, Button, Alert } from 'react-native';
-import g_THEME from '../../theme/theme';
-import { screenHeight, screenWidth } from '../../constants/screen_dimension';
+import { StyleSheet, View } from 'react-native';
 import GradientContainer from '../atoms/gradient_container';
-import { PaperProvider, Divider, Menu, Provider, DefaultTheme } from 'react-native-paper';
-import GradientButton from './gradient_button';
+import { Menu } from 'react-native-paper';
 import IconButton from '../atoms/icon_button';
-import CustomMenuItem from '../atoms/custom_menu_item';
 
 interface GradientPopupMenuProps {
     children: React.ReactNode;

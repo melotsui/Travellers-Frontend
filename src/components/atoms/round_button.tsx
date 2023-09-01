@@ -1,13 +1,10 @@
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { screenWidth } from "../../constants/screen_dimension";
 import g_THEME from "../../theme/theme";
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import CustomText from "./text";
 import g_STYLE from "../../styles/styles";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import getActivityIcon from "../../helpers/activity_icon";
-import { ActivityTypes } from "../../constants/types";
 
 interface RoundButtonProps {
     icon: string;
