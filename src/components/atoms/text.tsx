@@ -7,9 +7,10 @@ interface TextFieldProps {
     size?: number;
     color?: string,
     textAlign?: 'center' | 'left' | 'right' | 'auto' | 'justify' | undefined;
+    numberOfLines?: number;
   }
   
-const CustomText: React.FC<TextFieldProps> = ({children, size, color, textAlign}) => {
+const CustomText: React.FC<TextFieldProps> = ({children, size, color, textAlign, numberOfLines}) => {
 
     const styles =  StyleSheet.create({
         text: {
@@ -21,7 +22,7 @@ const CustomText: React.FC<TextFieldProps> = ({children, size, color, textAlign}
     });
 
     return (
-    <Text style={styles.text}>
+    <Text style={styles.text} numberOfLines={numberOfLines}>
         {children}
     </Text>
     );

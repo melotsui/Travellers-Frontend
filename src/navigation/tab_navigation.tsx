@@ -8,6 +8,7 @@ import g_THEME from '../theme/theme';
 import { screenHeight, screenWidth } from '../constants/screen_dimension';
 import CustomHeader from '../components/molecules/header';
 import { NotesStackNavigation } from './stack_navigations/notes_stack_navigation';
+import NotificationsScreen from '../screens/notifications/notifications';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,6 +24,7 @@ export default function TabNavigation() {
       screenOptions={({ route }) => ({
         cardStyle: { backgroundColor: 'white', opacity: 1},
         headerShown: false,
+        
         tabBarStyle: {
           backgroundColor: 'transparent',
           elevation: 0,
@@ -51,7 +53,7 @@ export default function TabNavigation() {
         <Tab.Screen name="TripStack" component={TripStackNavigation}></Tab.Screen>
         <Tab.Screen name="NotesStack" component={NotesStackNavigation}></Tab.Screen>
         <Tab.Screen name="AddTrip" component={TripStackNavigation}></Tab.Screen>
-        <Tab.Screen name="Notification" component={TripStackNavigation}></Tab.Screen>
+        <Tab.Screen name="Notification" component={NotificationsScreen}></Tab.Screen>
         <Tab.Screen name="AccountStack" component={TripStackNavigation}></Tab.Screen>
       </Tab.Navigator></LinearGradient>
   );
