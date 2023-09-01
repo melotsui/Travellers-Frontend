@@ -9,12 +9,15 @@ import { MediaTypes } from "../../constants/types";
 interface RoundRectImageProps {
     uri?: string;
     type: MediaTypes;
+    onPress?: () => void;
 }
 
-const RoundRectImage: React.FC<RoundRectImageProps> = ({ uri, type }) => {
+const RoundRectImage: React.FC<RoundRectImageProps> = ({ uri, type, onPress }) => {
 
     const handleMedia = () => {
-                console.log("open media");
+        if (onPress != null) {
+            onPress();
+        }
     }
 
     const styles = StyleSheet.create({
@@ -23,6 +26,7 @@ const RoundRectImage: React.FC<RoundRectImageProps> = ({ uri, type }) => {
             height: 100,
             borderRadius: 5,
             backgroundColor: getMediaBackgroundColors(type),
+            overflow: 'hidden'
         },
         image: {
             width: '100%',

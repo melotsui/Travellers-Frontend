@@ -22,6 +22,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import TextField from "../../components/molecules/text_field";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { formatDate, formatTime, parseDate, parseTime } from "../../utils/datetime_formatter";
+import PartnerTile from "../../components/organisms/partner_tile";
 "../../utils/datetime_formatter";
 
 const ScheduleEditScreen: React.FC<HomeProps<'ScheduleEdit'>> = (props) => {
@@ -146,11 +147,11 @@ const ScheduleEditScreen: React.FC<HomeProps<'ScheduleEdit'>> = (props) => {
                         }
                         data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
                         renderItem={({ item, index }) => (
-                            <View style={[styles.partnerContainer, g_STYLE.row]}>
-                                <ImageTile title={"Samoyed Meme"} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'}></ImageTile>
-                                <RoundButton icon={"update"} title={"Pending"} color='orange'></RoundButton>
-                                <IconButton onPress={handleInvitePartner} icon={"close"} color={g_THEME.colors.grey} size={20}></IconButton>
-                            </View>
+                            <PartnerTile 
+                            name={"Samoyed Meme"} 
+                            uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} 
+                            onPress={handleInvitePartner} 
+                            isPending={true}></PartnerTile>
                         )}>
                     </FlatList>
                     <View style={styles.saveButton}>

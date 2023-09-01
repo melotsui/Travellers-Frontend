@@ -12,6 +12,7 @@ interface GradientButtonProps {
   width?: number;
   size?: number;
   color?: string;
+  textColor?: string;
 }
 
 const GradientButton: React.FC<GradientButtonProps> = ({
@@ -21,6 +22,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   width,
   size,
   color,
+  textColor,
 }) => {
 
   const styles = StyleSheet.create({
@@ -33,7 +35,6 @@ const GradientButton: React.FC<GradientButtonProps> = ({
       backgroundColor: color ? color : 'transparent',
     },
     buttonText: {
-      color: 'white',
       fontFamily: g_THEME.fonts.regular,
       alignItems: 'center',
       paddingVertical: screenHeight * 0.01,
@@ -46,11 +47,11 @@ const GradientButton: React.FC<GradientButtonProps> = ({
       {color == null ?
         <GradientContainer>
           <View style={styles.buttonText}>
-            <CustomText size={size ? size : 25} color='white'>{title}</CustomText>
+            <CustomText size={size ? size : 25} color={textColor ? textColor :　'white'}>{title}</CustomText>
           </View>
         </GradientContainer> :
         <View style={styles.buttonText}>
-          <CustomText size={size ? size : 25} color='white'>{title}</CustomText>
+          <CustomText size={size ? size : 25} color={textColor ? textColor : 'white'}>{title}</CustomText>
         </View>
       }
     </TouchableOpacity>

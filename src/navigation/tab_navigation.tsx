@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import g_THEME from '../theme/theme';
 import { screenHeight, screenWidth } from '../constants/screen_dimension';
 import CustomHeader from '../components/molecules/header';
+import { NotesStackNavigation } from './stack_navigations/notes_stack_navigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -48,7 +49,7 @@ export default function TabNavigation() {
       initialRouteName="TripStack"
     >
         <Tab.Screen name="TripStack" component={TripStackNavigation}></Tab.Screen>
-        <Tab.Screen name="NoteStack" component={TripStackNavigation}></Tab.Screen>
+        <Tab.Screen name="NotesStack" component={NotesStackNavigation}></Tab.Screen>
         <Tab.Screen name="AddTrip" component={TripStackNavigation}></Tab.Screen>
         <Tab.Screen name="Notification" component={TripStackNavigation}></Tab.Screen>
         <Tab.Screen name="AccountStack" component={TripStackNavigation}></Tab.Screen>
@@ -74,7 +75,7 @@ function getIcon(name: string): string {
   switch (name) {
     case 'TripStack':
       return 'card-travel';
-    case 'NoteStack':
+    case 'NotesStack':
       return 'description';
     case 'AddTrip':
       return 'add-circle';
@@ -91,7 +92,7 @@ function getName(name: string): string {
   switch (name) {
     case 'TripStack':
       return 'Trip';
-    case 'NoteStack':
+    case 'NotesStack':
       return 'Note';
     case 'AddTrip':
       return 'Add';

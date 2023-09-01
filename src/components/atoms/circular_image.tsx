@@ -17,6 +17,7 @@ const CircularImage: React.FC<CircularImageProps> = ({ size, uri }) => {
             borderWidth: 2,
             borderColor: g_THEME.colors.grey,
             borderRadius: size / 2,
+            overflow: 'hidden'
         },
         image: {
             width: '100%',

@@ -64,8 +64,8 @@ const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
                                 <CustomText>20/12/2023 - 25/12/2023</CustomText>
                             </View>
                             <View style={styles.rightContainer}>
-                                <CircularImage size={screenWidth * 0.15} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'} />
-                                {/*<Image source={{ uri: 'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png' }} style={styles.image} />*/}
+                                <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
+                                {/*<Image source={{ uri: 'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80' }} style={styles.image} />*/}
                             </View>
                         </View>
                         <View style={styles.description}>
@@ -82,7 +82,7 @@ const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
                                 if (index == 0) {
                                     return <RoundRectImage type={MediaTypes.OTHER}></RoundRectImage>
                                 } else {
-                                    return <RoundRectImage type={MediaTypes.AUDIO}></RoundRectImage>
+                                    return <RoundRectImage type={MediaTypes.IMAGE} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></RoundRectImage>
                                 }
                             }}
                         ></FlatList>

@@ -64,8 +64,8 @@ const ScheduleScreen: React.FC<HomeProps<'Schedule'>> = (props) => {
                                     <CustomText>20/12/2023 10:00 - 12:00 (2hrs)</CustomText>
                                 </View>
                                 <View style={styles.rightContainer}>
-                                    <CircularImage size={screenWidth * 0.15} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'} />
-                                    {/*<Image source={{ uri: 'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png' }} style={styles.image} />*/}
+                                    <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
+                                    {/*<Image source={{ uri: 'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80' }} style={styles.image} />*/}
                                     <RoundButton icon={getActivityIcon(ActivityTypes.FOOD)} title="Food"></RoundButton>
                                 </View>
                             </View>
@@ -93,11 +93,9 @@ const ScheduleScreen: React.FC<HomeProps<'Schedule'>> = (props) => {
                                     if (index == 0) {
                                         return <RoundRectImage type={MediaTypes.OTHER}></RoundRectImage>
                                     } else {
-                                        return <RoundRectImage type={MediaTypes.VIDEO} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'}></RoundRectImage>
+                                        return <RoundRectImage type={MediaTypes.VIDEO} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></RoundRectImage>
                                     }
-                                }
-
-                                }
+                                }}
                             ></FlatList>
                         </View>
                         <View style={styles.space}></View>
@@ -120,7 +118,7 @@ const ScheduleScreen: React.FC<HomeProps<'Schedule'>> = (props) => {
                             }
                             data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
                             renderItem={({ item, index }) => (
-                                <ImageTile title={"Samoyed Meme"} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'}></ImageTile>
+                                <ImageTile title={"Samoyed Meme"} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></ImageTile>
                             )}>
                         </FlatList>
                         <View style={styles.deleteButton}>

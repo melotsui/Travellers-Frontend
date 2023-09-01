@@ -12,6 +12,7 @@ interface Theme {
   };
   gradient: {
     colors: string[];
+    lightColors: string[];
     locations: number[];
   }
   fonts: {
@@ -31,6 +32,7 @@ const g_THEME: Theme = {
   },
   gradient: {
     colors: ["#8A8FFF", "#98D8FD", "white"],
+    lightColors: ['rgba(138, 143, 255, 0.22)', 'rgba(152, 216, 253, 0.35)', 'rgba(255, 255, 255, 0.46)'],
     locations: [0, 0.95, 1],
   },
   fonts: {
