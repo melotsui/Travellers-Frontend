@@ -148,6 +148,7 @@ const ScheduleEditScreen: React.FC<HomeProps<'ScheduleEdit'>> = (props) => {
                         renderItem={({ item, index }) => (
                             <View style={[styles.partnerContainer, g_STYLE.row]}>
                                 <ImageTile title={"Samoyed Meme"} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'}></ImageTile>
+                                <RoundButton icon={"update"} title={"Pending"} color='orange'></RoundButton>
                                 <IconButton onPress={handleInvitePartner} icon={"close"} color={g_THEME.colors.grey} size={20}></IconButton>
                             </View>
                         )}>

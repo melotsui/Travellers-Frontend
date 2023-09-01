@@ -9,14 +9,15 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 interface RoundButtonProps {
     icon: string;
     title: string;
+    color?: string;
 }
 
-const RoundButton: React.FC<RoundButtonProps> = ({ icon, title }) => {
+const RoundButton: React.FC<RoundButtonProps> = ({ icon, title, color }) => {
 
     const styles = StyleSheet.create({
         container: {
             width: screenWidth * 0.2,
-            backgroundColor: g_THEME.colors.secondary,
+            backgroundColor: color ? color : g_THEME.colors.secondary,
             marginVertical: 5,
             paddingHorizontal: 5,
             paddingVertical: 3,

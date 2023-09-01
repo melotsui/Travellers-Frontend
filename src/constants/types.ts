@@ -11,5 +11,6 @@ export enum ActivityTypes {
 export enum MediaTypes {
     IMAGE = 'image',
     VIDEO = 'video',
-    AUDIO = 'audio'
+    AUDIO = 'audio',
+    OTHER = 'other'
 }

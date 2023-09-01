@@ -89,9 +89,15 @@ const ScheduleScreen: React.FC<HomeProps<'Schedule'>> = (props) => {
                                     <View style={{ width: screenWidth * 0.02 }}></View>
                                 }
                                 data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
-                                renderItem={({ item }) => (
-                                    <RoundRectImage type={MediaTypes.AUDIO} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'}></RoundRectImage>
-                                )}
+                                renderItem={({ item, index }) => {
+                                    if (index == 0) {
+                                        return <RoundRectImage type={MediaTypes.OTHER}></RoundRectImage>
+                                    } else {
+                                        return <RoundRectImage type={MediaTypes.VIDEO} uri={'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png'}></RoundRectImage>
+                                    }
+                                }
+
+                                }
                             ></FlatList>
                         </View>
                         <View style={styles.space}></View>

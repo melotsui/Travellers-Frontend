@@ -1,25 +1,28 @@
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { screenWidth } from "../../constants/screen_dimension";
 import g_THEME from "../../theme/theme";
 import React from "react";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { getMediaIconColors, getMediaIcons } from "../../helpers/media_icon";
+import { getMediaBackgroundColors, getMediaIconColors, getMediaIcons } from "../../helpers/media_icon";
 import { MediaTypes } from "../../constants/types";
 
 interface RoundRectImageProps {
-    uri: string;
+    uri?: string;
     type: MediaTypes;
 }
 
 const RoundRectImage: React.FC<RoundRectImageProps> = ({ uri, type }) => {
 
+    const handleMedia = () => {
+                console.log("open media");
+    }
+
     const styles = StyleSheet.create({
         container: {
             width: screenWidth * 0.21,
             height: 100,
-            borderWidth: 1,
-            borderColor: g_THEME.colors.grey,
             borderRadius: 5,
+            backgroundColor: getMediaBackgroundColors(type),
         },
         image: {
             width: '100%',
@@ -40,12 +43,14 @@ const RoundRectImage: React.FC<RoundRectImageProps> = ({ uri, type }) => {
     });
 
     return (
-        <View style={styles.container}>
-            <Image source={{ uri: uri }} style={styles.image} />
-            {type != MediaTypes.IMAGE && <View style={styles.iconContainer}>
-                <MaterialIcons name={getMediaIcons(type)} size={30} color={getMediaIconColors(type)} />
-            </View>}
-        </View>
+        <TouchableOpacity onPress={handleMedia}>
+            <View style={styles.container}>
+                {uri != null ? <Image source={{ uri: uri }} style={styles.image} /> : null}
+                {type != MediaTypes.IMAGE && <View style={styles.iconContainer}>
+                    <MaterialIcons name={getMediaIcons(type)} size={30} color={getMediaIconColors(type)} />
+                </View>}
+            </View>
+        </TouchableOpacity>
     );
 }
 
