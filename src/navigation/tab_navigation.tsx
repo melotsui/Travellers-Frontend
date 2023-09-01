@@ -9,6 +9,7 @@ import { screenHeight, screenWidth } from '../constants/screen_dimension';
 import CustomHeader from '../components/molecules/header';
 import { NotesStackNavigation } from './stack_navigations/notes_stack_navigation';
 import NotificationsScreen from '../screens/notifications/notifications';
+import { AccountStackavigation } from './stack_navigations/account_stack_navigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -54,7 +55,7 @@ export default function TabNavigation() {
         <Tab.Screen name="NotesStack" component={NotesStackNavigation}></Tab.Screen>
         <Tab.Screen name="AddTrip" component={TripStackNavigation}></Tab.Screen>
         <Tab.Screen name="Notification" component={NotificationsScreen}></Tab.Screen>
-        <Tab.Screen name="AccountStack" component={TripStackNavigation}></Tab.Screen>
+        <Tab.Screen name="AccountStack" component={AccountStackavigation}></Tab.Screen>
       </Tab.Navigator></LinearGradient>
   );
 }
