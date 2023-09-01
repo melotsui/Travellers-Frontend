@@ -9,20 +9,23 @@ import IconButton from '../atoms/icon_button';
 
 interface TextFieldProps {
     text: string;
-    onChange: (value: string) => void;
+    onChange?: (value: string) => void;
     hint?: string;
     onPress?: () => void;
+    onPressText?: () => void;
     suffixIcon?: string;
     error?: string;
     secure?: boolean;
     numberOfLines?: number;
 }
 
-const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, suffixIcon, error, secure, numberOfLines }) => {
+const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, onPressText, suffixIcon, error, secure, numberOfLines }) => {
     const [isSecure, setIsSecure] = useState(true);
 
     const handleInputChange = (text: string) => {
-        onChange(text);
+        if (onChange != null) {
+            onChange(text);
+        }
     };
 
     const handleSecureToggle = () => {
@@ -32,6 +35,12 @@ const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, su
     const handleSuffixIcon = () => {
         if (onPress != null) {
             onPress();
+        }
+    }
+
+    const handleText = () => {
+        if (onPressText != null) {
+            onPressText();
         }
     }
 
@@ -62,28 +71,31 @@ const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, su
     return (
         <View>
             <Container>
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={[styles.input]}
-                        value={text}
-                        onChangeText={handleInputChange}
-                        placeholder={hint}
-                        placeholderTextColor={'rgba(0, 0, 0, 0.21)'}
-                        secureTextEntry={secure != null ? isSecure : false} 
-                        multiline={numberOfLines != null}
-                        numberOfLines={numberOfLines ?? 1} 
-                    />
-                    {suffixIcon != null &&
-                        <View style={styles.suffix}>
-                            <IconButton onPress={handleSuffixIcon} icon={suffixIcon} size={24} />
-                        </View>}
-                    {secure != null &&
-                        <View style={styles.suffix}>
-                            <TouchableOpacity onPress={handleSecureToggle}>
-                                <Icon name={isSecure ? 'visibility' : 'visibility-off'} size={24} color={'grey'} />
-                            </TouchableOpacity>
-                        </View>}
-                </View>
+                <TouchableOpacity onPress={handleText}>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={[styles.input]}
+                            value={text}
+                            onChangeText={handleInputChange}
+                            placeholder={hint}
+                            placeholderTextColor={'rgba(0, 0, 0, 0.21)'}
+                            secureTextEntry={secure != null ? isSecure : false}
+                            multiline={numberOfLines != null}
+                            numberOfLines={numberOfLines ?? 1}
+                            editable={onPressText == null}
+                        />
+                        {suffixIcon != null &&
+                            <View style={styles.suffix}>
+                                <IconButton onPress={handleSuffixIcon} icon={suffixIcon} size={24} />
+                            </View>}
+                        {secure != null &&
+                            <View style={styles.suffix}>
+                                <TouchableOpacity onPress={handleSecureToggle}>
+                                    <Icon name={isSecure ? 'visibility' : 'visibility-off'} size={24} color={'grey'} />
+                                </TouchableOpacity>
+                            </View>}
+                    </View>
+                </TouchableOpacity>
             </Container>
             {error != null && error.length != 0 &&
                 <View style={{ paddingLeft: 15 }}>

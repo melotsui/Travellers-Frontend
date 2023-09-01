@@ -21,54 +21,64 @@ import getActivityIcon from "../../helpers/activity_icon";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import TextField from "../../components/molecules/text_field";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { formatDate, parseDate } from "../../utils/datetime_formatter";
+import { formatDate, formatTime, parseDate, parseTime } from "../../utils/datetime_formatter";
+"../../utils/datetime_formatter";
 
-const TripEditScreen: React.FC<HomeProps<'TripEdit'>> = (props) => {
+const ScheduleEditScreen: React.FC<HomeProps<'ScheduleEdit'>> = (props) => {
     const [name, setName] = useState('Japan Gogo');
-    const [startDate, setStartDate] = useState(parseDate('12/20/2023'));
-    const [endDate, setEndDate] = useState(parseDate('12/25/2023'));
-    const [description, setDescription] = useState('');
+    const [date, setDate] = useState(parseDate('12/20/2023'));
+    const [startTime, setStartTime] = useState(parseTime('10:00'));
+    const [endTime, setEndTime] = useState(parseTime('12:00'));
+    const [remarks, setRemarks] = useState('');
     const [partner, setPartner] = useState('');
-    const [showStartDatePicker, setShowStartDatePicker] = useState(false);
-    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showStartTimePicker, setShowStartTimePicker] = useState(false);
+    const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
     const handleName = (value: string) => {
         setName(value);
     }
 
-    const handleStartDate = (event: DateTimePickerEvent, date?: Date) => {
-        setShowStartDatePicker(false);
+    const handleDate = (event: DateTimePickerEvent, date?: Date) => {
+        setShowDatePicker(false);
         if (date != null) {
-            setStartDate(parseDate(date.toLocaleDateString()));
+            setDate(parseDate(date.toLocaleDateString()));
         }
     }
 
-    const handleEndDate = (event: DateTimePickerEvent, date?: Date) => {
-        setShowEndDatePicker(false);
+    const handleStartTime = (event: DateTimePickerEvent, date?: Date) => {
+        setShowStartTimePicker(false);
         if (date != null) {
-            setEndDate(parseDate(date.toLocaleDateString()));
+            setStartTime(parseTime(date.toTimeString()));
         }
-    }
+    };
 
-    const handleDescription = (value: string) => {
-        setDescription(value);
+    const handleEndTime = (event: DateTimePickerEvent, date?: Date) => {
+        setShowEndTimePicker(false);
+        if (date != null) {
+            setEndTime(parseTime(date.toTimeString()));
+        }
+    };
+
+    const handleRemarks = (value: string) => {
+        setRemarks(value);
     }
 
     const handlePartner = (value: string) => {
         setPartner(value);
     }
 
-    const handleSelectDate = () => {
+    const handleDatePicker = () => {
+        setShowDatePicker(true);
     }
 
-    const handleStartDatePicker = () => {
-        setShowStartDatePicker(true);
+    const handleStartTimePicker = () => {
+        setShowStartTimePicker(true);
     }
 
-    const handleEndDatePicker = () => {
-        setShowEndDatePicker(true);
+    const handleEndTimePicker = () => {
+        setShowEndTimePicker(true);
     }
-
 
     const handleInvitePartner = () => {
     }
@@ -80,32 +90,48 @@ const TripEditScreen: React.FC<HomeProps<'TripEdit'>> = (props) => {
                 <View style={[styles.container, g_STYLE.col]}>
                     <CustomText size={25}>Trip Name</CustomText>
                     <TextField text={name} onChange={handleName}></TextField>
+
                     <CustomText size={25}>Date</CustomText>
-                    <View style={[styles.dateContainer, g_STYLE.row]}>
+                    <View style={[styles.datetimeContainer, g_STYLE.row]}>
                         <View style={styles.date}>
-                            <TextField text={formatDate(startDate)} onPressText={handleStartDatePicker}/>
+                            <TextField text={formatDate(date)} onPressText={handleDatePicker} />
                         </View>
-                        {showStartDatePicker && <RNDateTimePicker
+                        {showDatePicker && <RNDateTimePicker
                             mode="date"
-                            value={startDate}
-                            onChange={handleStartDate}
-                            minimumDate={new Date()}
-                        />}
-                        <CustomText size={25}>to</CustomText>
-                        <View style={styles.date}>
-                            <TextField text={formatDate(endDate)} onPressText={handleEndDatePicker}/>
-                        </View>
-                        {showEndDatePicker && <RNDateTimePicker
-                            mode="date"
-                            value={endDate}
-                            onChange={handleEndDate}
+                            value={date}
+                            onChange={handleDate}
                             minimumDate={new Date()}
                         />}
                         {/*<IconButton onPress={handleSelectDate} icon={"event"}></IconButton>*/}
                     </View>
-                    <CustomText size={25}>Description</CustomText>
-                    <TextField text={description} onChange={handleDescription} numberOfLines={4}></TextField>
-                    <CustomText size={25}>Partners</CustomText>
+
+                    <CustomText size={25}>Time</CustomText>
+                    <View style={[styles.datetimeContainer, g_STYLE.row]}>
+                        <View style={styles.time}>
+                            <TextField text={formatTime(startTime)} onPressText={handleStartTimePicker} />
+                        </View>
+                        {showStartTimePicker && <RNDateTimePicker
+                            mode="time"
+                            value={startTime}
+                            onChange={handleStartTime}
+                        />}
+                        <View style={styles.to}>
+                            <CustomText size={25}>to</CustomText>
+                        </View>
+                        <View style={styles.time}>
+                            <TextField text={formatTime(endTime)} onPressText={handleEndTimePicker} />
+                        </View>
+                        {showEndTimePicker && <RNDateTimePicker
+                            mode="time"
+                            value={endTime}
+                            onChange={handleEndTime}
+                        />}
+                        {/*<IconButton onPress={handleSelectTime} icon={"schedule"}></IconButton>*/}
+
+                    </View>
+                    <CustomText size={25}>Remarks</CustomText>
+                    <TextField text={remarks} onChange={handleRemarks} numberOfLines={4}></TextField>
+                    <CustomText size={25}>Accessible Partners</CustomText>
                     <View style={[styles.partnerContainer, g_STYLE.row]}>
                         <View style={styles.partner}>
                             <TextField text={partner} onChange={handlePartner} hint="Send Invitation"></TextField>
@@ -128,7 +154,7 @@ const TripEditScreen: React.FC<HomeProps<'TripEdit'>> = (props) => {
                     </FlatList>
                     <View style={styles.saveButton}>
                         <GradientButton title={"Save"} onPress={() => { }}></GradientButton>
-                        </View>
+                    </View>
                 </View>
             </ScrollView>
         </View>
@@ -141,12 +167,19 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         marginVertical: 10,
     },
-    dateContainer: {
-        justifyContent: 'space-between',
+    datetimeContainer: {
         alignItems: 'center',
     },
     date: {
-        width: '43%',
+        width: '40%',
+        marginRight: 10,
+    },
+    time: {
+        marginRight: 10,
+        width: '26%',
+    },
+    to: {
+        marginRight: 10,
     },
     partnerContainer: {
         justifyContent: 'space-between',
@@ -161,4 +194,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default TripEditScreen;
+export default ScheduleEditScreen;

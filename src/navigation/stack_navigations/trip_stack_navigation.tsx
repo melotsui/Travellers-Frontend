@@ -7,6 +7,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import g_THEME from "../../theme/theme";
 import ScheduleScreen from "../../screens/trip/schedule";
 import TripEditScreen from "../../screens/trip/trip_edit";
+import ScheduleEditScreen from "../../screens/trip/schedule_edit";
 
 type ScreenNavigationProp<
   T extends keyof HomeStackParamList
@@ -44,6 +45,7 @@ export const TripStackNavigation = () => {
       <HomeStack.Screen name="TripDetail" component={TripDetailScreen} />
       <HomeStack.Screen name="TripEdit" component={TripEditScreen} />
       <HomeStack.Screen name="Schedule" component={ScheduleScreen} />
+      <HomeStack.Screen name="ScheduleEdit" component={ScheduleEditScreen} />
     </HomeStack.Navigator>
   );
 }

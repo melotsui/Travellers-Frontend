@@ -25,8 +25,7 @@ const ScheduleScreen: React.FC<HomeProps<'Schedule'>> = (props) => {
     const [schedules, setSchedules] = useState(['a']);
 
     const handleEdit = () => {
-        console.log("edit Schdule");
-        //props.navigation.navigate('TripDetail');
+        props.navigation.navigate('ScheduleEdit');
     }
 
     const handleNavigation = () => {
