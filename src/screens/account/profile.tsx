@@ -15,6 +15,8 @@ import CircularImage from "../../components/atoms/circular_image";
 import { screenWidth } from "../../constants/screen_dimension";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import g_THEME from "../../theme/theme";
+import GradientPopupDialog from "../../components/molecules/gradient_dialog";
+import { PaperProvider } from "react-native-paper";
 "../../utils/datetime_formatter";
 
 const ProfileScreen: React.FC<AccountProps<'Profile'>> = (props) => {
@@ -31,10 +33,6 @@ const ProfileScreen: React.FC<AccountProps<'Profile'>> = (props) => {
 
     const handleEmail = (value: string) => {
         setEmail(value);
-    }
-
-    const handleVerify = () => {
-        console.log('verify');
     }
 
     const handleNationality = (value: string) => {
@@ -58,7 +56,7 @@ const ProfileScreen: React.FC<AccountProps<'Profile'>> = (props) => {
     }
 
     return (
-        <View>
+        <PaperProvider>
             <CustomHeader title={"Japan Gogo"}></CustomHeader>
             <ScrollView>
                 <View style={[styles.container, g_STYLE.col]}>
@@ -81,7 +79,12 @@ const ProfileScreen: React.FC<AccountProps<'Profile'>> = (props) => {
                         <View style={styles.verifyButton}>
                             <TextField text={email} onChange={handleEmail}></TextField>
                         </View>
-                        <GradientButton title={"Verify"} width={0.2} size={20} onPress={handleVerify}></GradientButton>
+                        <GradientPopupDialog isSelect={false} title="Reminder">
+                            {[
+                                <GradientButton title={"Verify"} width={0.2} size={20}></GradientButton>,
+                                <CustomText size={20}>Verification link is sent to your email</CustomText>
+                            ]}
+                        </GradientPopupDialog>
                     </View>
                     <View style={styles.space}></View>
 
@@ -107,7 +110,7 @@ const ProfileScreen: React.FC<AccountProps<'Profile'>> = (props) => {
                     </View>
                 </View >
             </ScrollView >
-        </View >
+        </PaperProvider >
     );
 
 }

@@ -17,15 +17,23 @@ import IconButton from "../../components/atoms/icon_button";
 import { PaperProvider } from "react-native-paper";
 import GradientPopupMenu from "../../components/molecules/gradient_menu";
 import CustomMenuItem from "../../components/atoms/custom_menu_item";
+import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 
 const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
     const [schedules, setSchedules] = useState(['a']);
 
+    const handleNote = () => {
+        props.navigation.navigate('Notes');
+    }
     const handleEdit = () => {
         props.navigation.navigate('TripEdit');
     }
     const handleAddSchedule = () => {
         console.log("add schdule");
+        //props.navigation.navigate('TripDetail');
+    }
+    const handleMap = () => {
+        console.log("map trip");
         //props.navigation.navigate('TripDetail');
     }
     const handleShare = () => {
@@ -36,7 +44,10 @@ const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
         console.log("delete trip");
         //props.navigation.navigate('TripDetail');
     }
-
+    const handleAddMedia = () => {
+        console.log("add media");
+        props.navigation.navigate('NotesMedia');
+    }
     const handleScheduleTileChange = () => {
         props.navigation.navigate('Schedule');
     }
@@ -44,15 +55,20 @@ const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
     return (
         <PaperProvider>
             <CustomHeader title={"Japan Gogo"}>
-                <IconButton onPress={function (): void {
-                    throw new Error("Function not implemented.");
-                }} icon={"pin-drop"} />
+                <IconButton onPress={handleNote} icon={"bookmark-outline"} />
                 <View style={{ width: 10 }}></View>
                 <GradientPopupMenu>
                     <CustomMenuItem title={"Edit"} onPress={handleEdit} icon={"edit"} />
                     <CustomMenuItem title={"Add Schedule"} onPress={handleAddSchedule} icon={"edit-calendar"} />
+                    <CustomMenuItem title={"Map"} onPress={handleMap} icon={"pin-drop"} />
                     <CustomMenuItem title={"Share"} onPress={handleShare} icon={"share"} />
-                    <CustomMenuItem title={"Delete"} onPress={handleDelete} icon={"delete-outline"} />
+
+                    <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDelete}>
+                        {[
+                            <CustomMenuItem title={"Delete"} onPress={handleDelete} icon={"delete-outline"} />,
+                            <CustomText size={20}>Are you sure to delete this schedule? Everyone will not be able to access the trip again</CustomText>
+                        ]}
+                    </GradientPopupDialog>
                 </GradientPopupMenu>
             </CustomHeader>
             <ScrollView>
@@ -80,7 +96,7 @@ const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
                             data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
                             renderItem={({ item, index }) => {
                                 if (index == 0) {
-                                    return <RoundRectImage type={MediaTypes.OTHER}></RoundRectImage>
+                                    return <RoundRectImage type={MediaTypes.OTHER} onPress={handleAddMedia}></RoundRectImage>
                                 } else {
                                     return <RoundRectImage type={MediaTypes.IMAGE} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></RoundRectImage>
                                 }

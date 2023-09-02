@@ -7,7 +7,7 @@ import CustomText from '../atoms/text';
 
 interface GradientButtonProps {
   title: string;
-  onPress: () => void;
+  onPress?: () => void;
   radius?: number;
   width?: number;
   size?: number;
@@ -43,7 +43,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   });
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
+    <TouchableOpacity onPress={onPress} style={styles.button} disabled={onPress == null}>
       {color == null ?
         <GradientContainer>
           <View style={styles.buttonText}>

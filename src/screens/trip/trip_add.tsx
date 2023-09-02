@@ -1,20 +1,16 @@
 import React, { useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { HomeProps } from "../../navigation/stack_navigations/trip_stack_navigation";
+import { View, StyleSheet, FlatList, ScrollView } from "react-native";
 import g_STYLE from "../../styles/styles";
 import CustomText from "../../components/atoms/text";
 import GradientButton from "../../components/molecules/gradient_button";
-import g_THEME from "../../theme/theme";
 import CustomHeader from "../../components/molecules/header";
 import IconButton from "../../components/atoms/icon_button";
-import ImageTile from "../../components/molecules/image_tile";
 import TextField from "../../components/molecules/text_field";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { formatDate, parseDate } from "../../utils/datetime_formatter";
 import PartnerTile from "../../components/organisms/partner_tile";
 
-const TripEditScreen: React.FC<HomeProps<'TripEdit'>> | React.FC = (props: any) => {
+const TripAddScreen: React.FC = () => {
     const [name, setName] = useState('Japan Gogo');
     const [startDate, setStartDate] = useState(parseDate('12/20/2023'));
     const [endDate, setEndDate] = useState(parseDate('12/25/2023'));
@@ -133,8 +129,9 @@ const TripEditScreen: React.FC<HomeProps<'TripEdit'>> | React.FC = (props: any) 
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 20,
-        marginVertical: 10,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        backgroundColor: 'white',
     },
     dateContainer: {
         justifyContent: 'space-between',
@@ -156,4 +153,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default TripEditScreen;
+export default TripAddScreen;

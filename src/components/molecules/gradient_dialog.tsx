@@ -14,7 +14,7 @@ interface GradientPopupDialogProps {
     children: React.ReactNode[];
     isSelect: boolean;
     title: string;
-    onPress: () => void;
+    onPress?: () => void;
 }
 
 const GradientPopupDialog: React.FC<GradientPopupDialogProps> = ({ children, isSelect, title, onPress }) => {
@@ -26,7 +26,9 @@ const GradientPopupDialog: React.FC<GradientPopupDialogProps> = ({ children, isS
     const hideDialog = () => setVisible(false);
 
     const handleConfirm = () => {
-        onPress();
+        if (onPress != null) {
+            onPress();
+        }
         hideDialog();
     }
 

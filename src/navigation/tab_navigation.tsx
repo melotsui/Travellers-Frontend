@@ -10,6 +10,9 @@ import CustomHeader from '../components/molecules/header';
 import { NotesStackNavigation } from './stack_navigations/notes_stack_navigation';
 import NotificationsScreen from '../screens/notifications/notifications';
 import { AccountStackavigation } from './stack_navigations/account_stack_navigation';
+import TripAddScreen from '../screens/trip/trip_add';
+import CustomText from '../components/atoms/text';
+import g_STYLE from '../styles/styles';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,9 +26,9 @@ export default function TabNavigation() {
       style={styles.linearGradient}
     ><Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarHideOnKeyboard: true,
         cardStyle: { backgroundColor: 'white', opacity: 1},
         headerShown: false,
-        
         tabBarStyle: {
           backgroundColor: 'transparent',
           elevation: 0,
@@ -36,24 +39,40 @@ export default function TabNavigation() {
         },
         tabBarActiveTintColor: '#FFFFFF',
         tabBarInactiveTintColor: '#BDBDBD',
-        tabBarShowIcon: true,
-        tabBarLabel: getName(route.name),
+        tabBarLabel: ({ focused }) => {
+          let color = focused ? 'white' : '#BDBDBD';
+          let name = getName(route.name);
+
+          return route.name != 'AddTrip' ? <CustomText color={color} size={14}>{name}</CustomText> : null;
+      },
+       // tabBarLabel: getName(route.name),
         tabBarIcon: ({ color }) => {
           let iconName = getIcon(route.name);
+          if(route.name == "AddTrip")
+          return (
+        <View style={styles.iconContainer}>
+            <MaterialIcons
+              name={iconName}
+              color={g_THEME.colors.shadowBlue}
+              size={70}
+              style={styles.icon}
+            />
+            </View>
+          );
+          else 
           return (
             <MaterialIcons
               name={iconName}
               color={color}
               size={30}
-            />
-          );
+            />)
         },
       })}
       initialRouteName="TripStack"
     >
         <Tab.Screen name="TripStack" component={TripStackNavigation}></Tab.Screen>
         <Tab.Screen name="NotesStack" component={NotesStackNavigation}></Tab.Screen>
-        <Tab.Screen name="AddTrip" component={TripStackNavigation}></Tab.Screen>
+        <Tab.Screen name="AddTrip" component={TripAddScreen}></Tab.Screen>
         <Tab.Screen name="Notification" component={NotificationsScreen}></Tab.Screen>
         <Tab.Screen name="AccountStack" component={AccountStackavigation}></Tab.Screen>
       </Tab.Navigator></LinearGradient>
@@ -64,14 +83,16 @@ const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
   },
-  Icon: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  iconContainer: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    top: -30,
+    width: 70,
+    height: 70,
+    borderRadius: 80 / 2,
   },
-  Text: {
-    fontSize: 12,
-    color: "#16247d"
-  },
+  icon: {
+  }
 });
 
 function getIcon(name: string): string {
@@ -97,10 +118,8 @@ function getName(name: string): string {
       return 'Trip';
     case 'NotesStack':
       return 'Note';
-    case 'AddTrip':
-      return 'Add';
     case 'Notification':
-      return 'Notifications';
+      return 'Notification';
     case 'AccountStack':
       return 'Account';
     default:

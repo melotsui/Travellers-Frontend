@@ -13,6 +13,9 @@ import IconButton from "../../components/atoms/icon_button";
 import AccountTile from "../../components/organisms/account_tile";
 import { Screen } from "react-native-screens";
 import SeparateLine from "../../components/atoms/separate_line";
+import GradientPopupDialog from "../../components/molecules/gradient_dialog";
+import { PaperProvider } from "react-native-paper";
+import BulletPoint from "../../components/organisms/bullet_point";
 
 const SettingsScreen: React.FC<AccountProps<'Settings'>> = (props) => {
     let items = ['Theme', 'Language', 'Font Size'];
@@ -22,17 +25,26 @@ const SettingsScreen: React.FC<AccountProps<'Settings'>> = (props) => {
         props.navigation.navigate('Profile');
     }
 
-    const handleTap = (index: number) => {
+    const getPopupContent = (index: number) => {
         switch (index) {
             case 0:
-                props.navigation.navigate('Settings');
-                break;
+                return <View>
+                    <BulletPoint name={"Light"} isSelected={true}></BulletPoint>
+                    <BulletPoint name={"Dark"} isSelected={false}></BulletPoint>
+                    <BulletPoint name={"Default"} isSelected={false}></BulletPoint>
+                </View>
             case 1:
-                props.navigation.navigate('PrivacyPolicy');
-                break;
+                return <View>
+                    <BulletPoint name={"Traditional Chinese"} isSelected={true}></BulletPoint>
+                    <BulletPoint name={"English"} isSelected={false}></BulletPoint>
+                    <BulletPoint name={"Simplified Chinese"} isSelected={false}></BulletPoint>
+                </View>
             case 2:
-                props.navigation.navigate('TermsConditions');
-                break;
+                return <View>
+                    <BulletPoint name={"Large"} isSelected={true}></BulletPoint>
+                    <BulletPoint name={"Medium"} isSelected={false}></BulletPoint>
+                    <BulletPoint name={"Small"} isSelected={false}></BulletPoint>
+                </View>
             default:
                 break;
         }
@@ -40,7 +52,7 @@ const SettingsScreen: React.FC<AccountProps<'Settings'>> = (props) => {
 
 
     return (
-        <View>
+        <PaperProvider>
             <CustomHeader title={"Settings"}></CustomHeader>
             <View style={styles.container}>
                 <View style={styles.account}>
@@ -50,14 +62,17 @@ const SettingsScreen: React.FC<AccountProps<'Settings'>> = (props) => {
                         renderItem={({ item, index }) => (
                             <View>
                                 {index != 0 ? <SeparateLine isTextInclude={false} /> : null}
-                                <TouchableOpacity onPress={() => handleTap(index)}>
-                                    <AccountTile name={item} icon={itemsIcon[index]} />
-                                </TouchableOpacity>
+                                <GradientPopupDialog isSelect={true} title={"Select " + items[index]}>
+                                    {[
+                                        <AccountTile name={item} icon={itemsIcon[index]} />,
+                                        getPopupContent(index)
+                                    ]}
+                                </GradientPopupDialog>
                             </View>
                         )}
                     /></View>
             </View>
-        </View>
+        </PaperProvider>
     );
 
 }

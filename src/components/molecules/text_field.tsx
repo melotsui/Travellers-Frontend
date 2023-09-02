@@ -70,7 +70,8 @@ const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, on
             justifyContent: 'center',
         },
         suffix: {
-            width: '10%'
+            width: '10%',
+            justifyContent: 'center',
         },
         suffixRightBottom: {
             position: 'absolute',

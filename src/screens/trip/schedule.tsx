@@ -38,9 +38,9 @@ const ScheduleScreen: React.FC<HomeProps<'Schedule'>> = (props) => {
         //props.navigation.navigate('TripDetail');
     }
 
-    const handleDelete = () => {
-        console.log("delete Schdule");
-        //props.navigation.navigate('TripDetail');
+    const handleAddMedia = () => {
+        console.log("add media");
+        props.navigation.navigate('NotesMedia');
     }
 
     const handleDeleteConfirm = () => {
@@ -91,7 +91,7 @@ const ScheduleScreen: React.FC<HomeProps<'Schedule'>> = (props) => {
                                 data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
                                 renderItem={({ item, index }) => {
                                     if (index == 0) {
-                                        return <RoundRectImage type={MediaTypes.OTHER}></RoundRectImage>
+                                        return <RoundRectImage type={MediaTypes.OTHER} onPress={handleAddMedia}></RoundRectImage>
                                     } else {
                                         return <RoundRectImage type={MediaTypes.VIDEO} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></RoundRectImage>
                                     }

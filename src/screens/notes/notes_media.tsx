@@ -14,6 +14,8 @@ import CustomText from "../../components/atoms/text";
 import g_STYLE from "../../styles/styles";
 import IconButton from "../../components/atoms/icon_button";
 import GradientButton from "../../components/molecules/gradient_button";
+import GradientPopupDialog from "../../components/molecules/gradient_dialog";
+import { PaperProvider } from "react-native-paper";
 
 const NotesMediaScreen: React.FC<NotesProps<'NotesMedia'>> = (props) => {
     const [partner, setPartner] = useState('');
@@ -32,38 +34,48 @@ const NotesMediaScreen: React.FC<NotesProps<'NotesMedia'>> = (props) => {
 
     const handleDelete = () => {
     }
-     
+
     return (
-        <ScrollView>
-            <CustomHeader title={"Media"}></CustomHeader>
-            <View style={styles.container}>
-                <View style={styles.mediaContainer}>
-                    <View style={styles.media}>
-                        <MaterialIcons name={"add-a-photo"} size={40} color={g_THEME.colors.grey} style={styles.mediaButton}></MaterialIcons>
+        <PaperProvider>
+            <ScrollView>
+                <CustomHeader title={"Media"}></CustomHeader>
+                <View style={styles.container}>
+                    <View style={styles.mediaContainer}>
+                        <View style={styles.media}>
+                            <MaterialIcons name={"add-a-photo"} size={40} color={g_THEME.colors.grey} style={styles.mediaButton}></MaterialIcons>
+                        </View>
+                    </View>
+                    <View style={[styles.partnerContainer, g_STYLE.row]}>
+                        <CustomText size={25}>Accessible Partners</CustomText>
+                        <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
+                    </View>
+                    <FlatList
+                        scrollEnabled={false}
+                        showsVerticalScrollIndicator={false}
+                        data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
+                        renderItem={({ item }) => (
+                            <PartnerTile
+                                name={"Samoyed Meme"}
+                                uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}
+                                onPress={handleInvitePartner}
+                                isPending={false}></PartnerTile>
+                        )}
+                    />
+                    <View style={[styles.saveButton, g_STYLE.row]}>
+
+                        <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
+                        {!isNew ?
+                            <GradientPopupDialog isSelect={true} title={'Reminder'}>
+                                {[
+                                    <GradientButton title={"Delete"} color={g_THEME.colors.error}></GradientButton>,
+                                    <CustomText size={20}>Are you sure to delete? You can no longer undo your note</CustomText>
+                                ]}
+                            </GradientPopupDialog>
+                            : null}
                     </View>
                 </View>
-                <View style={[styles.partnerContainer, g_STYLE.row]}>
-                <CustomText size={25}>Accessible Partners</CustomText>
-                    <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
-                </View>
-                <FlatList
-                    scrollEnabled={false}
-                    showsVerticalScrollIndicator={false}
-                    data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
-                    renderItem={({ item }) => (
-                        <PartnerTile
-                            name={"Samoyed Meme"}
-                            uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}
-                            onPress={handleInvitePartner}
-                            isPending={false}></PartnerTile>
-                    )}
-                />
-                <View style={[styles.saveButton, g_STYLE.row]}>
-                    <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
-                    {isNew ? <GradientButton title={"Delete"} onPress={handleDelete} color={g_THEME.colors.error}></GradientButton> : null}
-                </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </PaperProvider>
     );
 
 }
@@ -101,6 +113,7 @@ const styles = StyleSheet.create({
     },
     saveButton: {
         alignItems: 'center',
+        justifyContent: 'space-evenly',
         marginVertical: 60,
     }
 });

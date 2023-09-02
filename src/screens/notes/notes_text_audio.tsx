@@ -13,11 +13,12 @@ import g_STYLE from "../../styles/styles";
 import IconButton from "../../components/atoms/icon_button";
 import GradientButton from "../../components/molecules/gradient_button";
 import { set } from "immer/dist/internal";
+import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 
 const NotesTextAudioScreen: React.FC<NotesProps<'NotesTextAudio'>> = (props) => {
     const [note, setNote] = useState('');
     const [partner, setPartner] = useState('');
-    const [isNew, setIsNew] = useState(false); 
+    const [isNew, setIsNew] = useState(false);
     const [audio, setAudio] = useState('');
 
     const handleNote = (value: string) => {
@@ -97,7 +98,14 @@ const NotesTextAudioScreen: React.FC<NotesProps<'NotesTextAudio'>> = (props) => 
                 />
                 <View style={[styles.saveButton, g_STYLE.row]}>
                     <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
-                    {isNew ? <GradientButton title={"Delete"} onPress={handleDelete} color={g_THEME.colors.error}></GradientButton> : null}
+                    {!isNew ?
+                        <GradientPopupDialog isSelect={true} title={'Reminder'} onPress={handleDelete}>
+                            {[
+                                <GradientButton title={"Delete"} color={g_THEME.colors.error}></GradientButton>,
+                                <CustomText size={20}>Are you sure to delete? You can no longer undo your note</CustomText>
+                            ]}
+                        </GradientPopupDialog>
+                        : null}
                 </View>
             </View>
         </ScrollView>
