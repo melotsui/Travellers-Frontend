@@ -14,9 +14,9 @@ import AccountTile from "../../components/organisms/account_tile";
 import { Screen } from "react-native-screens";
 import SeparateLine from "../../components/atoms/separate_line";
 
-const AccountScreen: React.FC<AccountProps<'Account'>> = (props) => {
-    let items = ['Settings', 'Privacy Policy', 'Terms & Conditions', 'Contact Us', 'Share', 'Logout'];
-    let itemsIcon = ['settings', 'assignment', 'handshake', 'call', 'share', 'logout'];
+const SettingsScreen: React.FC<AccountProps<'Settings'>> = (props) => {
+    let items = ['Theme', 'Language', 'Font Size'];
+    let itemsIcon = ['palette', 'language', 'format-size'];
 
     const handleEdit = () => {
         props.navigation.navigate('Profile');
@@ -33,15 +33,6 @@ const AccountScreen: React.FC<AccountProps<'Account'>> = (props) => {
             case 2:
                 props.navigation.navigate('TermsConditions');
                 break;
-            case 3:
-                props.navigation.navigate('ContactUs');
-                break;
-            case 4:
-                props.navigation.navigate('Share');
-                break;
-            case 5:
-                console.log('logout');
-                break;
             default:
                 break;
         }
@@ -50,20 +41,15 @@ const AccountScreen: React.FC<AccountProps<'Account'>> = (props) => {
 
     return (
         <View>
-            <CustomHeader title={"Account"}></CustomHeader>
+            <CustomHeader title={"Settings"}></CustomHeader>
             <View style={styles.container}>
                 <View style={styles.account}>
-                    <View style={[styles.profile, g_STYLE.row]}>
-                        <CircularImage size={screenWidth * 0.25} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
-                        <CustomText size={25}>Corgi Meme</CustomText>
-                        <IconButton icon={'edit'} size={25} onPress={handleEdit} />
-                    </View>
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         data={items}
                         renderItem={({ item, index }) => (
                             <View>
-                                <SeparateLine isTextInclude={false} />
+                                {index != 0 ? <SeparateLine isTextInclude={false} /> : null}
                                 <TouchableOpacity onPress={() => handleTap(index)}>
                                     <AccountTile name={item} icon={itemsIcon[index]} />
                                 </TouchableOpacity>
@@ -92,4 +78,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AccountScreen;
+export default SettingsScreen;

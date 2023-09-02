@@ -26,7 +26,7 @@ const NotesAccessScreen: React.FC<NotesProps<'NotesAccess'>> = (props) => {
     const handleSave = () => {
     }
 
-    const handleDelete = () => {
+    const handleCancel = () => {
     }
 
     return (
@@ -52,7 +52,7 @@ const NotesAccessScreen: React.FC<NotesProps<'NotesAccess'>> = (props) => {
                 /></View>
             <View style={[styles.saveButton, g_STYLE.row]}>
                 <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
-                <GradientButton title={"Cancel"} onPress={handleDelete} color={g_THEME.colors.grey}></GradientButton>
+                <GradientButton title={"Cancel"} onPress={handleCancel} color={g_THEME.colors.grey}></GradientButton>
             </View>
         </ScrollView>
     );

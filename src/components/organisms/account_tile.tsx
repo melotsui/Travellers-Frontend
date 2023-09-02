@@ -15,12 +15,9 @@ import SeparateLine from '../atoms/separate_line';
 interface AccountTileProps {
     name: string;
     icon: string;
-    onPress?: (index: number) => void
 }
 
-const AccountTile: React.FC<AccountTileProps> = ({ name, icon, onPress }) => {
-
-    const handleTap = () => { onPress }
+const AccountTile: React.FC<AccountTileProps> = ({ name, icon }) => {
 
     const styles = StyleSheet.create({
         container: {
@@ -29,17 +26,12 @@ const AccountTile: React.FC<AccountTileProps> = ({ name, icon, onPress }) => {
         },
     });
 
-    return (<>
-        <SeparateLine isTextInclude={false} />
-
-        <TouchableOpacity onPress={handleTap}>
-            <View style={[styles.container, g_STYLE.row]}>
-                <MaterialIcons name={icon} size={24} color={g_THEME.colors.secondary} />
-                <View style={{ width: 15 }}></View>
-                <CustomText size={22}>{name}</CustomText>
-            </View>
-        </TouchableOpacity>
-    </>
+    return (
+        <View style={[styles.container, g_STYLE.row]}>
+            <MaterialIcons name={icon} size={24} color={g_THEME.colors.secondary} />
+            <View style={{ width: 15 }}></View>
+            <CustomText size={22}>{name}</CustomText>
+        </View>
 
     );
 };

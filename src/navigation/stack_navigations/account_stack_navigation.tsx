@@ -1,10 +1,9 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
-import NotesScreen from "../../screens/notes/notes";
-import NotesMediaScreen from "../../screens/notes/notes_media";
-import NotesTextAudioScreen from "../../screens/notes/notes_text_audio";
-import NotesAccessScreen from "../../screens/notes/notes_access";
 import AccountScreen from "../../screens/account/account";
+import ProfileScreen from "../../screens/account/profile";
+import ChangePasswordScreen from "../../screens/account/change_password";
+import SettingsScreen from "../../screens/account/settings";
 
 type ScreenNavigationProp<
   T extends keyof AccountStackParamList
@@ -22,6 +21,8 @@ type AccountProps<T extends keyof AccountStackParamList> = {
 
 type AccountStackParamList = {
   Account: undefined;
+  Profile: undefined;
+  ChangePassword: undefined;
   Settings: undefined;
   PrivacyPolicy: undefined;
   TermsConditions: undefined;
@@ -40,6 +41,9 @@ export const AccountStackavigation = () => {
       headerShown: false
     })} initialRouteName="Account">
       <AccountProps.Screen name="Account" component={AccountScreen} />
+      <AccountProps.Screen name="Profile" component={ProfileScreen} />
+      <AccountProps.Screen name="ChangePassword" component={ChangePasswordScreen} />
+      <AccountProps.Screen name="Settings" component={SettingsScreen} />
     </AccountProps.Navigator>
   );
 }
