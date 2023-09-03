@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { API_ENDPOINT } from './apiConfig';
+import { API_ENDPOINT, LOCAL_ENDPOINT } from './apiConfig';
 import { setupInterceptors } from './interceptors';
 
 class ApiService {
@@ -8,7 +8,7 @@ class ApiService {
 
   constructor() {
     this.api = axios.create({
-      baseURL: API_ENDPOINT + "/api",
+      baseURL: LOCAL_ENDPOINT + "/api",
       headers: {
         'Content-Type': 'application/json',
       },

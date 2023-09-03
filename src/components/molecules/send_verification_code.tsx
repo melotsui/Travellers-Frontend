@@ -13,9 +13,10 @@ interface SendVerificationCodeProps {
     onChange: (value: string) => void;
     onPress: () => void;
     error?: string;
+    color?: string;
 }
 
-const SendVerificationCode: React.FC<SendVerificationCodeProps> = ({ text, hint, onChange, onPress, error }) => {
+const SendVerificationCode: React.FC<SendVerificationCodeProps> = ({ text, hint, onChange, onPress, error, color }) => {
     const handleTextChange = (text: string) => {
         onChange(text);
     };
@@ -27,7 +28,7 @@ const SendVerificationCode: React.FC<SendVerificationCodeProps> = ({ text, hint,
         <View>
             <Container>
                 <View style={[styles.container, g_STYLE.row]}>
-                    <GradientButton title={'Send'} onPress={sendCode} radius={20} width={0.25} />
+                    <GradientButton title={'Send'} onPress={sendCode} radius={20} width={0.25} color={color}/>
                     <TextInput
                         style={[styles.input]}
                         value={text}
@@ -58,6 +59,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: g_THEME.fonts.regular,
         width: '100%',
+        color: 'black',
     }
 });
 

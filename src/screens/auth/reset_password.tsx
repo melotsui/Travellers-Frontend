@@ -22,14 +22,16 @@ const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setSeconds((prevSeconds) => prevSeconds + 1);
-        }, 1000);
+        if (seconds > 0) {
+          const timerId = setTimeout(() => {
+            setSeconds(seconds - 1);
+          }, 1000);
+    
+          // Cleanup timer on unmount or when seconds change
+          return () => clearTimeout(timerId);
+        }
+      }, [seconds]);
 
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
 
     const handleUsernameChange = (value: string) => {
         setUsername(value);
@@ -53,7 +55,7 @@ const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
 
     const handleForgetPassword = async () => {
         if (username == '') {
-            setUsernameError('Username cannot be empty');
+            setUsernameError('Username or email cannot be empty');
             return;
         }
 
@@ -110,7 +112,7 @@ const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
                 <CustomText size={22}>Reset Password</CustomText>
                 <View style={styles.text}>
                     <View style={styles.space} />
-                    <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange} />
+                    <TextField hint={'username or email'} text={username} error={usernameError} onChange={handleUsernameChange} />
                     <View style={styles.space} />
                     <SendVerificationCode hint={'verification code'} text={code} error={codeError} onChange={handleCodeChange} onPress={handleForgetPassword} />
                     <View style={styles.space} />

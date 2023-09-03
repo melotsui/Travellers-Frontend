@@ -54,6 +54,7 @@ const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, on
             paddingHorizontal: screenWidth * 0.05,
             fontSize: 18,
             fontFamily: g_THEME.fonts.regular,
+            color: 'black',
         },
 
         inputContainer: {
@@ -95,7 +96,6 @@ const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, on
                             multiline={numberOfLines != null || multiline}
                             numberOfLines={numberOfLines ?? 1}
                             editable={onPressText == null}
-                            
                         />
                         {suffixIcon != null &&
                             <View style={styles.suffix}>

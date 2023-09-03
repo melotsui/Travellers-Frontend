@@ -15,3 +15,8 @@ export enum MediaTypes {
     TEXT = 'text',
     OTHER = 'other'
 }
+
+export enum VerificationType {
+    EMAIL = 'email_verification',
+    PASSWORD = 'forgot_password'
+}

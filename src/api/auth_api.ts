@@ -1,4 +1,4 @@
-import { User } from '../models/user';
+import User from '../models/user';
 import { Response } from '../models/reponse';
 import APIs from './api';
 import apis from './api_service';
@@ -14,7 +14,7 @@ class AuthApi {
         return new Promise(async (resolve, reject) => {
             try {
                 const jsonData = {
-                    "user_name": username,
+                    "username": username,
                     "password": password
                 };
 
@@ -38,7 +38,7 @@ class AuthApi {
         return new Promise(async (resolve, reject) => {
             try {
                 const jsonData = {
-                    "user_name": username,
+                    "username": username,
                     "password": password
                 };
 
@@ -64,7 +64,7 @@ class AuthApi {
                 await this.auth.api.post('/me')
                     .then((response) => {
                         const result = response.data;
-                        resolve(result.data)
+                        resolve(result.data.user)
                     })
                     .catch((error) => {
                         const result = error.response.data;

@@ -9,9 +9,10 @@ import g_STYLE from '../../styles/styles';
 import CustomText from '../../components/atoms/text';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';
-import { updateProfile } from '../../actions/profile_actions';
+import { updateUser } from '../../actions/user_actions';
 import { useDispatch } from 'react-redux';
 import { RootProps } from '../../navigation/stack_navigation';
+import profileReducer from '../../reducers/user_reducer';
 
 
 const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
@@ -33,15 +34,15 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
     };
 
     const handleLogin = async () => {
-        if (username == '') {
-            setUsernameError('Username cannot be empty');
-            return;
-        }
-        if (password == '') {
-            setPasswordError('Password cannot be empty');
-            return;
-        }
-        await apis.auth.login(username, password)
+        // if (username == '') {
+        //     setUsernameError('Username cannot be empty');
+        //     return;
+        // }
+        // if (password == '') {
+        //     setPasswordError('Password cannot be empty');
+        //     return;
+        // }
+        await apis.auth.login('vincy' , 'Abc123456')//username, password)
             .then((response) => {
                 console.log('success to login');
             })
@@ -51,7 +52,9 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
             });
         await apis.auth.getMyProfile().then((response) => {
             console.log('success to get profile');
-            dispatch(updateProfile(response));
+            dispatch(updateUser(response));
+            props.navigation.navigate('HomeBottomBarNavigation');
+            
         }).catch((error) => {
             console.log('failed to get profile');
         }
@@ -59,8 +62,8 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
     }
     
     const handleForgetPassword = () => {
-        //props.navigation.navigate('ResetPassword');
-        props.navigation.navigate('HomeBottomBarNavigation');
+        props.navigation.navigate('ForgetPassword');
+        //props.navigation.navigate('HomeBottomBarNavigation');
     };
 
     return (

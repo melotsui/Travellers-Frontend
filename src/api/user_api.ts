@@ -1,3 +1,5 @@
+import { VerificationType } from '../constants/types';
+import { validateEmail } from '../utils/validation';
 import APIs from './api';
 
 class UserApi {
@@ -7,14 +9,14 @@ class UserApi {
         this.user = user;
     }
 
-    sendVerifyEmail = async (user : string): Promise<string> => {
+    sendVerifyEmail = async (email: string): Promise<string> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const jsonData = {
-                    "user_id": user
+                    'email': email
                 };
 
-                await this.user.api.post('/users/sendVerify', jsonData)
+                await this.user.api.post('/users/sendEmailVerification', jsonData)
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data);
@@ -29,14 +31,17 @@ class UserApi {
         });
     }
 
-    verifyEmail = async (userId: string, passcode: string): Promise<string> => {
+    verifyEmail = async (userId: string, passcode: string, email: string): Promise<string> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const jsonData = {
                     "user_id": userId,
-                    "passcode": passcode
+                    "type": VerificationType.EMAIL,
+                    "passcode": passcode,
+                    "email": email,
                 };
 
+                console.log(jsonData);
                 await this.user.api.post('/users/verifyPasscode', jsonData)
                     .then((response) => {
                         const result = response.data;
@@ -52,11 +57,17 @@ class UserApi {
         });
     }
 
-    forgetPassword = async (username: string): Promise<string> => {
+    forgetPassword = async (username: string | null): Promise<string> => {
         return new Promise(async (resolve, reject) => {
+            let email = null;
+            if(validateEmail(username!)){
+                email = username;
+                username = null;
+            }
             try {
                 const jsonData = {
-                    "username": username
+                    "username": username,
+                    "email": email
                 };
 
                 await this.user.api.post('/users/forgotPassword', jsonData)

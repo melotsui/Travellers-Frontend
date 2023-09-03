@@ -5,7 +5,7 @@ import TextField from '../../components/molecules/text_field';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';
 import { useDispatch } from 'react-redux';
-import { updateProfile } from '../../actions/profile_actions';
+import { updateUser } from '../../actions/user_actions';
 import { RootProps } from '../../navigation/stack_navigation';
 
 const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
@@ -57,7 +57,7 @@ const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
             });
         await apis.auth.getMyProfile().then((response) => {
             console.log('success to get profile');
-            dispatch(updateProfile(response));
+            dispatch(updateUser(response));
         });
 
     };

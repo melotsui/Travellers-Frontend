@@ -2,23 +2,24 @@ import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
 import TextField from '../../components/molecules/text_field';
-import TextButton from '../../components/atoms/text_button';
 import CustomText from '../../components/atoms/text';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import SendVerificationCode from '../../components/molecules/send_verification_code';
 import g_THEME from '../../theme/theme';
 import apis from '../../api/api_service';
 import { RootProps } from '../../navigation/stack_navigation';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../models/state';
 
-const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props) => {
-    const user = useSelector((state: RootState) => state.user);
+const ForgetPasswordScreen: React.FC<RootProps<'ForgetPassword'>> = (props) => {
+
     const [seconds, setSeconds] = useState(0);
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [code, setCode] = useState('');
-    const [emailError, setEmailError] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [usernameError, setUsernameError] = useState('');
     const [codeError, setCodeError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
     useEffect(() => {
         if (seconds > 0) {
@@ -31,25 +32,36 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
         }
       }, [seconds]);
 
-    const handleEmailChange = (value: string) => {
-        setEmail(value);
-        setEmailError('');
-    };
+    const handleUsernameChange = (value: string) => {
+        setUsername(value);
+        setUsernameError('');
+    }
 
     const handleCodeChange = (value: string) => {
         setCode(value);
         setCodeError('');
-    };
+    }
 
-    const handleSendCode = async () => {
+    const handlePasswordChange = (value: string) => {
+        setPassword(value);
+        setPasswordError('');
+    }
+
+    const handleConfirmPasswordChange = (value: string) => {
+        setConfirmPassword(value);
+        setConfirmPasswordError('');
+    }
+
+    const handleForgetPassword = async () => {
         if (seconds > 0) {
             return;
         }
-        if (email == '') {
-            setEmailError('Username cannot be empty');
+        if (username == '') {
+            setUsernameError('Username cannot be empty');
             return;
         }
-        await apis.user.sendVerifyEmail(email)
+
+        await apis.user.forgetPassword(username)
             .then((response) => {
                 setSeconds(20);
                 console.log('success to send code');
@@ -60,31 +72,22 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
             });
     };
 
-    const handleEmailVerification = async () => {
-        console.log(user);
-        if (email == '') {
-            setEmailError('Username cannot be empty');
-            return;
-        }
+    const handleResetPassword = async () => {
         if (code == '') {
             setCodeError('Verification code cannot be empty');
             return;
         }
-
-        await apis.user.verifyEmail(user!.user_id.toString(), code, email)
+        await apis.user.resetPassword(username, password)
             .then((response) => {
-                console.log('success to verify');
-                props.navigation.navigate('HomeBottomBarNavigation');
+                console.log('success to reset password');
+                props.navigation.navigate('Login');
             })
             .catch((error) => {
-                console.log('failed to verify');
+                console.log('failed to reset password');
                 setCodeError(error);
             });
     };
 
-    const handleSkip = () => {
-        props.navigation.navigate('HomeBottomBarNavigation');
-    };
 
     return (
         <ScrollView style={{ height: '100%' }}>
@@ -96,22 +99,20 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
                 />
             </View>
             <View style={[styles.container, { flex: 2, }]}>
-                <CustomText size={22}>Bind your email to Travellers</CustomText>
+                <CustomText size={22}>Reset Password</CustomText>
                 <View style={styles.text}>
                     <View style={styles.space} />
-                    <TextField hint={'email'} text={email} error={emailError} onChange={handleEmailChange}></TextField>
+                    <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange} />
                     <View style={styles.space} />
-                    <SendVerificationCode hint={'verification code'} text={code} color={seconds > 0 ? g_THEME.colors.grey : undefined} error={codeError} onChange={handleCodeChange} onPress={handleSendCode} />
-                    {seconds > 0 && <><View style={styles.longSpace} />
-                    <CustomText size={12} color={g_THEME.colors.grey} textAlign={'center'}>Can be re-sent in {seconds} seconds</CustomText></>}
+                    <SendVerificationCode hint={'verification code'} text={code} color={seconds > 0 ? g_THEME.colors.grey : undefined} error={codeError} onChange={handleCodeChange} onPress={handleForgetPassword} />
                     <View style={styles.longSpace} />
+                    <CustomText size={12} color={g_THEME.colors.grey} textAlign={'center'}>Can be re-sent in {seconds} seconds</CustomText>
                     <View style={styles.longSpace} />
                 </View>
                 <GradientButton
                     title="Confirm"
-                    onPress={handleEmailVerification}
+                    onPress={handleForgetPassword}
                 />
-                <TextButton onPress={handleSkip} color={g_THEME.colors.grey} size={22}>Skip</TextButton>
             </View>
         </ScrollView>
     );
@@ -141,4 +142,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EmailVerificationScreen;
+export default ForgetPasswordScreen;
