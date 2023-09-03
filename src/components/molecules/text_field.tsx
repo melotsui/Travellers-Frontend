@@ -20,9 +20,10 @@ interface TextFieldProps {
     secure?: boolean;
     numberOfLines?: number;
     suffixIconColor?: string;
+    multiline?: boolean;
 }
 
-const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, onPressText, suffixIcon, prefixIcon, error, secure, numberOfLines, suffixIconColor }) => {
+const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, onPressText, suffixIcon, prefixIcon, error, secure, numberOfLines, suffixIconColor, multiline }) => {
     const [isSecure, setIsSecure] = useState(true);
 
     const handleInputChange = (text: string) => {
@@ -49,7 +50,7 @@ const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, on
 
     const styles = StyleSheet.create({
         input: {
-            width: secure || suffixIcon ? '90%' : '100%',
+            width: prefixIcon && suffixIcon ? '80%' : secure || suffixIcon ? '90%' : '100%',
             paddingHorizontal: screenWidth * 0.05,
             fontSize: 18,
             fontFamily: g_THEME.fonts.regular,
@@ -73,11 +74,6 @@ const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, on
             width: '10%',
             justifyContent: 'center',
         },
-        suffixRightBottom: {
-            position: 'absolute',
-            right: 15,
-            bottom: 15,
-        }
     });
 
     return (
@@ -96,13 +92,13 @@ const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, on
                             placeholder={hint}
                             placeholderTextColor={'rgba(0, 0, 0, 0.21)'}
                             secureTextEntry={secure != null ? isSecure : false}
-                            multiline={numberOfLines != null}
+                            multiline={numberOfLines != null || multiline}
                             numberOfLines={numberOfLines ?? 1}
                             editable={onPressText == null}
                             
                         />
                         {suffixIcon != null &&
-                            <View style={numberOfLines != null ? styles.suffixRightBottom : styles.suffix}>
+                            <View style={styles.suffix}>
                                 <IconButton onPress={handleSuffixIcon} icon={suffixIcon} color={suffixIconColor} size={24} />
                             </View>}
                         {secure != null &&

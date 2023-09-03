@@ -21,7 +21,7 @@ const TripSearchScreen: React.FC<HomeProps<'TripSearch'>> = (props) => {
 
     return (
         <View>
-            <CustomHeader title={"Trip"}></CustomHeader>
+            <CustomHeader isLogo={true} title={"Trip"}></CustomHeader>
             <View style={styles.container}>
                 <View style={styles.text}>
                     <TextField hint={"Trip title, type and place"} text={searchText} onChange={handleSearchTextChange} suffixIcon={'search'} />
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     },
     text: {
         paddingHorizontal: screenWidth * 0.05,
+        paddingVertical: 5
     },
 });
 

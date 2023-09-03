@@ -55,7 +55,7 @@ const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
     return (
         <PaperProvider>
             <CustomHeader title={"Japan Gogo"}>
-                <IconButton onPress={handleNote} icon={"event-note"} />
+                <IconButton onPress={handleNote} icon={"description"} />
                 <View style={{ width: 10 }}></View>
                 <GradientPopupMenu>
                     <CustomMenuItem title={"Edit"} onPress={handleEdit} icon={"edit"} />

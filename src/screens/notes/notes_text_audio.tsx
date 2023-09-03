@@ -31,16 +31,20 @@ const NotesTextAudioScreen: React.FC<NotesProps<'NotesTextAudio'>> = (props) => 
             setNote('');
             setAudio('');
         } else {
-            console.log('start recording');
-            setAudio('0:10');
         }
     }
 
-    const handleNoteIcon = (): string => {
+    const handleAudio = () => {
+        console.log('start recording');
+        setAudio('0:10');
+    }
+
+    const handleNoteIcon = (): string | undefined => {
         if (note.length > 0 || audio.length > 0) {
             return 'close';
         } else {
-            return 'mic';
+            return undefined;
+            //return 'mic';
         }
     }
 
@@ -66,21 +70,61 @@ const NotesTextAudioScreen: React.FC<NotesProps<'NotesTextAudio'>> = (props) => 
     const handleDelete = () => {
     }
 
+    const styles = StyleSheet.create({
+        container: {
+            marginHorizontal: 20,
+            paddingTop: screenHeight * 0.02,
+        },
+        mediaContainer: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 10,
+            marginLeft: audio.length > 0 || note.length > 0 ? 0 : 10,
+        },
+        media: {
+            width: screenWidth * 0.8,
+            height: screenWidth * 0.7,
+            backgroundColor: g_THEME.colors.grey,
+            borderRadius: 10,
+        },
+        mediaButton: {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: [{ translateX: -25 }, { translateY: -25 }],
+            color: 'white',
+        },
+        partnerContainer: {
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginVertical: 10,
+        },
+        partner: {
+            width: '90%'
+        },
+        saveButton: {
+            alignItems: 'center',
+            justifyContent: 'space-evenly',
+            marginVertical: 60,
+        }
+    });
+
     return (
         <PaperProvider>
         <ScrollView>
             <CustomHeader title={"Text/Audio"}></CustomHeader>
             <View style={styles.container}>
-                <View style={styles.mediaContainer}>
+                <View style={[styles.mediaContainer, g_STYLE.row]}>
                     <TextField
                         hint="Write down your wonderful moment in your trip!"
                         text={audio.length > 0 ? audio : note}
                         onChange={handleNote}
                         onPress={handleNoteSuffix}
-                        numberOfLines={audio.length > 0 ? 1 : 6}
+                        multiline={true}
                         prefixIcon={audio.length > 0 ? 'headphones' : undefined}
                         suffixIcon={handleNoteIcon()}
                         suffixIconColor={handleNoteIconColor()} />
+                        {audio.length > 0 || note.length > 0 ? null : <IconButton icon={"mic"} color={g_THEME.colors.error} onPress={handleAudio}></IconButton>}
                 </View>
                 <View style={[styles.partnerContainer, g_STYLE.row]}>
                     <CustomText size={25}>Accessible Partners</CustomText>
@@ -115,43 +159,5 @@ const NotesTextAudioScreen: React.FC<NotesProps<'NotesTextAudio'>> = (props) => 
     );
 
 }
-
-const styles = StyleSheet.create({
-    container: {
-        marginHorizontal: 20,
-        paddingTop: screenHeight * 0.02,
-    },
-    mediaContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    media: {
-        width: screenWidth * 0.8,
-        height: screenWidth * 0.7,
-        backgroundColor: g_THEME.colors.grey,
-        borderRadius: 10,
-    },
-    mediaButton: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: [{ translateX: -25 }, { translateY: -25 }],
-        color: 'white',
-    },
-    partnerContainer: {
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginVertical: 10,
-    },
-    partner: {
-        width: '90%'
-    },
-    saveButton: {
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        marginVertical: 60,
-    }
-});
 
 export default NotesTextAudioScreen;

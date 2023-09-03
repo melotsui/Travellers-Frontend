@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     container: {
         height: 150,
         width: screenWidth * 0.85,
-        marginVertical: 10,
+        marginVertical: 3,
         padding: 10,
         backgroundColor: g_THEME.colors.lightBlue,
         borderWidth: 2,
