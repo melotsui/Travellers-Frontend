@@ -47,6 +47,8 @@ const NotesScreen: React.FC<NotesProps<'Notes'>> = (props) => {
     return (
         <View>
             <CustomHeader title={"Note"}>
+                <IconButton onPress={handleBookmark} icon={"add"} />
+                <View style={{ width: 10 }}></View>
                 <IconButton onPress={handleBookmark} icon={"bookmark-outline"} />
             </CustomHeader>
             <View>
