@@ -1,44 +1,34 @@
-import { StyleSheet, View, Pressable, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react'
-import GradientButton from '../../components/molecules/gradient_button';
+import { StyleSheet, View, Pressable } from 'react-native';
+import React from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import GradientContainer from '../../components/atoms/gradient_container';
-import CustomText from '../atoms/text';
-import { opacity } from 'react-native-reanimated';
+import { useBottomSheet } from '../../context/bottom_sheet_context';
 
 
 interface GradientBottomSheetProps {
     children: React.ReactNode;
+    isVisible: boolean;
 }
 
-const GradientBottomSheet: React.FC<GradientBottomSheetProps> = ({ children }) => {
-
-    const [isOpen, setOpen] = useState(false);
-
-    const toggleSheet = () => {
-        setOpen(!isOpen);
-    };
+const GradientBottomSheet: React.FC<GradientBottomSheetProps> = ({ children, isVisible }) => {
+    const { hideBottomSheet, content } = useBottomSheet();
 
     return (<GestureHandlerRootView style={styles.container}>
-        <TouchableOpacity onPress={toggleSheet}>
-            {children}
-        
-            </TouchableOpacity>
-            {isOpen && (
-                <>
-                    <Pressable style={styles.backdrop} onPress={toggleSheet} />
-                    <View style={styles.sheet}>
-                        <GradientContainer>
-                            <View style={styles.outerContainer}>
-                                <View style={styles.innerContainer}>
-                                    <CustomText>afa</CustomText>
-                                </View>
+        {children}
+        {isVisible && (
+            <>
+                <Pressable style={styles.backdrop} onPress={hideBottomSheet} />
+                <View style={styles.sheet}>
+                    <GradientContainer>
+                        <View style={styles.outerContainer}>
+                            <View style={styles.innerContainer}>
+                                {content}
                             </View>
-                        </GradientContainer>
-                    </View>
-                </>
-            )}
+                        </View>
+                    </GradientContainer>
+                </View>
+            </>
+        )}
     </GestureHandlerRootView>
     );
 
@@ -63,6 +53,7 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         backgroundColor: 'grey',
         opacity: 0.5,
+        zIndex: 1,
     },
     outerContainer: {
         height: '100%',
@@ -74,6 +65,8 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
         padding: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 });
 

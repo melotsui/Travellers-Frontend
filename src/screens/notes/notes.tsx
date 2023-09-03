@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import TextField from "../../components/molecules/text_field";
 import { screenHeight, screenWidth } from "../../constants/screen_dimension";
@@ -11,16 +11,43 @@ import ChatDialog from "../../components/organisms/chat_dialog";
 import { MediaTypes } from "../../constants/types";
 import RoundRectImage from "../../components/atoms/round_rect_image";
 import IconButton from "../../components/atoms/icon_button";
+import GradientBottomSheet from "../../components/molecules/gradient__bottom_sheet";
+import { useBottomSheet } from "../../context/bottom_sheet_context";
+import CustomText from "../../components/atoms/text";
+import GradientText from "../../components/molecules/gradient_text";
+import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
+import SeparateLine from "../../components/atoms/separate_line";
 const NotesScreen: React.FC<NotesProps<'Notes'>> = (props) => {
     const [searchText, setSearchText] = useState('');
     const [isTextAudio, setIsTextAudio] = useState(true);
     const [numColumns, setNumColumns] = useState(4);
+    const { showBottomSheet, hideBottomSheet ,setBottomSheetContent } = useBottomSheet();
+
+    const content = () : ReactNode => {
+        return <>
+        <BottomSheetTile onPress={handleTextAudioAdd}>Text/Audio</BottomSheetTile>
+        <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
+        <BottomSheetTile onPress={handleMediaAdd}>Media</BottomSheetTile>
+        </>
+    }
+
+    const handleTextAudioAdd = () => {
+        props.navigation.navigate('NotesTextAudio');
+        hideBottomSheet();
+    }
+
+    const handleMediaAdd = () => {
+        props.navigation.navigate('NotesMedia');
+        hideBottomSheet();
+    }
 
     const handleSearchTextChange = (value: string) => {
         setSearchText(value);
     }
 
-    const handleAddNote = () => {
+    const handleAdd = () => {
+        setBottomSheetContent(content());
+        showBottomSheet();
     }
 
     const handleBookmark = () => {
@@ -47,7 +74,7 @@ const NotesScreen: React.FC<NotesProps<'Notes'>> = (props) => {
     return (
         <View>
             <CustomHeader title={"Note"}>
-                <IconButton onPress={handleBookmark} icon={"add"} />
+                <IconButton onPress={handleAdd} icon={"add"} />
                 <View style={{ width: 10 }}></View>
                 <IconButton onPress={handleBookmark} icon={"bookmark-outline"} />
             </CustomHeader>

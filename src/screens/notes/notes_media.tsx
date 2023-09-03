@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import TextField from "../../components/molecules/text_field";
@@ -16,10 +16,38 @@ import IconButton from "../../components/atoms/icon_button";
 import GradientButton from "../../components/molecules/gradient_button";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { PaperProvider } from "react-native-paper";
+import SeparateLine from "../../components/atoms/separate_line";
+import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
+import { useBottomSheet } from "../../context/bottom_sheet_context";
 
 const NotesMediaScreen: React.FC<NotesProps<'NotesMedia'>> = (props) => {
     const [partner, setPartner] = useState('');
     const [isNew, setIsNew] = useState(false);
+    const {setBottomSheetContent, showBottomSheet} = useBottomSheet();
+
+    const content = () : ReactNode => {
+        return <>
+        <BottomSheetTile onPress={handleTakePhoto}>Take Photo</BottomSheetTile>
+        <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
+        <BottomSheetTile onPress={handleGallery}>Select from Gallery</BottomSheetTile>
+        <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
+        <BottomSheetTile onPress={handlePhotoDelete} color={g_THEME.colors.error}>Delete Photo</BottomSheetTile>
+        </>
+    }
+
+    const handleTakePhoto = () => {
+    }
+
+    const handleGallery = () => {
+    }
+
+    const handlePhotoDelete = () => {
+    }
+
+    const handleAddMedia = () => {
+        setBottomSheetContent(content());
+        showBottomSheet();
+    }
 
     const handlePartner = (value: string) => {
         setPartner(value);
@@ -42,7 +70,9 @@ const NotesMediaScreen: React.FC<NotesProps<'NotesMedia'>> = (props) => {
                 <View style={styles.container}>
                     <View style={styles.mediaContainer}>
                         <View style={styles.media}>
-                            <MaterialIcons name={"add-a-photo"} size={40} color={g_THEME.colors.grey} style={styles.mediaButton}></MaterialIcons>
+                            <View style={styles.mediaButton}>
+                            <IconButton icon={"add-a-photo"} size={40} color={'white'} onPress={handleAddMedia} ></IconButton>
+                            </View>
                         </View>
                     </View>
                     <View style={[styles.partnerContainer, g_STYLE.row]}>

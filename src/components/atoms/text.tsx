@@ -2,7 +2,7 @@ import React from 'react';
 import {  StyleSheet, Text } from 'react-native';
 import g_THEME from '../../theme/theme';
 
-interface TextFieldProps {
+interface TextProps {
     children: React.ReactNode;
     size?: number;
     color?: string,
@@ -10,7 +10,7 @@ interface TextFieldProps {
     numberOfLines?: number;
   }
   
-const CustomText: React.FC<TextFieldProps> = ({children, size, color, textAlign, numberOfLines}) => {
+const CustomText: React.FC<TextProps> = ({children, size, color, textAlign, numberOfLines}) => {
 
     const styles =  StyleSheet.create({
         text: {

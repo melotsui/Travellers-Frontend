@@ -13,11 +13,17 @@ import { AccountStackavigation } from './stack_navigations/account_stack_navigat
 import TripAddScreen from '../screens/trip/trip_add';
 import CustomText from '../components/atoms/text';
 import g_STYLE from '../styles/styles';
+import GradientBottomSheet from '../components/molecules/gradient__bottom_sheet';
+import { useBottomSheet } from '../context/bottom_sheet_context';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigation() {
+  
+  const { isVisible } = useBottomSheet();
+  
   return (
+    <GradientBottomSheet isVisible={isVisible}>
     <LinearGradient
       colors={g_THEME.gradient.colors}
       start={{ x: 0, y: 0.92 }}
@@ -76,6 +82,7 @@ export default function TabNavigation() {
         <Tab.Screen name="Notification" component={NotificationsScreen}></Tab.Screen>
         <Tab.Screen name="AccountStack" component={AccountStackavigation}></Tab.Screen>
       </Tab.Navigator></LinearGradient>
+      </GradientBottomSheet>
   );
 }
 

@@ -14,6 +14,7 @@ import IconButton from "../../components/atoms/icon_button";
 import GradientButton from "../../components/molecules/gradient_button";
 import { set } from "immer/dist/internal";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
+import { PaperProvider } from "react-native-paper";
 
 const NotesTextAudioScreen: React.FC<NotesProps<'NotesTextAudio'>> = (props) => {
     const [note, setNote] = useState('');
@@ -66,6 +67,7 @@ const NotesTextAudioScreen: React.FC<NotesProps<'NotesTextAudio'>> = (props) => 
     }
 
     return (
+        <PaperProvider>
         <ScrollView>
             <CustomHeader title={"Text/Audio"}></CustomHeader>
             <View style={styles.container}>
@@ -109,6 +111,7 @@ const NotesTextAudioScreen: React.FC<NotesProps<'NotesTextAudio'>> = (props) => 
                 </View>
             </View>
         </ScrollView>
+        </PaperProvider>
     );
 
 }
