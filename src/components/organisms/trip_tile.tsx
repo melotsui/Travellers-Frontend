@@ -6,17 +6,19 @@ import g_STYLE from '../../styles/styles';
 import g_THEME from '../../theme/theme';
 import CustomText from '../atoms/text';
 import CircularImage from '../atoms/circular_image';
+import { formatDate, getDate } from '../../utils/datetime_formatter';
 
 interface TripTileProps {
+    trip: Trip;
 }
 
-const TripTile: React.FC<TripTileProps> = ({ }) => {
+const TripTile: React.FC<TripTileProps> = ({ trip }) => {
 
     return (
         <View style={[styles.container, g_STYLE.col]}>
             <View style={[g_STYLE.row, {flex: 1}]}>
                 <View style={styles.leftContainer}>
-                    <CustomText size={25}>Japan Gogo</CustomText>
+                    <CustomText size={25}>{trip.trip_name}</CustomText>
                 </View>
                 <View style={styles.rightContainer}>
                     
@@ -25,8 +27,8 @@ const TripTile: React.FC<TripTileProps> = ({ }) => {
                 </View>
             </View>
                 <View style={styles.textContainer}>
-                    <CustomText>Osaka</CustomText>
-                    <CustomText>20/12/2023 - 25/12/2023</CustomText>
+                    <CustomText>{trip.trip_destination}</CustomText>
+                    <CustomText>{getDate(trip.trip_datetime_from)} - {getDate(trip.trip_datetime_to)}</CustomText>
                 </View>
         </View>
     );

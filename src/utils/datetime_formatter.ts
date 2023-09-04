@@ -23,3 +23,13 @@ export function formatTime(date: Date): string {
 
     return `${hours}:${minutes}`;
 }
+
+export function getDate(datetime: string): string {
+    const [date, time] = datetime.split(' ');
+    return date;
+}
+
+export function getTime(datetime: string): string {
+    const [date, time] = datetime.split(' ');
+    return time;
+}

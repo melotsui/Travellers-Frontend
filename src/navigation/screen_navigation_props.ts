@@ -42,9 +42,9 @@ type RootStackParamList = {
 
   //trip
   TripSearch: undefined;
-  TripDetail: undefined;
+  TripDetail: { trip_id: number };
   TripEdit: undefined;
-  Schedule: undefined;
+  Schedule: { schedule_id: number };
   ScheduleEdit: undefined;
 
 };

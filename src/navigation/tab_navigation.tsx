@@ -22,48 +22,6 @@ const Tab = createBottomTabNavigator();
 const TabNavigation: React.FC<RootProps<'HomeBottomBarNavigation'>> = (props) => {
 
   const { isVisible } = useBottomSheet();
-  const [isDialogVisible, setDialogVisible] = useState(false);
-
-  const backButtonPressCount = useRef(0);
-
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
-    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
-    return () => {
-      backHandler.remove();
-    };
-  }, []);
-
-  const handleBackPress = () => {
-    backButtonPressCount.current++;
-
-    if (backButtonPressCount.current === 1) {
-      setTimeout(() => {
-        backButtonPressCount.current = 0;
-      }, 2000); // Reset the count after 2 seconds
-
-      return true; // Allow the first back press
-    } else if (backButtonPressCount.current === 2) {
-      backButtonPressCount.current = 0;
-      showDialog();
-
-      return true; // Prevent the app from being closed immediately
-    }
-  };
-
-  const handleLogout = () => {  
-    props.navigation.popToTop();
-  }
-
-  const showDialog = () => {
-    setDialogVisible(true);
-  };
-
-  const hideDialog = () => {
-    setDialogVisible(false);
-  };
 
   return (
   <PaperProvider>
@@ -126,10 +84,6 @@ const TabNavigation: React.FC<RootProps<'HomeBottomBarNavigation'>> = (props) =>
           <Tab.Screen name="Notification" component={NotificationsScreen}></Tab.Screen>
           <Tab.Screen name="AccountStack" component={AccountStackavigation}></Tab.Screen>
         </Tab.Navigator></LinearGradient>
-        <GradientPopupDialog isSelect={true} title={'Reminder'} onPress={handleLogout} outVisible={isDialogVisible} onDismiss={hideDialog}>
-            [ , 
-            <CustomText size={20}>Are you sure you want to exit?</CustomText>]
-        </GradientPopupDialog>
     </GradientBottomSheet>
     </PaperProvider>
   );

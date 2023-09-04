@@ -1,40 +1,40 @@
 class User {
   user_id: number;
-  username?: string;
-  name: string;
+  username: string;
+  name?: string;
   email?: string;
-  email_verified_at?: string;
-  password_changed_at?: string;
+  email_verified_at?: Date;
+  password_changed_at?: Date;
   user_icon_url?: string;
   gender?: string;
   age?: number;
   nationality?: string;
   timezone?: string;
-  last_login_at: string;
+  last_login_at?: Date;
   provider?: string;
   provider_id?: string;
-  created_at: string;
-  updated_at?: string;
-  deleted_at?: string;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
 
   constructor(
       user_id: number = 0,
-      name: string = '',
-      last_login_at: string = new Date().toISOString(),
-      created_at: string = new Date().toISOString(),
-      username?: string,
+      username: string,
+      name?: string,
+      created_at?: Date,
       email?: string,
-      email_verified_at?: string,
-      password_changed_at?: string,
+      email_verified_at?: Date,
+      password_changed_at?: Date,
       user_icon_url?: string,
       gender?: string,
       age?: number,
       nationality?: string,
       timezone?: string,
+      last_login_at?: Date,
       provider?: string,
       provider_id?: string,
-      updated_at?: string,
-      deleted_at?: string
+      updated_at?: Date,
+      deleted_at?: Date
   ) {
       this.user_id = user_id;
       this.username = username;

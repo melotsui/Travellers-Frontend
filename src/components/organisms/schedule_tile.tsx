@@ -19,7 +19,7 @@ interface ScheduleTileProps {
     date: string;
     time: string;
     type: ActivityTypes;
-    transportTime: string;
+    transportTime?: string;
     onPress: () => void;
 }
 

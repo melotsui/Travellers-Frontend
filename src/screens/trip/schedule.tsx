@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { screenWidth } from "../../constants/screen_dimension";
@@ -19,9 +19,30 @@ import getActivityIcon from "../../helpers/activity_icon";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { RootProps } from "../../navigation/screen_navigation_props";
+import apis from "../../api/api_service";
+import { formatDate } from "../../utils/datetime_formatter";
 
 const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
-    const [schedules, setSchedules] = useState(['a']);
+    const { schedule_id } = props.route.params;
+    const [schedule, setSchedule] = useState<Schedule | null>(null);
+
+    useEffect(() => {
+
+        const fetchSchedule = async () => {
+            await apis.schedule.getScheduleById(schedule_id)
+                .then((response) => {
+                    console.log('success to get schedule');
+                    setSchedule(response);
+                })
+                .catch((error) => {
+                    console.log('failed to get schedule');
+                });
+        }
+        fetchSchedule();
+        return () => {
+            // Perform any cleanup tasks here if necessary
+        };
+    }, []);
 
     const handleEdit = () => {
         props.navigation.navigate('ScheduleEdit');
@@ -49,8 +70,8 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
 
     return (
         <PaperProvider>
-            <View>
-                <CustomHeader title={"Japan Gogo"}>
+            { schedule && <View>
+                <CustomHeader title={schedule?.schedule_name}>
                     <IconButton onPress={handleEdit} icon={"edit"} />
                 </CustomHeader>
                 <ScrollView>
@@ -58,9 +79,9 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                         <View>
                             <View style={g_STYLE.row}>
                                 <View style={[g_STYLE.col, styles.leftContainer]}>
-                                    <CustomText size={25}>Dotombori District</CustomText>
+                                    <CustomText size={25}>{schedule?.schedule_place}</CustomText>
                                     <CustomText>Sushiro</CustomText>
-                                    <CustomText>20/12/2023 10:00 - 12:00 (2hrs)</CustomText>
+                                    <CustomText>{formatDate(new Date(schedule?.schedule_datetime!))} 10:00 - 12:00 (2hrs)</CustomText>
                                 </View>
                                 <View style={styles.rightContainer}>
                                     <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
@@ -69,13 +90,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                 </View>
                             </View>
                             <View style={styles.description}>
-                                <CustomText>
-                                    Remember to eat salmon!!!!!{'\n'}
-                                    Remember to eat ice cream!!!!!{'\n'}
-                                    Remember to eat tamagoyaki!!!!!{'\n'}
-                                    Remember to eat wagyu!!!!!{'\n'}
-                                    Remember to eat cake!!!!!
-                                </CustomText>
+                                <CustomText>{schedule?.schedule_remark}</CustomText>
                             </View>
                             <View style={[styles.buttonContainer, g_STYLE.row]}>
                                 <GradientButton title={"Navigate Now"} onPress={handleNavigation} width={0.43} size={20}></GradientButton>
@@ -100,14 +115,6 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                         <View style={styles.space}></View>
                         <SeparateLine isTextInclude={false} />
                         <View style={styles.space}></View>
-                        {schedules.length == 0 &&
-                            <View style={styles.lowerContainer}>
-                                <CustomText size={25} textAlign={'center'}>Your Trip is empty{'\n'}Let's add schedule !!</CustomText>
-                                <View style={styles.space}></View>
-                                <GradientButton size={20} title={"Add Schedule"} radius={35} onPress={function (): void {
-                                    throw new Error("Function not implemented.");
-                                }} />
-                            </View>}
                         <CustomText size={20}>Partners</CustomText>
                         <FlatList
                             scrollEnabled={false}
@@ -133,7 +140,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                         </View>
                     </View>
                 </ScrollView>
-            </View>
+            </View>}
         </PaperProvider>
     );
 

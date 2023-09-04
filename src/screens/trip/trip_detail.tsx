@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { screenWidth } from "../../constants/screen_dimension";
@@ -18,9 +18,37 @@ import GradientPopupMenu from "../../components/molecules/gradient_menu";
 import CustomMenuItem from "../../components/atoms/custom_menu_item";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { RootProps } from "../../navigation/screen_navigation_props";
+import apis from "../../api/api_service";
+import { formatDate, formatTime, getDate, getTime } from "../../utils/datetime_formatter";
 
 const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
-    const [schedules, setSchedules] = useState(['a']);
+    const [trip, setTrip] = useState<Trip | null>(null);
+    const [schedules, setSchedules] = useState<Schedule[] | null>([]);
+    const { trip_id } = props.route.params;
+
+    useEffect(() => {
+
+        const fetchTrip = async () => {
+
+            try {
+                const promise1: Promise<Trip> = apis.trip.getTripById(trip_id);
+                const promise2: Promise<Schedule[]> = apis.schedule.getScheduleListById(trip_id);
+
+                const [trip, schedule] = await Promise.all([promise1, promise2]);
+
+                setTrip(trip);
+                setSchedules(schedule);
+
+            } catch (error) {
+                // Handle any errors that occurred during the API calls
+                console.error('Error:', error);
+            }
+        }
+        fetchTrip();
+        return () => {
+            // Perform any cleanup tasks here if necessary
+        };
+    }, []);
 
     const handleNote = () => {
         props.navigation.navigate('Notes');
@@ -48,13 +76,13 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
         console.log("add media");
         props.navigation.navigate('NotesMedia');
     }
-    const handleScheduleTileChange = () => {
-        props.navigation.navigate('Schedule');
+    const handleScheduleTileChange = (schedule_id: number) => {
+        props.navigation.navigate('Schedule', { schedule_id: schedule_id });
     }
 
     return (
         <PaperProvider>
-            <CustomHeader title={"Japan Gogo"}>
+            {trip && <><CustomHeader title={trip!.trip_name}>
                 <IconButton onPress={handleNote} icon={"description"} />
                 <View style={{ width: 10 }}></View>
                 <GradientPopupMenu>
@@ -70,14 +98,14 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                         ]}
                     </GradientPopupDialog>
                 </GradientPopupMenu>
-            </CustomHeader>
+            </CustomHeader> 
             <ScrollView>
                 <View style={[styles.container, g_STYLE.col]}>
                     <View>
                         <View style={g_STYLE.row}>
                             <View style={[g_STYLE.col, styles.leftContainer]}>
-                                <CustomText size={25}>Osaka</CustomText>
-                                <CustomText>20/12/2023 - 25/12/2023</CustomText>
+                                <CustomText size={25}>{trip!.trip_destination}</CustomText>
+                                <CustomText>{getDate(trip!.trip_datetime_from!)} - {getDate(trip!.trip_datetime_to!)}</CustomText>
                             </View>
                             <View style={styles.rightContainer}>
                                 <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
@@ -85,9 +113,9 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                             </View>
                         </View>
                         <View style={styles.description}>
-                            <CustomText>Trip of Samoyed Meme and Master Vivi</CustomText>
+                            <CustomText>{trip!.trip_description}</CustomText>
                         </View>
-                        <FlatList
+                        {/*<FlatList
                             showsHorizontalScrollIndicator={false}
                             horizontal={true}
                             ItemSeparatorComponent={() =>
@@ -101,39 +129,43 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                                     return <RoundRectImage type={MediaTypes.IMAGE} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></RoundRectImage>
                                 }
                             }}
-                        ></FlatList>
+                        ></FlatList>*?*/}
                     </View>
                     <View style={styles.space}></View>
                     <SeparateLine isTextInclude={false} />
                     <View style={styles.space}></View>
-                    {schedules.length == 0 &&
+                    {schedules!.length == 0 &&
                         <View style={styles.lowerContainer}>
                             <CustomText size={25} textAlign={'center'}>Your Trip is empty{'\n'}Let's add schedule !!</CustomText>
                             <View style={styles.space}></View>
                             <GradientButton size={20} title={"Add Schedule"} radius={35} onPress={handleAddSchedule} />
                         </View>}
 
-                    <FlatList
+                    {schedules && <FlatList
                         scrollEnabled={false}
                         showsVerticalScrollIndicator={false}
                         ItemSeparatorComponent={() =>
                             <View style={{ height: 5 }}></View>
                         }
-                        data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
-                        renderItem={({ item, index }) => (
-                            <ScheduleTile
+                        data={schedules}
+                        renderItem={({ item, index }) => {
+                            let transportTime = undefined;
+                            if(index != schedules.length -1){
+                                transportTime = "15 mins"
+                            }
+                            return <ScheduleTile
                                 step={index}
-                                title={"Dotombori District"}
-                                subTitle={"Sushiro"}
-                                date={"20/12/2023"}
-                                time={"10:00 - 12:00"}
+                                title={item.schedule_name}
+                                subTitle={item.schedule_place!}
+                                date={formatDate(new Date(item.schedule_datetime!))}
+                                time={formatTime(new Date(item.schedule_datetime!))}
                                 type={ActivityTypes.FOOD}
-                                transportTime={"15 mins"}
-                                onPress={handleScheduleTileChange} />
-                        )}>
-                    </FlatList>
+                                transportTime={transportTime}
+                                onPress={() => handleScheduleTileChange(item.schedule_id)} />
+                    }}>
+                    </FlatList>}
                 </View>
-            </ScrollView>
+            </ScrollView></>}
         </PaperProvider>
     );
 
