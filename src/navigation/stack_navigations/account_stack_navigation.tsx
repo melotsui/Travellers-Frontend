@@ -1,38 +1,11 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationProp, RouteProp } from "@react-navigation/native";
 import AccountScreen from "../../screens/account/account";
 import ProfileScreen from "../../screens/account/profile";
 import ChangePasswordScreen from "../../screens/account/change_password";
 import SettingsScreen from "../../screens/account/settings";
+import { RootStackParamList } from "../screen_navigation_props";
 
-type ScreenNavigationProp<
-  T extends keyof AccountStackParamList
-> = NavigationProp<AccountStackParamList, T>;
-
-type ScreenRouteProp<T extends keyof AccountStackParamList> = RouteProp<
-  AccountStackParamList,
-  T
->;
-
-type AccountProps<T extends keyof AccountStackParamList> = {
-  route: ScreenRouteProp<T>;
-  navigation: ScreenNavigationProp<T>;
-};
-
-type AccountStackParamList = {
-  Account: undefined;
-  Profile: undefined;
-  ChangePassword: undefined;
-  Settings: undefined;
-  PrivacyPolicy: undefined;
-  TermsConditions: undefined;
-  ContactUs: undefined;
-  Share: undefined;
-};
-
-export type { AccountProps, AccountStackParamList };
-
-const AccountProps = createStackNavigator<AccountStackParamList>();
+const AccountProps = createStackNavigator<RootStackParamList>();
 
 export const AccountStackavigation = () => {
   return (

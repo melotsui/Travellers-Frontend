@@ -3,7 +3,6 @@ import { View, StyleSheet, FlatList } from "react-native";
 import TextField from "../../components/molecules/text_field";
 import { screenHeight, screenWidth } from "../../constants/screen_dimension";
 import CustomHeader from "../../components/molecules/header";
-import { NotesProps } from "../../navigation/stack_navigations/notes_stack_navigation";
 import GradientButton from "../../components/molecules/gradient_button";
 import g_STYLE from "../../styles/styles";
 import g_THEME from "../../theme/theme";
@@ -11,13 +10,12 @@ import ChatDialog from "../../components/organisms/chat_dialog";
 import { MediaTypes } from "../../constants/types";
 import RoundRectImage from "../../components/atoms/round_rect_image";
 import IconButton from "../../components/atoms/icon_button";
-import GradientBottomSheet from "../../components/molecules/gradient__bottom_sheet";
 import { useBottomSheet } from "../../context/bottom_sheet_context";
-import CustomText from "../../components/atoms/text";
-import GradientText from "../../components/molecules/gradient_text";
 import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
 import SeparateLine from "../../components/atoms/separate_line";
-const NotesScreen: React.FC<NotesProps<'Notes'>> = (props) => {
+import { RootProps } from "../../navigation/screen_navigation_props";
+
+const NotesScreen: React.FC<RootProps<'Notes'>> = (props) => {
     const [searchText, setSearchText] = useState('');
     const [isTextAudio, setIsTextAudio] = useState(true);
     const [numColumns, setNumColumns] = useState(4);

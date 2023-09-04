@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { HomeProps } from "../../navigation/stack_navigations/trip_stack_navigation";
 import g_STYLE from "../../styles/styles";
 import CustomText from "../../components/atoms/text";
 import GradientButton from "../../components/molecules/gradient_button";
-import g_THEME from "../../theme/theme";
 import CustomHeader from "../../components/molecules/header";
 import IconButton from "../../components/atoms/icon_button";
-import ImageTile from "../../components/molecules/image_tile";
 import TextField from "../../components/molecules/text_field";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { formatDate, parseDate } from "../../utils/datetime_formatter";
 import PartnerTile from "../../components/organisms/partner_tile";
+import { RootProps } from "../../navigation/screen_navigation_props";
 
-const TripEditScreen: React.FC<HomeProps<'TripEdit'>> | React.FC = (props: any) => {
+const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) => {
     const [name, setName] = useState('Japan Gogo');
     const [startDate, setStartDate] = useState(parseDate('12/20/2023'));
     const [endDate, setEndDate] = useState(parseDate('12/25/2023'));

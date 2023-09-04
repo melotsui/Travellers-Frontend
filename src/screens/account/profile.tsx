@@ -10,16 +10,15 @@ import TextField from "../../components/molecules/text_field";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { formatDate, formatTime, parseDate, parseTime } from "../../utils/datetime_formatter";
 import PartnerTile from "../../components/organisms/partner_tile";
-import { AccountProps } from "../../navigation/stack_navigations/account_stack_navigation";
 import CircularImage from "../../components/atoms/circular_image";
 import { screenWidth } from "../../constants/screen_dimension";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import g_THEME from "../../theme/theme";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { PaperProvider } from "react-native-paper";
-"../../utils/datetime_formatter";
+import { RootProps } from "../../navigation/screen_navigation_props";
 
-const ProfileScreen: React.FC<AccountProps<'Profile'>> = (props) => {
+const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
     const [name, setName] = useState('Japan Gogo');
     const [email, setEmail] = useState('');
     const [nationality, setNationality] = useState('');

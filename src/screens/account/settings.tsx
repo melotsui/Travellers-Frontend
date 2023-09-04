@@ -1,23 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet, FlatList } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import TextField from "../../components/molecules/text_field";
-import TripTile from "../../components/organisms/trip_tile";
-import { screenHeight, screenWidth } from "../../constants/screen_dimension";
+import { screenHeight } from "../../constants/screen_dimension";
 import CustomHeader from "../../components/molecules/header";
-import { AccountProps } from "../../navigation/stack_navigations/account_stack_navigation";
-import CircularImage from "../../components/atoms/circular_image";
-import g_STYLE from "../../styles/styles";
-import CustomText from "../../components/atoms/text";
-import IconButton from "../../components/atoms/icon_button";
 import AccountTile from "../../components/organisms/account_tile";
-import { Screen } from "react-native-screens";
 import SeparateLine from "../../components/atoms/separate_line";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { PaperProvider } from "react-native-paper";
 import BulletPoint from "../../components/organisms/bullet_point";
+import { RootProps } from "../../navigation/screen_navigation_props";
 
-const SettingsScreen: React.FC<AccountProps<'Settings'>> = (props) => {
+const SettingsScreen: React.FC<RootProps<'Settings'>> = (props) => {
     let items = ['Theme', 'Language', 'Font Size'];
     let itemsIcon = ['palette', 'language', 'format-size'];
 

@@ -8,9 +8,9 @@ import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import SendVerificationCode from '../../components/molecules/send_verification_code';
 import g_THEME from '../../theme/theme';
 import apis from '../../api/api_service';
-import { RootProps } from '../../navigation/stack_navigation';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../models/state';
+import { RootProps } from '../../navigation/screen_navigation_props';
 
 const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props) => {
     const user = useSelector((state: RootState) => state.user);

@@ -4,19 +4,17 @@ import { ScrollView } from "react-native-gesture-handler";
 import TextField from "../../components/molecules/text_field";
 import { screenHeight, screenWidth } from "../../constants/screen_dimension";
 import CustomHeader from "../../components/molecules/header";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { NotesProps } from "../../navigation/stack_navigations/notes_stack_navigation";
 import PartnerTile from "../../components/organisms/partner_tile";
 import g_THEME from "../../theme/theme";
 import CustomText from "../../components/atoms/text";
 import g_STYLE from "../../styles/styles";
 import IconButton from "../../components/atoms/icon_button";
 import GradientButton from "../../components/molecules/gradient_button";
-import { set } from "immer/dist/internal";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { PaperProvider } from "react-native-paper";
+import { RootProps } from "../../navigation/screen_navigation_props";
 
-const NotesTextAudioScreen: React.FC<NotesProps<'NotesTextAudio'>> = (props) => {
+const NotesTextAudioScreen: React.FC<RootProps<'NotesTextAudio'>> = (props) => {
     const [note, setNote] = useState('');
     const [partner, setPartner] = useState('');
     const [isNew, setIsNew] = useState(false);

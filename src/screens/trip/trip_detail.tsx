@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { screenWidth } from "../../constants/screen_dimension";
-import { HomeProps } from "../../navigation/stack_navigations/trip_stack_navigation";
 import g_STYLE from "../../styles/styles";
 import CustomText from "../../components/atoms/text";
 import SeparateLine from "../../components/atoms/separate_line";
@@ -18,8 +17,9 @@ import { PaperProvider } from "react-native-paper";
 import GradientPopupMenu from "../../components/molecules/gradient_menu";
 import CustomMenuItem from "../../components/atoms/custom_menu_item";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
+import { RootProps } from "../../navigation/screen_navigation_props";
 
-const TripDetailScreen: React.FC<HomeProps<'TripDetail'>> = (props) => {
+const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
     const [schedules, setSchedules] = useState(['a']);
 
     const handleNote = () => {

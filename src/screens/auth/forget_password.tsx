@@ -7,7 +7,7 @@ import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import SendVerificationCode from '../../components/molecules/send_verification_code';
 import g_THEME from '../../theme/theme';
 import apis from '../../api/api_service';
-import { RootProps } from '../../navigation/stack_navigation';
+import { RootProps } from '../../navigation/screen_navigation_props';
 
 const ForgetPasswordScreen: React.FC<RootProps<'ForgetPassword'>> = (props) => {
 

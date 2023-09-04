@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TextField from "../../components/molecules/text_field";
 import TripTile from "../../components/organisms/trip_tile";
 import { screenHeight, screenWidth } from "../../constants/screen_dimension";
-import { HomeProps } from "../../navigation/stack_navigations/trip_stack_navigation";
 import CustomHeader from "../../components/molecules/header";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { RootProps } from "../../navigation/screen_navigation_props";
 
-const TripSearchScreen: React.FC<HomeProps<'TripSearch'>> = (props) => {
+const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
     const [searchText, setSearchText] = useState('');
 
     const handleSearchTextChange = (value: string) => {

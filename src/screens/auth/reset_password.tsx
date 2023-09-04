@@ -1,13 +1,11 @@
 import { StyleSheet, View, Image, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
 import TextField from '../../components/molecules/text_field';
 import CustomText from '../../components/atoms/text';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
-import SendVerificationCode from '../../components/molecules/send_verification_code';
-import g_THEME from '../../theme/theme';
 import apis from '../../api/api_service';
-import { RootProps } from '../../navigation/stack_navigation';
+import { RootProps } from '../../navigation/screen_navigation_props';
 
 const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
     const {user_id, passcode} = props.route.params;

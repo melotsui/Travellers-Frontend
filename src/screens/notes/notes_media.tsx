@@ -1,13 +1,8 @@
 import React, { ReactNode, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import TextField from "../../components/molecules/text_field";
-import TripTile from "../../components/organisms/trip_tile";
+import { View, StyleSheet, FlatList } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { screenHeight, screenWidth } from "../../constants/screen_dimension";
-import { HomeProps } from "../../navigation/stack_navigations/trip_stack_navigation";
 import CustomHeader from "../../components/molecules/header";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { NotesProps } from "../../navigation/stack_navigations/notes_stack_navigation";
 import PartnerTile from "../../components/organisms/partner_tile";
 import g_THEME from "../../theme/theme";
 import CustomText from "../../components/atoms/text";
@@ -19,8 +14,9 @@ import { PaperProvider } from "react-native-paper";
 import SeparateLine from "../../components/atoms/separate_line";
 import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
 import { useBottomSheet } from "../../context/bottom_sheet_context";
+import { RootProps } from "../../navigation/screen_navigation_props";
 
-const NotesMediaScreen: React.FC<NotesProps<'NotesMedia'>> = (props) => {
+const NotesMediaScreen: React.FC<RootProps<'NotesMedia'>> = (props) => {
     const [partner, setPartner] = useState('');
     const [isNew, setIsNew] = useState(false);
     const {setBottomSheetContent, showBottomSheet} = useBottomSheet();

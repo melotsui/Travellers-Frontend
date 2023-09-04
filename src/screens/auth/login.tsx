@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
 import SeparateLine from '../../components/atoms/separate_line';
@@ -11,8 +11,7 @@ import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';
 import { updateUser } from '../../actions/user_actions';
 import { useDispatch } from 'react-redux';
-import { RootProps } from '../../navigation/stack_navigation';
-import profileReducer from '../../reducers/user_reducer';
+import { RootProps } from '../../navigation/screen_navigation_props';
 
 
 const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {

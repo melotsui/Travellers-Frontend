@@ -1,31 +1,19 @@
 import React, { useState } from "react";
-import { View, StyleSheet, FlatList, Button } from "react-native";
-import { RectButton, ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { screenWidth } from "../../constants/screen_dimension";
-import { HomeProps } from "../../navigation/stack_navigations/trip_stack_navigation";
+import { View, StyleSheet, FlatList } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import g_STYLE from "../../styles/styles";
 import CustomText from "../../components/atoms/text";
-import SeparateLine from "../../components/atoms/separate_line";
-import CircularImage from "../../components/atoms/circular_image";
 import GradientButton from "../../components/molecules/gradient_button";
-import g_THEME from "../../theme/theme";
-import RoundRectImage from "../../components/atoms/round_rect_image";
-import ScheduleTile from "../../components/organisms/schedule_tile";
-import { ActivityTypes, MediaTypes } from "../../constants/types";
 import CustomHeader from "../../components/molecules/header";
 import IconButton from "../../components/atoms/icon_button";
-import { PaperProvider } from "react-native-paper";
-import RoundButton from "../../components/atoms/round_button";
-import ImageTile from "../../components/molecules/image_tile";
-import getActivityIcon from "../../helpers/activity_icon";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import TextField from "../../components/molecules/text_field";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { formatDate, formatTime, parseDate, parseTime } from "../../utils/datetime_formatter";
 import PartnerTile from "../../components/organisms/partner_tile";
+import { RootProps } from "../../navigation/screen_navigation_props";
 "../../utils/datetime_formatter";
 
-const ScheduleEditScreen: React.FC<HomeProps<'ScheduleEdit'>> = (props) => {
+const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     const [name, setName] = useState('Japan Gogo');
     const [date, setDate] = useState(parseDate('12/20/2023'));
     const [startTime, setStartTime] = useState(parseTime('10:00'));

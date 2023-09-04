@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import TextField from "../../components/molecules/text_field";
 import { screenHeight, screenWidth } from "../../constants/screen_dimension";
 import CustomHeader from "../../components/molecules/header";
-import { NotesProps } from "../../navigation/stack_navigations/notes_stack_navigation";
 import PartnerTile from "../../components/organisms/partner_tile";
 import g_THEME from "../../theme/theme";
 import CustomText from "../../components/atoms/text";
 import g_STYLE from "../../styles/styles";
-import IconButton from "../../components/atoms/icon_button";
 import GradientButton from "../../components/molecules/gradient_button";
+import { RootProps } from "../../navigation/screen_navigation_props";
 
-const NotesAccessScreen: React.FC<NotesProps<'NotesAccess'>> = (props) => {
+const NotesAccessScreen: React.FC<RootProps<'NotesAccess'>> = (props) => {
     const [note, setNote] = useState('');
     const [partners, setPartners] = useState(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
     const [partnersSelected, setPartnersSelected] = useState([false, false, false, false, false, false, false, false]);

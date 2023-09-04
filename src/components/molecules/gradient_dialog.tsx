@@ -15,9 +15,11 @@ interface GradientPopupDialogProps {
     isSelect: boolean;
     title: string;
     onPress?: () => void;
+    outVisible?: boolean
+    onDismiss?: () => void;
 }
 
-const GradientPopupDialog: React.FC<GradientPopupDialogProps> = ({ children, isSelect, title, onPress }) => {
+const GradientPopupDialog: React.FC<GradientPopupDialogProps> = ({ children, isSelect, title, onPress, outVisible, onDismiss }) => {
 
     const [visible, setVisible] = React.useState(false);
 
@@ -34,11 +36,11 @@ const GradientPopupDialog: React.FC<GradientPopupDialogProps> = ({ children, isS
 
     return (
         <View>
-            <TouchableOpacity onPress={showDialog}>
+            {outVisible == null ? <TouchableOpacity onPress={showDialog}>
                 {children[0]}
-            </TouchableOpacity>
+            </TouchableOpacity> : null}
             <Portal>
-                <Dialog style={styles.dialogContainer} visible={visible} onDismiss={hideDialog}>
+                <Dialog style={styles.dialogContainer} visible={outVisible ? outVisible : visible} onDismiss={onDismiss != null ? onDismiss : hideDialog}>
                     <GradientContainer>
                         <View style={styles.whiteContainer}>
                             <Dialog.Title>
@@ -51,7 +53,7 @@ const GradientPopupDialog: React.FC<GradientPopupDialogProps> = ({ children, isS
                                 <GradientButton size={20} width={0.25} title={"Confirm"} onPress={handleConfirm}></GradientButton>
                                 {isSelect ?
                                     <View>
-                                        <GradientButton size={20} width={0.25} title={"Cancel"} onPress={hideDialog} color={g_THEME.colors.grey}></GradientButton>
+                                        <GradientButton size={20} width={0.25} title={"Cancel"} onPress={onDismiss != null ? onDismiss : hideDialog} color={g_THEME.colors.grey}></GradientButton>
                                     </View> : null
                                 }
                             </Dialog.Actions>

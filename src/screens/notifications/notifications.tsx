@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { screenHeight, screenWidth } from "../../constants/screen_dimension";
 import CustomHeader from "../../components/molecules/header";
 import NotificationTile from "../../components/organisms/notification_tile";
 
-const NotificationsScreen: React.FC = () => {
+const NotificationsScreen: React.FC = (props) => {
 
     return (
         <View style={{backgroundColor: 'white'}}>

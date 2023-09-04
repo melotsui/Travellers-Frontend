@@ -1,23 +1,15 @@
 import React, { useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import g_STYLE from "../../styles/styles";
 import CustomText from "../../components/atoms/text";
 import GradientButton from "../../components/molecules/gradient_button";
 import CustomHeader from "../../components/molecules/header";
-import IconButton from "../../components/atoms/icon_button";
 import TextField from "../../components/molecules/text_field";
-import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { formatDate, formatTime, parseDate, parseTime } from "../../utils/datetime_formatter";
-import PartnerTile from "../../components/organisms/partner_tile";
-import { AccountProps } from "../../navigation/stack_navigations/account_stack_navigation";
-import CircularImage from "../../components/atoms/circular_image";
-import { screenWidth } from "../../constants/screen_dimension";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import g_THEME from "../../theme/theme";
-"../../utils/datetime_formatter";
+import { RootProps } from "../../navigation/screen_navigation_props";
 
-const ChangePasswordScreen: React.FC<AccountProps<'ChangePassword'>> = (props) => {
+const ChangePasswordScreen: React.FC<RootProps<'ChangePassword'>> = (props) => {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
