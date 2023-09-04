@@ -34,15 +34,15 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
     };
 
     const handleLogin = async () => {
-        // if (username == '') {
-        //     setUsernameError('Username cannot be empty');
-        //     return;
-        // }
-        // if (password == '') {
-        //     setPasswordError('Password cannot be empty');
-        //     return;
-        // }
-        await apis.auth.login('vincy' , 'Abc123456')//username, password)
+        if (username == '') {
+            setUsernameError('Username cannot be empty');
+            return;
+        }
+        if (password == '') {
+            setPasswordError('Password cannot be empty');
+            return;
+        }
+        await apis.auth.login(username, password)
             .then((response) => {
                 console.log('success to login');
             })
@@ -63,7 +63,6 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
     
     const handleForgetPassword = () => {
         props.navigation.navigate('ForgetPassword');
-        //props.navigation.navigate('HomeBottomBarNavigation');
     };
 
     return (

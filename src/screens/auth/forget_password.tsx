@@ -15,11 +15,8 @@ const ForgetPasswordScreen: React.FC<RootProps<'ForgetPassword'>> = (props) => {
     const [username, setUsername] = useState('');
     const [code, setCode] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const [codeError, setCodeError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
     useEffect(() => {
         if (seconds > 0) {
@@ -42,16 +39,6 @@ const ForgetPasswordScreen: React.FC<RootProps<'ForgetPassword'>> = (props) => {
         setCodeError('');
     }
 
-    const handlePasswordChange = (value: string) => {
-        setPassword(value);
-        setPasswordError('');
-    }
-
-    const handleConfirmPasswordChange = (value: string) => {
-        setConfirmPassword(value);
-        setConfirmPasswordError('');
-    }
-
     const handleForgetPassword = async () => {
         if (seconds > 0) {
             return;
@@ -72,15 +59,19 @@ const ForgetPasswordScreen: React.FC<RootProps<'ForgetPassword'>> = (props) => {
             });
     };
 
-    const handleResetPassword = async () => {
+    const handleVerifyCode = async () => {
+        if (username == '') {
+            setUsernameError('Username cannot be empty');
+            return;
+        }
         if (code == '') {
             setCodeError('Verification code cannot be empty');
             return;
         }
-        await apis.user.resetPassword(username, password)
+        await apis.user.verifyForgetPassword(username, password)
             .then((response) => {
                 console.log('success to reset password');
-                props.navigation.navigate('Login');
+                props.navigation.navigate('ResetPassword', {user_id: username, passcode: code});
             })
             .catch((error) => {
                 console.log('failed to reset password');
@@ -106,12 +97,12 @@ const ForgetPasswordScreen: React.FC<RootProps<'ForgetPassword'>> = (props) => {
                     <View style={styles.space} />
                     <SendVerificationCode hint={'verification code'} text={code} color={seconds > 0 ? g_THEME.colors.grey : undefined} error={codeError} onChange={handleCodeChange} onPress={handleForgetPassword} />
                     <View style={styles.longSpace} />
-                    <CustomText size={12} color={g_THEME.colors.grey} textAlign={'center'}>Can be re-sent in {seconds} seconds</CustomText>
+                    {seconds > 0 ? <CustomText size={12} color={g_THEME.colors.grey} textAlign={'center'}>Can be re-sent in {seconds} seconds</CustomText> : null}
                     <View style={styles.longSpace} />
                 </View>
                 <GradientButton
                     title="Confirm"
-                    onPress={handleForgetPassword}
+                    onPress={handleVerifyCode}
                 />
             </View>
         </ScrollView>

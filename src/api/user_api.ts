@@ -85,12 +85,37 @@ class UserApi {
         });
     }
 
-    resetPassword = async (username: string, password: string): Promise<string> => {
+    verifyForgetPassword = async (userId: string, passcode: string): Promise<string> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const jsonData = {
-                    "username": username,
-                    "password": password,
+                    "user_id": userId,
+                    "type": VerificationType.PASSWORD,
+                    "passcode": passcode
+                };
+
+                await this.user.api.post('/users/verifyPasscode', jsonData)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    resetPassword = async (userId: string, passcode: string, password: string): Promise<string> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const jsonData = {
+                    "user_id": userId,
+                    "passcode": passcode,
+                    "password": password
                 };
 
                 await this.user.api.post('/users/resetPassword', jsonData)

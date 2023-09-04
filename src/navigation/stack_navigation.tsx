@@ -28,7 +28,7 @@ type RootStackParamList = {
   Register: undefined;
   EmailVerification: undefined;
   ForgetPassword: undefined;
-  ResetPassword: undefined;
+  ResetPassword: { user_id: string; passcode: string };
   HomeBottomBarNavigation: undefined;
 };
 

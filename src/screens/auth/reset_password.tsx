@@ -10,38 +10,12 @@ import apis from '../../api/api_service';
 import { RootProps } from '../../navigation/stack_navigation';
 
 const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
+    const {user_id, passcode} = props.route.params;
 
-    const [seconds, setSeconds] = useState(0);
-    const [username, setUsername] = useState('');
-    const [code, setCode] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [usernameError, setUsernameError] = useState('');
-    const [codeError, setCodeError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
-
-    useEffect(() => {
-        if (seconds > 0) {
-          const timerId = setTimeout(() => {
-            setSeconds(seconds - 1);
-          }, 1000);
-    
-          // Cleanup timer on unmount or when seconds change
-          return () => clearTimeout(timerId);
-        }
-      }, [seconds]);
-
-
-    const handleUsernameChange = (value: string) => {
-        setUsername(value);
-        setUsernameError('');
-    }
-
-    const handleCodeChange = (value: string) => {
-        setCode(value);
-        setCodeError('');
-    }
 
     const handlePasswordChange = (value: string) => {
         setPassword(value);
@@ -53,27 +27,9 @@ const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
         setConfirmPasswordError('');
     }
 
-    const handleForgetPassword = async () => {
-        if (username == '') {
-            setUsernameError('Username or email cannot be empty');
-            return;
-        }
-
-        await apis.user.forgetPassword(username)
-            .then((response) => {
-                console.log('success to send code');
-            })
-            .catch((error) => {
-                console.log('failed to send code');
-                setCodeError(error);
-            });
-    };
-
     const handleResetPassword = async () => {
-        if (code == '') {
-            setCodeError('Verification code cannot be empty');
-            return;
-        }
+        console.log(user_id);
+        console.log(passcode);
         if (password == '') {
             setPasswordError('Password cannot be empty');
             return;
@@ -87,14 +43,14 @@ const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
             return;
         }
 
-        await apis.user.resetPassword(username, password)
+        await apis.user.resetPassword('', '', password)
             .then((response) => {
                 console.log('success to reset password');
                 props.navigation.navigate('Login');
             })
             .catch((error) => {
                 console.log('failed to reset password');
-                setCodeError(error);
+                setConfirmPasswordError(error);
             });
     };
 
@@ -112,16 +68,10 @@ const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
                 <CustomText size={22}>Reset Password</CustomText>
                 <View style={styles.text}>
                     <View style={styles.space} />
-                    <TextField hint={'username or email'} text={username} error={usernameError} onChange={handleUsernameChange} />
-                    <View style={styles.space} />
-                    <SendVerificationCode hint={'verification code'} text={code} error={codeError} onChange={handleCodeChange} onPress={handleForgetPassword} />
-                    <View style={styles.space} />
-                    <CustomText size={12} color={g_THEME.colors.grey}>Can be re-sent in 20 seconds</CustomText>
-                    <View style={styles.space} />
                     <TextField hint={'new password'} text={password} error={passwordError} onChange={handlePasswordChange} />
                     <View style={styles.space} />
                     <TextField hint={'confirm new password'} text={confirmPassword} error={confirmPasswordError} onChange={handleConfirmPasswordChange} />
-                    <View style={styles.space} />
+                    <View style={styles.longSpace} />
                 </View>
                 <GradientButton
                     title="Confirm"
