@@ -44,6 +44,86 @@ class TripApi {
             }
         });
     }
+
+    sendTripInvitation = async (trip_id: number, send_to: number): Promise<Trip> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                const json = {
+                    "trip_id": trip_id,
+                    "send_to": send_to,
+                };
+
+                await this.trip.api.post('/trips/sendTripInvitation', json)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    respondTripInvitation = async (trip_id: number, reponse: boolean): Promise<Trip> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                const json = {
+                    "trip_id": trip_id,
+                    "respond": reponse,
+                };
+
+                await this.trip.api.post('/trips/respondTripInvitation', json)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    createTrip = async (
+        trip_name: string,
+        trip_datetime_from?: Date,
+        trip_datetime_to?: Date,
+        trip_destination?: string,
+        trip_description?: string,
+    ): Promise<Trip> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const json = {
+                    "trip_name": trip_name,
+                    "trip_datetime_from": trip_datetime_from,
+                    "trip_datetime_to": trip_datetime_to,
+                    "trip_destination": trip_destination,
+                    "trip_description": trip_description,
+                };
+
+                await this.trip.api.post('/trips', json)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
 }
 
 export default TripApi;

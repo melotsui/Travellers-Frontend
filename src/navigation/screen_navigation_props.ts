@@ -43,10 +43,18 @@ type RootStackParamList = {
   //trip
   TripSearch: undefined;
   TripDetail: { trip_id: number };
-  TripEdit: undefined;
+  TripAdd: undefined;
+  TripEdit: { trip_id: number };
   Schedule: { schedule_id: number };
-  ScheduleEdit: undefined;
+  ScheduleEdit: { schedule_id: number };
 
+  //notification
+  Notification: undefined;
+
+  //stack
+  TripStack: undefined;
+  NotesStack: undefined;
+  AccountStack: undefined;
 };
 
 export type { RootProps, RootStackParamList};

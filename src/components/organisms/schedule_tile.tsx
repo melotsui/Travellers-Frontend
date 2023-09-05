@@ -47,7 +47,7 @@ const ScheduleTile: React.FC<ScheduleTileProps> = ({ step, title, subTitle, date
             {transportTime != null && <View>
                 <View style={styles.dottedLine}></View>
                 <View style={g_STYLE.row}>
-                    <MaterialIcons color={'rgba(0, 0, 0, 0.21)'} size={20} name={getActivityIcon(ActivityTypes.FOOD)}></MaterialIcons>
+                    <MaterialIcons color={'rgba(0, 0, 0, 0.21)'} size={20} name={'directions-car'}></MaterialIcons>
                     <View style={{ marginHorizontal: 10 }}>
                         <CustomText color={g_THEME.colors.grey} size={16} >{transportTime}</CustomText>
                     </View>

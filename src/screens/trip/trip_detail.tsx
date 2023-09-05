@@ -19,7 +19,7 @@ import CustomMenuItem from "../../components/atoms/custom_menu_item";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { RootProps } from "../../navigation/screen_navigation_props";
 import apis from "../../api/api_service";
-import { formatDate, formatTime, getDate, getTime } from "../../utils/datetime_formatter";
+import { formatDate, formatTime, getDateFromString, getTimeFromString } from "../../utils/datetime_formatter";
 
 const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
     const [trip, setTrip] = useState<Trip | null>(null);
@@ -28,7 +28,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
 
     useEffect(() => {
 
-        const fetchTrip = async () => {
+        const fetchData = async () => {
 
             try {
                 const promise1: Promise<Trip> = apis.trip.getTripById(trip_id);
@@ -44,7 +44,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                 console.error('Error:', error);
             }
         }
-        fetchTrip();
+        fetchData();
         return () => {
             // Perform any cleanup tasks here if necessary
         };
@@ -54,7 +54,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
         props.navigation.navigate('Notes');
     }
     const handleEdit = () => {
-        props.navigation.navigate('TripEdit');
+        props.navigation.navigate('TripEdit', { trip_id: trip_id });
     }
     const handleAddSchedule = () => {
         console.log("add schdule");
@@ -93,8 +93,8 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
 
                     <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDelete}>
                         {[
-                            <CustomMenuItem title={"Delete"} onPress={handleDelete} icon={"delete-outline"} />,
-                            <CustomText size={20}>Are you sure to delete this schedule? Everyone will not be able to access the trip again</CustomText>
+                            <CustomMenuItem title={"Delete"} onPress={handleDelete} icon={"delete-outline"} key={0}/>,
+                            <CustomText size={20} key={1}>Are you sure to delete this schedule? Everyone will not be able to access the trip again</CustomText>
                         ]}
                     </GradientPopupDialog>
                 </GradientPopupMenu>
@@ -105,7 +105,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                         <View style={g_STYLE.row}>
                             <View style={[g_STYLE.col, styles.leftContainer]}>
                                 <CustomText size={25}>{trip!.trip_destination}</CustomText>
-                                <CustomText>{getDate(trip!.trip_datetime_from!)} - {getDate(trip!.trip_datetime_to!)}</CustomText>
+                                <CustomText>{getDateFromString(trip!.trip_datetime_from!)} - {getDateFromString(trip!.trip_datetime_to!)}</CustomText>
                             </View>
                             <View style={styles.rightContainer}>
                                 <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
@@ -147,6 +147,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                         ItemSeparatorComponent={() =>
                             <View style={{ height: 5 }}></View>
                         }
+                        keyExtractor={(schedule: Schedule) => schedule.schedule_id.toString()}
                         data={schedules}
                         renderItem={({ item, index }) => {
                             let transportTime = undefined;
@@ -161,7 +162,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                                 time={formatTime(new Date(item.schedule_datetime!))}
                                 type={ActivityTypes.FOOD}
                                 transportTime={transportTime}
-                                onPress={() => handleScheduleTileChange(item.schedule_id)} />
+                                onPress={() => handleScheduleTileChange(item.schedule_id)}  />
                     }}>
                     </FlatList>}
                 </View>

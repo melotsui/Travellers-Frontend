@@ -9,22 +9,22 @@ import ForgetPasswordScreen from '../screens/auth/forget_password';
 import ResetPasswordScreen from '../screens/auth/reset_password';
 import { RootStackParamList } from './screen_navigation_props';
 
-  const Stack = createNativeStackNavigator<RootStackParamList>();
-  
-  const StackNavigation = () : JSX.Element  => { 
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-    return (
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ contentStyle: {backgroundColor: 'white'}, headerShown: false}} initialRouteName='Login'>
-          <Stack.Screen name="Login" component={LoginScreen}/>
-          <Stack.Screen name="Register" component={RegisterScreen}/>
-          <Stack.Screen name="EmailVerification" component={EmailVerificationScreen}/>
-          <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen}/>
-          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
-          <Stack.Screen name="HomeBottomBarNavigation" component={TabNavigation}/>
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  };
+const StackNavigation = (): JSX.Element => {
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ contentStyle: { backgroundColor: 'white' }, headerShown: false }} initialRouteName='Login'>
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="EmailVerification" component={EmailVerificationScreen} />
+        <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
+        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+        <Stack.Screen name="HomeBottomBarNavigation" component={TabNavigation} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
 export default StackNavigation;

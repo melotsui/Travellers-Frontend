@@ -3,7 +3,7 @@ import { screenWidth } from "../../constants/screen_dimension";
 import g_THEME from "../../theme/theme";
 import React from "react";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { getMediaBackgroundColors, getMediaIconColors, getMediaIcons } from "../../helpers/media_icon";
+import { getMediaBackgroundColors, getMediaIconColors, getMediaIcons } from "../../helpers/media";
 import { MediaTypes } from "../../constants/types";
 
 interface RoundRectImageProps {

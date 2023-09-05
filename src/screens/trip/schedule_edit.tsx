@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import g_STYLE from "../../styles/styles";
@@ -11,11 +11,26 @@ import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/d
 import { formatDate, formatTime, parseDate, parseTime } from "../../utils/datetime_formatter";
 import PartnerTile from "../../components/organisms/partner_tile";
 import { RootProps } from "../../navigation/screen_navigation_props";
+import apis from "../../api/api_service";
+import { MediaModal } from "../../models/media";
+import { ActivityTypes } from "../../constants/types";
+import { PaperProvider } from "react-native-paper";
+import { useBottomSheet } from "../../context/bottom_sheet_context";
+import SeparateLine from "../../components/atoms/separate_line";
+import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
+import g_THEME from "../../theme/theme";
 "../../utils/datetime_formatter";
 
 const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
+    const { schedule_id } = props.route.params;
+    const [scheduleAccess, setScheduleAccess] = useState<ScheduleAccess[] | null>([]);
+    //const [tripAccess, setTripAccess] = useState<TripAccess[] | null>([]);
+    const [scheduleType, setScheduleType] = useState<ScheduleType[] | null>([]);
+    const { showBottomSheet, setBottomSheetContent } = useBottomSheet();
     const [name, setName] = useState('Japan Gogo');
-    const [date, setDate] = useState(parseDate('12/20/2023'));
+    const [place, setPlace] = useState('Japan');
+    const [type, setType] = useState<ScheduleType | null>(null);
+    const [date, setDate] = useState<Date>(parseDate('12/20/2023'));
     const [startTime, setStartTime] = useState(parseTime('10:00'));
     const [endTime, setEndTime] = useState(parseTime('12:00'));
     const [remarks, setRemarks] = useState('');
@@ -24,8 +39,68 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
     const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
+    useEffect(() => {
+
+        const fetchData = async () => {
+
+            try {
+                const promise1: Promise<Schedule> = apis.schedule.getScheduleById(schedule_id)
+                const promise2: Promise<ScheduleAccess[]> = apis.schedule.getScheduleAccess(schedule_id)
+                const promise3: Promise<ScheduleType[]> = apis.schedule.getScheduleTypeList()
+                const [schedule, scheduleAccess, scheduleType] = await Promise.all([promise1, promise2, promise3]);
+
+                setScheduleAccess(scheduleAccess);
+                setScheduleType(scheduleType);
+                setName(schedule.schedule_name);
+                setPlace(schedule.schedule_place ?? '');
+                setType(null);
+                setDate(parseDate(formatDate(new Date(schedule!.schedule_datetime!))));
+                setStartTime(parseTime(formatTime(new Date(schedule!.schedule_datetime!))));
+                setEndTime(parseTime(formatTime(new Date(schedule!.schedule_datetime!))));
+                setRemarks(schedule.schedule_remark ?? '');
+
+
+            } catch (error) {
+                // Handle any errors that occurred during the API calls
+                console.error('Error:', error);
+            }
+        }
+
+        fetchData();
+        return () => {
+            // Perform any cleanup tasks here if necessary
+        };
+    }, []);
+
+    const content = (): ReactNode => {
+        return <>
+            <View style={{ height: 300 }}>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    keyExtractor={(item) => item.schedule_type_id.toString()}
+                    data={scheduleType}
+                    renderItem={({ item, index }) => (
+                        <>
+                            <BottomSheetTile onPress={() => { setType(item) }}>{item.schedule_type}</BottomSheetTile>
+                            { scheduleType!.length - 1 != index && <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>}
+                        </>
+                    )}>
+                </FlatList></View>
+        </>
+    }
+
     const handleName = (value: string) => {
         setName(value);
+    }
+
+    const handlePlace = (value: string) => {
+        setPlace(value);
+    }
+
+    const handleType = () => {
+        console.log(scheduleType);
+        setBottomSheetContent(content());
+        showBottomSheet();
     }
 
     const handleDate = (event: DateTimePickerEvent, date?: Date) => {
@@ -57,6 +132,11 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
         setPartner(value);
     }
 
+    const handleScheduleAccess = (value: ScheduleAccess) => {
+        const updated: ScheduleAccess[] = scheduleAccess?.filter((item) => item.user_id != value.user_id)!;
+        setScheduleAccess(updated);
+    }
+
     const handleDatePicker = () => {
         setShowDatePicker(true);
     }
@@ -69,16 +149,29 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
         setShowEndTimePicker(true);
     }
 
-    const handleInvitePartner = () => {
+    const handleSave = async () => {
+        await apis.schedule.updateSchedule(schedule_id, name, type?.schedule_type_id ?? undefined, startTime, endTime, place, remarks)
+            .then((response) => {
+                console.log('success to update schedule');
+            })
+            .catch((error) => {
+                console.log('failed to update schedule');
+            });
     }
 
     return (
         <View>
-            <CustomHeader title={"Japan Gogo"}></CustomHeader>
+            <CustomHeader title={name ?? 'Schedule'}></CustomHeader>
             <ScrollView>
                 <View style={[styles.container, g_STYLE.col]}>
                     <CustomText size={25}>Trip Name</CustomText>
                     <TextField text={name} onChange={handleName}></TextField>
+
+                    <CustomText size={25}>Place</CustomText>
+                    <TextField text={place} onChange={handlePlace}></TextField>
+
+                    <CustomText size={25}>Type</CustomText>
+                    <TextField text={type?.schedule_type ?? 'Please select'} onPressText={handleType}></TextField>
 
                     <CustomText size={25}>Date</CustomText>
                     <View style={[styles.datetimeContainer, g_STYLE.row]}>
@@ -121,29 +214,30 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                     <CustomText size={25}>Remarks</CustomText>
                     <TextField text={remarks} onChange={handleRemarks} numberOfLines={4}></TextField>
                     <CustomText size={25}>Accessible Partners</CustomText>
-                    <View style={[styles.partnerContainer, g_STYLE.row]}>
+                    {/*<View style={[styles.partnerContainer, g_STYLE.row]}>
                         <View style={styles.partner}>
                             <TextField text={partner} onChange={handlePartner} hint="Send Invitation"></TextField>
                         </View>
                         <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
-                    </View>
+                        </View>*/}
                     <FlatList
                         scrollEnabled={false}
                         showsVerticalScrollIndicator={false}
                         ItemSeparatorComponent={() =>
                             <View style={{ height: 5 }}></View>
                         }
-                        data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
+                        data={scheduleAccess}
                         renderItem={({ item, index }) => (
-                            <PartnerTile 
-                            name={"Samoyed Meme"} 
-                            uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} 
-                            onPress={handleInvitePartner} 
-                            isPending={true}></PartnerTile>
+                            <PartnerTile
+                                name={"Samoyed Meme"}
+                                uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}
+                                onPress={() => handleScheduleAccess(item)}
+                                isPending={false}
+                                isAdded={true}></PartnerTile>
                         )}>
                     </FlatList>
                     <View style={styles.saveButton}>
-                        <GradientButton title={"Save"} onPress={() => { }}></GradientButton>
+                        <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
                     </View>
                 </View>
             </ScrollView>

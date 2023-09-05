@@ -35,3 +35,18 @@ export function getMediaBackgroundColors(type: MediaTypes): string {
             return g_THEME.colors.lightGrey;
     }
 }
+
+export function parseMediaType(type: string): MediaTypes {
+    switch (type) {
+        case 'photo':
+            return MediaTypes.IMAGE;
+        case 'text':
+            return MediaTypes.TEXT;
+        case 'video':
+            return MediaTypes.VIDEO;
+        case 'audio':
+            return MediaTypes.AUDIO;
+        default:
+            return MediaTypes.OTHER;
+    }
+}

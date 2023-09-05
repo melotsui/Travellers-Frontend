@@ -1,5 +1,5 @@
 export function parseDate(date: string): Date {
-    const [month, day, year] = date.split('/');
+    const [year, month, day] = date.split('-');
     return new Date(Number(year), Number(month) - 1, Number(day));
 }
 
@@ -10,10 +10,10 @@ export function parseTime(time: string): Date {
 
 export function formatDate(date: Date): string {
     const year: number = date.getFullYear();
-    let month: string = String(date.getMonth() +1).padStart(2, '0');
+    let month: string = String(date.getMonth() + 1).padStart(2, '0');
     let day: string = String(date.getDate()).padStart(2, '0');
 
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;
 }
 
 export function formatTime(date: Date): string {
@@ -24,12 +24,21 @@ export function formatTime(date: Date): string {
     return `${hours}:${minutes}`;
 }
 
-export function getDate(datetime: string): string {
-    const [date, time] = datetime.split(' ');
-    return date;
+export function formatDatetime(date?: Date): string | null {
+    if(!date) return null
+    return `${formatDate(date)} ${formatTime(date)}`;
 }
 
-export function getTime(datetime: string): string {
+export function getDateFromString(datetime: string): string {
+    try {
+        const [date, time] = datetime.split(' ');
+        return date;
+    } catch (e) {
+        return '';
+    }
+}
+
+export function getTimeFromString(datetime: string): string {
     const [date, time] = datetime.split(' ');
     return time;
 }

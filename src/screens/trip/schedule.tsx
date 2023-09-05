@@ -21,31 +21,43 @@ import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { RootProps } from "../../navigation/screen_navigation_props";
 import apis from "../../api/api_service";
 import { formatDate } from "../../utils/datetime_formatter";
+import { MediaModal } from "../../models/media";
 
 const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     const { schedule_id } = props.route.params;
     const [schedule, setSchedule] = useState<Schedule | null>(null);
+    const [media, setMedia] = useState<MediaModal[] | null>(null);
+    const [scheduleAccess, setScheduleAccess] = useState<ScheduleAccess[] | null>(null);
 
     useEffect(() => {
 
-        const fetchSchedule = async () => {
-            await apis.schedule.getScheduleById(schedule_id)
-                .then((response) => {
-                    console.log('success to get schedule');
-                    setSchedule(response);
-                })
-                .catch((error) => {
-                    console.log('failed to get schedule');
-                });
+        const fetchData = async () => {
+
+            try {
+                const promise1: Promise<Schedule> = apis.schedule.getScheduleById(schedule_id)
+                const promise2: Promise<MediaModal[]> = apis.media.getScheduleMedia(schedule_id)
+                const promise3: Promise<ScheduleAccess[]> = apis.schedule.getScheduleAccess(schedule_id)
+                const [schedule, media, scheduleAccess] = await Promise.all([promise1, promise2, promise3]);
+
+                setSchedule(schedule);
+                setMedia(media);
+                setScheduleAccess(scheduleAccess);
+                console.log(typeof media[0].media.media_type);
+
+            } catch (error) {
+                // Handle any errors that occurred during the API calls
+                console.error('Error:', error);
+            }
         }
-        fetchSchedule();
+
+        fetchData();
         return () => {
             // Perform any cleanup tasks here if necessary
         };
     }, []);
 
     const handleEdit = () => {
-        props.navigation.navigate('ScheduleEdit');
+        props.navigation.navigate('ScheduleEdit', { schedule_id: schedule_id });
     }
 
     const handleNavigation = () => {
@@ -102,12 +114,12 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                 ItemSeparatorComponent={() =>
                                     <View style={{ width: screenWidth * 0.02 }}></View>
                                 }
-                                data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
+                                data={media}
                                 renderItem={({ item, index }) => {
                                     if (index == 0) {
                                         return <RoundRectImage type={MediaTypes.OTHER} onPress={handleAddMedia}></RoundRectImage>
                                     } else {
-                                        return <RoundRectImage type={MediaTypes.VIDEO} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></RoundRectImage>
+                                        return <RoundRectImage type={media![index].media.media_type!} uri={media![index].media.media_preview_url}></RoundRectImage>
                                     }
                                 }}
                             ></FlatList>
@@ -122,7 +134,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                             ItemSeparatorComponent={() =>
                                 <View style={{ height: 5 }}></View>
                             }
-                            data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
+                            data={scheduleAccess}
                             renderItem={({ item, index }) => (
                                 <ImageTile title={"Samoyed Meme"} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></ImageTile>
                             )}>

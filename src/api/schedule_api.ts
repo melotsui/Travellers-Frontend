@@ -44,6 +44,80 @@ class ScheduleApi {
             }
         });
     }
+
+    getScheduleAccess = async (schedule_id: number): Promise<ScheduleAccess[]> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                await this.schedule.api.get('/schedule_accesses/1')// + schedule_id)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.schedule_accesses);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    updateSchedule = async (
+        schedule_id: number,
+        schedule_name: string, 
+        schedule_type_id?: number,
+        schedule_datetime_from?: Date,
+        schedule_datetime_to?: Date,
+        schedule_place?: string,
+        schedule_remark?: string
+        ): Promise<Schedule> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                const json = {
+                    "schedule_name": schedule_name,
+                    "schedule_type_id": schedule_type_id,
+                    "schedule_datetime_from": schedule_datetime_from,
+                    "schedule_datetime_to": schedule_datetime_to,
+                    "schedule_place": schedule_place,
+                    "schedule_remark": schedule_remark,
+                }
+
+                await this.schedule.api.put('/schedules/1', json)// + schedule_id)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.schedule_accesses);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    getScheduleTypeList = async (): Promise<ScheduleType[]> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                await this.schedule.api.get('/schedule_types')
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.schedule_types);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
 }
 
 export default ScheduleApi;

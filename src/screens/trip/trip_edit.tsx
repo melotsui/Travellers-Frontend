@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import g_STYLE from "../../styles/styles";
@@ -11,8 +11,12 @@ import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/d
 import { formatDate, parseDate } from "../../utils/datetime_formatter";
 import PartnerTile from "../../components/organisms/partner_tile";
 import { RootProps } from "../../navigation/screen_navigation_props";
+import apis from "../../api/api_service";
+import { shareFriend } from "../../helpers/share";
 
 const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) => {
+    const { trip_id } = props.route.params;
+    const [trip, setTrip] = useState<Trip | null>(null);
     const [name, setName] = useState('Japan Gogo');
     const [startDate, setStartDate] = useState(parseDate('12/20/2023'));
     const [endDate, setEndDate] = useState(parseDate('12/25/2023'));
@@ -21,6 +25,32 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
+    useEffect(() => {
+
+        const fetchData = async () => {
+
+            try {
+                const promise1: Promise<Trip> = apis.trip.getTripById(trip_id);
+
+                const [trip] = await Promise.all([promise1]);
+
+                setTrip(trip);
+                setName(trip.trip_name);
+                setStartDate(new Date(trip!.trip_datetime_from ?? ''));
+                setEndDate(new Date(trip!.trip_datetime_to ?? ''));
+                setDescription(trip.trip_description ?? '');
+
+            } catch (error) {
+                // Handle any errors that occurred during the API calls
+                console.error('Error:', error);
+            }
+        }
+        fetchData();
+        return () => {
+            // Perform any cleanup tasks here if necessary
+        };
+    }, []);
+    
     const handleName = (value: string) => {
         setName(value);
     }
@@ -58,8 +88,15 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
         setShowEndDatePicker(true);
     }
 
-
-    const handleInvitePartner = () => {
+    const handleInvitePartner = async () => {
+        shareFriend('Join travellers! Let\'s plan your trip together');
+        // await apis.trip.sendTripInvitation(trip_id, 0)
+        //     .then((response) => {
+        //         console.log('success to invite partner');
+        //     })
+        //     .catch((error) => {
+        //         console.log('failed to invite partner');
+        //     });
     }
 
     const handleSave = () => {
@@ -67,7 +104,7 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
 
     return (
         <View>
-            <CustomHeader title={"Japan Gogo"}></CustomHeader>
+            <CustomHeader title={trip?.trip_name ?? 'Trip'}></CustomHeader>
             <ScrollView>
                 <View style={[styles.container, g_STYLE.col]}>
                     <CustomText size={25}>Trip Name</CustomText>

@@ -15,9 +15,10 @@ interface PartnerTileProps {
     onPress?: () => void;
     isPending: boolean;
     isSelect?: boolean;
+    isAdded?: boolean;
 }
 
-const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending, isSelect }) => {
+const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending, isSelect, isAdded }) => {
 
     const handleInvitePartner = () => {
         if (onPress != null) {
@@ -38,7 +39,7 @@ const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending
             <View style={[styles.container, g_STYLE.row]}>
                 <ImageTile title={name} uri={uri}></ImageTile>
                 {isPending ? <RoundButton icon={"update"} title={"Pending"} color='orange'></RoundButton> : null}
-                {isSelect == null && <IconButton onPress={handleInvitePartner} icon={"close"} color={g_THEME.colors.grey} size={20}></IconButton>}
+                {isSelect == null && <IconButton onPress={handleInvitePartner} icon={isAdded ? "add" : "close"} color={g_THEME.colors.grey} size={20}></IconButton>}
             </View></>
     }
 
