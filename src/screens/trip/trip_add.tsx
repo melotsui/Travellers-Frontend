@@ -60,9 +60,8 @@ const TripAddScreen: React.FC<RootProps<'TripAdd'>> = (props) => {
     const handleEndDatePicker = () => {
         setShowEndDatePicker(true);
     }
-
     const handleInvitePartner = () => {
-        //shareFriend('Join travellers! Let\'s plan your trip together');
+        shareFriend('Join travellers! Let\'s plan your trip together');
     }
 
     const handleSave = async () => {

@@ -4,41 +4,19 @@ import { Share } from "react-native";
 
 
 export async function shareFriend(message: string): Promise<void> {
-    const [url, setUrl] = useState<string | null>(null);
-    const [processing, setProcessing] = useState(true);
-
-    const useInitialURL = () => {
-
-        useEffect(() => {
-            const getUrlAsync = async () => {
-                // Get the deep link used to open the app
-                const initialUrl = await Linking.getInitialURL();
-
-                // The setTimeout is just for testing purpose
-                setTimeout(() => {
-                    setUrl(initialUrl);
-                    setProcessing(false);
-                }, 1000);
-            };
-
-            getUrlAsync();
-
-            console.log('url', url);
-        }, []);
-    };
-    await useInitialURL();
 
     try {
-        let url = '';
+        console.log('shareFriend');
+        let url = 'http://travellers.com?share_id=1';
         const appId = 'com.travellers';
-        if (Platform.OS === 'ios') {
-            url = `https://apps.apple.com/app/travellers/${appId}`
-        } else {
-            url = `https://play.google.com/store/apps/details?id=${appId}`
-        }
+        // if (Platform.OS === 'ios') {
+        //     url = `https://apps.apple.com/app/travellers/${appId}`
+        // } else {
+        //     url = `https://play.google.com/store/apps/details?id=${appId}`
+        // }
 
         const result = await Share.share({
-            message: message,
+            message: 'http://travellers.com?share_id=1\n' + message,
             url: url,
             title: 'Travellers',
         });

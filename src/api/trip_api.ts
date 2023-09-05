@@ -1,3 +1,4 @@
+import { formatDatetime } from '../utils/datetime_formatter';
 import APIs from './api';
 
 class TripApi {
@@ -104,8 +105,8 @@ class TripApi {
             try {
                 const json = {
                     "trip_name": trip_name,
-                    "trip_datetime_from": trip_datetime_from,
-                    "trip_datetime_to": trip_datetime_to,
+                    "trip_datetime_from": formatDatetime(trip_datetime_from),
+                    "trip_datetime_to": formatDatetime(trip_datetime_to),
                     "trip_destination": trip_destination,
                     "trip_description": trip_description,
                 };

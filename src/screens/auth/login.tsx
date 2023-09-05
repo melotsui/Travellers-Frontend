@@ -12,6 +12,7 @@ import apis from '../../api/api_service';
 import { updateUser } from '../../actions/user_actions';
 import { useDispatch } from 'react-redux';
 import { RootProps } from '../../navigation/screen_navigation_props';
+import { useRoute } from '@react-navigation/native';
 
 
 const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
