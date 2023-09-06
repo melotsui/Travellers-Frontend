@@ -50,17 +50,17 @@ const TabNavigation: React.FC<RootProps<'HomeBottomBarNavigation'>> = (props) =>
             let color = focused ? 'white' : '#BDBDBD';
             let name = getName(route.name);
 
-            return route.name != 'TripAdd' ? <CustomText color={color} size={12}>{name}</CustomText> : null;
+            return route.name != 'TripEdit' ? <CustomText color={color} size={12}>{name}</CustomText> : null;
           },
           // tabBarLabel: getName(route.name),
           tabBarIcon: ({ color }) => {
             let iconName = getIcon(route.name);
-            if (route.name == "TripAdd")
+            if (route.name == "TripEdit")
               return (
                 <View style={styles.iconContainer}>
                   <MaterialIcons
                     name={iconName}
-                    color={g_THEME.colors.shadowBlue}
+                    color={g_THEME.colors.secondary}
                     size={70}
                     style={styles.icon}
                   />

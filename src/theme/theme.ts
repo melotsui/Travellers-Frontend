@@ -31,9 +31,11 @@ const g_THEME: Theme = {
     shadowBlue: 'rgba(177, 205, 253, 1)',
   },
   gradient: {
-    colors: ["#8A8FFF", "#98D8FD", "white"],
+    colors: ['rgba(44, 52, 242, 1)', 'rgba(47, 146, 203, 1)'],
+    //colors: ["#8A8FFF", "#98D8FD", "white"],
     lightColors: ['rgba(138, 143, 255, 0.22)', 'rgba(152, 216, 253, 0.35)', 'rgba(255, 255, 255, 0.46)'],
-    locations: [0, 0.95, 1],
+    locations: [0, 1]
+    //locations: [0, 0.95, 1],
   },
   fonts: {
     regular: 'MergeOne-Regular',
