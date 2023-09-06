@@ -1,5 +1,6 @@
 import ApiService from './api';
 import AuthApi from './auth_api';
+import { setupInterceptors } from './interceptors';
 import MediaApi from './media_api';
 import ScheduleApi from './schedule_api';
 import TripApi from './trip_api';
@@ -20,7 +21,7 @@ class APIs {
         this.trip = new TripApi(this.apiService);
         this.schedule = new ScheduleApi(this.apiService);
         this.media = new MediaApi(this.apiService);
-        
+        setupInterceptors(this.apiService);
     }
 
     setToken(token: string): void {

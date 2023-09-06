@@ -14,7 +14,6 @@ class ApiService {
       },
     });
     this.token = null;
-    setupInterceptors(this.api);
   }
 
   setToken(token: string): void {

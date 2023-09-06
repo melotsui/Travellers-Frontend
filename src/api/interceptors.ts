@@ -1,8 +1,26 @@
 import { AxiosInstance } from "axios";
-import apis from "./api_service";
+import ApiService from "./api";
 
-export const setupInterceptors = (api: AxiosInstance) => {
-    api.interceptors.response.use(
+const refreshToken = async (api: AxiosInstance): Promise<string> => {
+    return new Promise<string>(async (resolve, reject) => {
+        try {
+            await api.post('/refresh')
+                .then((response) => {
+                    const result = response.data;
+                    resolve(result.data['access_token'])
+                })
+                .catch((error) => {
+                    const result = error.response.data;
+                    reject(result.message);
+                });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+export const setupInterceptors = (apiService: ApiService) => {
+    apiService.api.interceptors.response.use(
         (response) => response,
         async (error) => {
             const { config, response } = error;
@@ -19,7 +37,7 @@ export const setupInterceptors = (api: AxiosInstance) => {
                     await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for 3 seconds before retrying
 
                     console.log('Retrying request...');
-                    return api.request(config); // Retry the failed request
+                    return apiService.api.request(config); // Retry the failed request
                 } catch (error) {
                     console.error('Reconnection attempt failed', error);
                     return Promise.reject(error); // Reject if the reconnection attempt fails
@@ -33,15 +51,15 @@ export const setupInterceptors = (api: AxiosInstance) => {
                 try {
                     console.log('Refreshing token...');
                     // Make a request to the token refresh endpoint
-                    const response = await apis.auth.refreshToken();
+                    const response = await refreshToken(apiService.api);
 
                     const newAccessToken = response;
 
                     // Update the authorization header for subsequent requests
-                    apis.setToken(newAccessToken);
+                    apiService.setToken(newAccessToken);
 
                     // Retry the original request
-                    return api.request(config);
+                    return apiService.api.request(config);
                 } catch (error) {
                     console.error('Token refresh failed', error);
                     return Promise.reject(error);

@@ -74,24 +74,6 @@ class AuthApi {
             }
         });
     }
-
-    refreshToken = async (): Promise<string> => {
-        return new Promise<string>(async (resolve, reject) => {
-            try {
-                await this.auth.api.post('/refresh')
-                    .then((response) => {
-                        const result = response.data;
-                        resolve(result.data['access_token'])
-                    })
-                    .catch((error) => {
-                        const result = error.response.data;
-                        reject(result.message);
-                    });
-            } catch (error) {
-                reject(error);
-            }
-        });
-    }
 }
 
 export default AuthApi;
