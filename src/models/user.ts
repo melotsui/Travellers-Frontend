@@ -19,7 +19,7 @@ class User {
 
   constructor(
       user_id: number = 0,
-      username: string,
+      username: string = '',
       name?: string,
       created_at?: Date,
       email?: string,
@@ -56,4 +56,18 @@ class User {
   }
 }
 
-export default User;
+class TripPartnerModal{
+  trip_partners: User[];
+  trip_invitations: User[];
+
+  constructor(
+      trip_partners: User[],
+      trip_invitations: User[]
+  ) {
+      this.trip_partners = trip_partners;
+      this.trip_invitations = trip_invitations;
+  }
+
+}
+
+export { User, TripPartnerModal };

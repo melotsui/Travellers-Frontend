@@ -1,16 +1,9 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import g_STYLE from '../../styles/styles';
 import g_THEME from '../../theme/theme';
-import ImageTile from '../molecules/image_tile';
-import IconButton from '../atoms/icon_button';
-import RoundButton from '../atoms/round_button';
-import { isPending } from '@reduxjs/toolkit';
-import GradientContainer from '../atoms/gradient_container';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomText from '../atoms/text';
-import SeparateLine from '../atoms/separate_line';
 
 interface BulletPointProps {
     name: string;

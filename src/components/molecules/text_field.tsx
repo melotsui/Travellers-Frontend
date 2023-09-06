@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import g_THEME from '../../theme/theme';
-import { screenHeight, screenWidth } from '../../constants/screen_dimension';
+import { screenWidth } from '../../constants/screen_dimension';
 import CustomText from '../atoms/text';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Container from '../atoms/container';

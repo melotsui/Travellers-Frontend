@@ -7,8 +7,6 @@ import CustomText from "../atoms/text";
 import React from "react";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import getActivityIcon from "../../helpers/activity_icon";
-import { Colors } from "react-native/Libraries/NewAppScreen";
-import { opacity } from "react-native-reanimated";
 import SeparateLine from "../atoms/separate_line";
 import { TouchableOpacity } from "react-native-gesture-handler";
 

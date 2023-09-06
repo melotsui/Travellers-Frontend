@@ -1,6 +1,4 @@
 import { View, StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import CustomText from "../atoms/text";
 import CircularImage from "../atoms/circular_image";
 import g_STYLE from "../../styles/styles";

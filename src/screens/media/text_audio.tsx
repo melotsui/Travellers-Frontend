@@ -14,7 +14,7 @@ import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { PaperProvider } from "react-native-paper";
 import { RootProps } from "../../navigation/screen_navigation_props";
 
-const NotesTextAudioScreen: React.FC<RootProps<'NotesTextAudio'>> = (props) => {
+const TextAudioScreen: React.FC<RootProps<'TextAudio'>> = (props) => {
     const [note, setNote] = useState('');
     const [partner, setPartner] = useState('');
     const [isNew, setIsNew] = useState(false);
@@ -158,4 +158,4 @@ const NotesTextAudioScreen: React.FC<RootProps<'NotesTextAudio'>> = (props) => {
 
 }
 
-export default NotesTextAudioScreen;
+export default TextAudioScreen;

@@ -1,5 +1,5 @@
-import { BackHandler, StyleSheet, View } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { TripStackNavigation } from './stack_navigations/trip_stack_navigation';
 import LinearGradient from 'react-native-linear-gradient';
@@ -9,12 +9,12 @@ import { screenHeight } from '../constants/screen_dimension';
 import { NotesStackNavigation } from './stack_navigations/notes_stack_navigation';
 import NotificationsScreen from '../screens/notifications/notifications';
 import { AccountStackavigation } from './stack_navigations/account_stack_navigation';
-import TripAddScreen from '../screens/trip/trip_add';
 import CustomText from '../components/atoms/text';
 import GradientBottomSheet from '../components/molecules/gradient__bottom_sheet';
 import { useBottomSheet } from '../context/bottom_sheet_context';
 import { PaperProvider } from 'react-native-paper';
 import { RootProps, RootStackParamList } from './screen_navigation_props';
+import TripEditScreen from '../screens/trip/trip_edit';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -50,7 +50,7 @@ const TabNavigation: React.FC<RootProps<'HomeBottomBarNavigation'>> = (props) =>
             let color = focused ? 'white' : '#BDBDBD';
             let name = getName(route.name);
 
-            return route.name != 'TripAdd' ? <CustomText color={color} size={14}>{name}</CustomText> : null;
+            return route.name != 'TripAdd' ? <CustomText color={color} size={12}>{name}</CustomText> : null;
           },
           // tabBarLabel: getName(route.name),
           tabBarIcon: ({ color }) => {
@@ -79,7 +79,7 @@ const TabNavigation: React.FC<RootProps<'HomeBottomBarNavigation'>> = (props) =>
       >
           <Tab.Screen name="TripStack" component={TripStackNavigation}></Tab.Screen>
           <Tab.Screen name="NotesStack" component={NotesStackNavigation}></Tab.Screen>
-          <Tab.Screen name="TripAdd" component={TripAddScreen}></Tab.Screen>
+          <Tab.Screen name="TripEdit" component={TripEditScreen} initialParams={{ trip_id: null}}></Tab.Screen>
           <Tab.Screen name="Notification" component={NotificationsScreen}></Tab.Screen>
           <Tab.Screen name="AccountStack" component={AccountStackavigation}></Tab.Screen>
         </Tab.Navigator></LinearGradient>
@@ -110,7 +110,7 @@ function getIcon(name: string): string {
       return 'card-travel';
     case 'NotesStack':
       return 'description';
-    case 'TripAdd':
+    case 'TripEdit':
       return 'add-circle';
     case 'Notification':
       return 'notifications';

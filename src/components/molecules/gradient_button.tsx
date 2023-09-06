@@ -47,11 +47,11 @@ const GradientButton: React.FC<GradientButtonProps> = ({
       {color == null ?
         <GradientContainer>
           <View style={styles.buttonText}>
-            <CustomText size={size ? size : 25} color={textColor ? textColor :　'white'}>{title}</CustomText>
+            <CustomText size={size ? size : 25} color={textColor ? textColor :　'white'} textAlign='center'>{title}</CustomText>
           </View>
         </GradientContainer> :
         <View style={styles.buttonText}>
-          <CustomText size={size ? size : 25} color={textColor ? textColor : 'white'}>{title}</CustomText>
+          <CustomText size={size ? size : 25} color={textColor ? textColor : 'white'} textAlign='center'>{title}</CustomText>
         </View>
       }
     </TouchableOpacity>

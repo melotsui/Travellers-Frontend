@@ -2,6 +2,7 @@ import { MediaTypes } from "../constants/types";
 import g_THEME from "../theme/theme";
 
 export function getMediaIcons(type: MediaTypes): string {
+    console.log("getMediaIcons ", type)
     switch (type) {
         case MediaTypes.VIDEO:
             return 'play-circle';

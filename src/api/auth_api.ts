@@ -1,7 +1,6 @@
-import User from '../models/user';
+import { User } from '../models/user';
 import { Response } from '../models/reponse';
 import APIs from './api';
-import apis from './api_service';
 
 class AuthApi {
     private auth: APIs;
@@ -22,7 +21,7 @@ class AuthApi {
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data['access_token']);
-                        apis.setToken(result.data['access_token']);
+                        this.auth.setToken(result.data['access_token']);
                     })
                     .catch((error) => {
                         const result = error.response.data;
@@ -46,7 +45,7 @@ class AuthApi {
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data['access_token']);
-                        apis.setToken(result.data['access_token']);
+                        this.auth.setToken(result.data['access_token']);
                     })
                     .catch((error) => {
                         const result = error.response.data;

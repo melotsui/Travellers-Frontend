@@ -6,7 +6,6 @@ import g_THEME from '../../theme/theme';
 import ImageTile from '../molecules/image_tile';
 import IconButton from '../atoms/icon_button';
 import RoundButton from '../atoms/round_button';
-import { isPending } from '@reduxjs/toolkit';
 import GradientContainer from '../atoms/gradient_container';
 
 interface PartnerTileProps {

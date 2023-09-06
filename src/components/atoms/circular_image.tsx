@@ -1,5 +1,4 @@
 import { Image, StyleSheet, View } from "react-native";
-import { screenWidth } from "../../constants/screen_dimension";
 import g_THEME from "../../theme/theme";
 import React from "react";
 

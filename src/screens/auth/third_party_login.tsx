@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
-import React, { useState } from 'react'
+import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
+import React from 'react'
 import { screenWidth } from '../../constants/screen_dimension';
 import g_STYLE from '../../styles/styles';
 

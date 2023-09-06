@@ -5,58 +5,60 @@ import g_STYLE from "../../styles/styles";
 import CustomText from "../../components/atoms/text";
 import GradientButton from "../../components/molecules/gradient_button";
 import CustomHeader from "../../components/molecules/header";
-import IconButton from "../../components/atoms/icon_button";
 import TextField from "../../components/molecules/text_field";
-import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { formatDate, formatTime, parseDate, parseTime } from "../../utils/datetime_formatter";
+import { formatDate, formatDatetime, formatTime } from "../../utils/datetime_formatter";
 import PartnerTile from "../../components/organisms/partner_tile";
 import { RootProps } from "../../navigation/screen_navigation_props";
 import apis from "../../api/api_service";
-import { MediaModal } from "../../models/media";
-import { ActivityTypes } from "../../constants/types";
-import { PaperProvider } from "react-native-paper";
 import { useBottomSheet } from "../../context/bottom_sheet_context";
 import SeparateLine from "../../components/atoms/separate_line";
 import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
 import g_THEME from "../../theme/theme";
+import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import { TripPartnerModal } from "../../models/user";
 "../../utils/datetime_formatter";
 
 const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
-    const { schedule_id } = props.route.params;
+    const { schedule_id, trip_id } = props.route.params;
     const [scheduleAccess, setScheduleAccess] = useState<ScheduleAccess[] | null>([]);
     //const [tripAccess, setTripAccess] = useState<TripAccess[] | null>([]);
     const [scheduleType, setScheduleType] = useState<ScheduleType[] | null>([]);
-    const { showBottomSheet, setBottomSheetContent } = useBottomSheet();
-    const [name, setName] = useState('Japan Gogo');
-    const [place, setPlace] = useState('Japan');
+    const { showBottomSheet, setBottomSheetContent, hideBottomSheet } = useBottomSheet();
+    const [name, setName] = useState('');
+    const [place, setPlace] = useState('');
     const [type, setType] = useState<ScheduleType | null>(null);
-    const [date, setDate] = useState<Date>(parseDate('12/20/2023'));
-    const [startTime, setStartTime] = useState(parseTime('10:00'));
-    const [endTime, setEndTime] = useState(parseTime('12:00'));
+    const [date, setDate] = useState<Date>(new Date());
+    const [startTime, setStartTime] = useState<Date>(new Date('0000-00-00T00:00:00'));
     const [remarks, setRemarks] = useState('');
-    const [partner, setPartner] = useState('');
+    const [partner, setPartner] = useState<TripPartnerModal | null>(null);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
-    const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
     useEffect(() => {
 
         const fetchData = async () => {
 
             try {
+                await apis.schedule.getScheduleTypeList()
+                    .then((response) => {
+                        setScheduleType(response);
+                    })
+                    .catch((error) => {
+                        console.log('failed to get schedule type list');
+                    });
+                if (schedule_id == null) return;
                 const promise1: Promise<Schedule> = apis.schedule.getScheduleById(schedule_id)
                 const promise2: Promise<ScheduleAccess[]> = apis.schedule.getScheduleAccess(schedule_id)
-                const promise3: Promise<ScheduleType[]> = apis.schedule.getScheduleTypeList()
-                const [schedule, scheduleAccess, scheduleType] = await Promise.all([promise1, promise2, promise3]);
+                const [schedule, scheduleAccess] = await Promise.all([promise1, promise2]);
 
                 setScheduleAccess(scheduleAccess);
-                setScheduleType(scheduleType);
                 setName(schedule.schedule_name);
                 setPlace(schedule.schedule_place ?? '');
-                setType(null);
-                setDate(parseDate(formatDate(new Date(schedule!.schedule_datetime!))));
-                setStartTime(parseTime(formatTime(new Date(schedule!.schedule_datetime!))));
-                setEndTime(parseTime(formatTime(new Date(schedule!.schedule_datetime!))));
+                setType(schedule.schedule_type!);
+                setDate(new Date(schedule!.schedule_datetime!));
+                setStartTime(new Date(schedule!.schedule_datetime!));
+                //setDate(parseDate(formatDate(new Date(schedule!.schedule_datetime!))));
+                //setStartTime(parseTime(formatTime(new Date(schedule!.schedule_datetime!))));
                 setRemarks(schedule.schedule_remark ?? '');
 
 
@@ -72,6 +74,11 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
         };
     }, []);
 
+    const handleTypeOnPress = ( item: ScheduleType) => {
+        setType(item);
+        hideBottomSheet();
+    }
+
     const content = (): ReactNode => {
         return <>
             <View style={{ height: 300 }}>
@@ -81,8 +88,8 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                     data={scheduleType}
                     renderItem={({ item, index }) => (
                         <>
-                            <BottomSheetTile onPress={() => { setType(item) }}>{item.schedule_type}</BottomSheetTile>
-                            { scheduleType!.length - 1 != index && <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>}
+                            <BottomSheetTile onPress={() => { handleTypeOnPress(item) }}>{item.schedule_type}</BottomSheetTile>
+                            {scheduleType!.length - 1 != index && <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>}
                         </>
                     )}>
                 </FlatList></View>
@@ -106,21 +113,15 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     const handleDate = (event: DateTimePickerEvent, date?: Date) => {
         setShowDatePicker(false);
         if (date != null) {
-            setDate(parseDate(date.toLocaleDateString()));
+            setDate(date);
+            console.log(date);
         }
     }
 
     const handleStartTime = (event: DateTimePickerEvent, date?: Date) => {
         setShowStartTimePicker(false);
         if (date != null) {
-            setStartTime(parseTime(date.toTimeString()));
-        }
-    };
-
-    const handleEndTime = (event: DateTimePickerEvent, date?: Date) => {
-        setShowEndTimePicker(false);
-        if (date != null) {
-            setEndTime(parseTime(date.toTimeString()));
+            setStartTime(date);
         }
     };
 
@@ -128,8 +129,8 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
         setRemarks(value);
     }
 
-    const handlePartner = (value: string) => {
-        setPartner(value);
+    const handlePartner = () => {
+        setPartner(null);
     }
 
     const handleScheduleAccess = (value: ScheduleAccess) => {
@@ -145,23 +146,34 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
         setShowStartTimePicker(true);
     }
 
-    const handleEndTimePicker = () => {
-        setShowEndTimePicker(true);
-    }
-
     const handleSave = async () => {
-        await apis.schedule.updateSchedule(schedule_id, name, type?.schedule_type_id ?? undefined, startTime, endTime, place, remarks)
-            .then((response) => {
-                console.log('success to update schedule');
-            })
-            .catch((error) => {
-                console.log('failed to update schedule');
-            });
+        const datetime = new Date(formatDatetime(undefined, date, startTime)!);
+        if (schedule_id) {
+            await apis.schedule.updateSchedule(schedule_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
+                .then((response) => {
+                    console.log('success to update schedule');
+                    apis.schedule.setScheduleAccess(schedule_id, null);
+                    props.navigation.goBack();
+                })
+                .catch((error) => {
+                    console.log('failed to update schedule');
+                });
+        }else{
+            await apis.schedule.createSchedule(trip_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
+                .then((response) => {
+                    console.log('success to create schedule', response);
+                    apis.schedule.setScheduleAccess(response?.schedule_id!, null);
+                    props.navigation.goBack();
+                })
+                .catch((error) => {
+                    console.log('failed to create schedule', error);
+                });
+        }
     }
 
     return (
         <View>
-            <CustomHeader title={name ?? 'Schedule'}></CustomHeader>
+            <CustomHeader title={schedule_id == null ? "Add Schedule": "Edit Schedule"}></CustomHeader>
             <ScrollView>
                 <View style={[styles.container, g_STYLE.col]}>
                     <CustomText size={25}>Trip Name</CustomText>
@@ -173,9 +185,9 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                     <CustomText size={25}>Type</CustomText>
                     <TextField text={type?.schedule_type ?? 'Please select'} onPressText={handleType}></TextField>
 
-                    <CustomText size={25}>Date</CustomText>
                     <View style={[styles.datetimeContainer, g_STYLE.row]}>
-                        <View style={styles.date}>
+                        <View style={[styles.date, g_STYLE.col]}>
+                            <CustomText size={25}>Date</CustomText>
                             <TextField text={formatDate(date)} onPressText={handleDatePicker} />
                         </View>
                         {showDatePicker && <RNDateTimePicker
@@ -184,33 +196,17 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                             onChange={handleDate}
                             minimumDate={new Date()}
                         />}
-                        {/*<IconButton onPress={handleSelectDate} icon={"event"}></IconButton>*/}
-                    </View>
-
-                    <CustomText size={25}>Time</CustomText>
-                    <View style={[styles.datetimeContainer, g_STYLE.row]}>
-                        <View style={styles.time}>
+                        <View style={[styles.date, g_STYLE.col]}>
+                            <CustomText size={25}>Date</CustomText>
                             <TextField text={formatTime(startTime)} onPressText={handleStartTimePicker} />
-                        </View>
                         {showStartTimePicker && <RNDateTimePicker
                             mode="time"
                             value={startTime}
                             onChange={handleStartTime}
                         />}
-                        <View style={styles.to}>
-                            <CustomText size={25}>to</CustomText>
                         </View>
-                        <View style={styles.time}>
-                            <TextField text={formatTime(endTime)} onPressText={handleEndTimePicker} />
-                        </View>
-                        {showEndTimePicker && <RNDateTimePicker
-                            mode="time"
-                            value={endTime}
-                            onChange={handleEndTime}
-                        />}
-                        {/*<IconButton onPress={handleSelectTime} icon={"schedule"}></IconButton>*/}
-
                     </View>
+
                     <CustomText size={25}>Remarks</CustomText>
                     <TextField text={remarks} onChange={handleRemarks} numberOfLines={4}></TextField>
                     <CustomText size={25}>Accessible Partners</CustomText>
@@ -253,9 +249,10 @@ const styles = StyleSheet.create({
     },
     datetimeContainer: {
         alignItems: 'center',
+        justifyContent: 'space-between',
     },
     date: {
-        width: '40%',
+        width: '45%',
         marginRight: 10,
     },
     time: {
@@ -277,5 +274,6 @@ const styles = StyleSheet.create({
         marginVertical: 60,
     }
 });
+
 
 export default ScheduleEditScreen;

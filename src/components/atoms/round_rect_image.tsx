@@ -1,6 +1,5 @@
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { screenWidth } from "../../constants/screen_dimension";
-import g_THEME from "../../theme/theme";
 import React from "react";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { getMediaBackgroundColors, getMediaIconColors, getMediaIcons } from "../../helpers/media";
@@ -19,7 +18,7 @@ const RoundRectImage: React.FC<RoundRectImageProps> = ({ uri, type, onPress }) =
             onPress();
         }
     }
-
+    
     const styles = StyleSheet.create({
         container: {
             width: screenWidth * 0.21,

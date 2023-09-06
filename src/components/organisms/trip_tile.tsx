@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import { screenWidth } from '../../constants/screen_dimension';
 import g_STYLE from '../../styles/styles';
@@ -7,6 +7,7 @@ import g_THEME from '../../theme/theme';
 import CustomText from '../atoms/text';
 import CircularImage from '../atoms/circular_image';
 import { getDateFromString } from '../../utils/datetime_formatter';
+import { Trip } from '../../models/trip';
 
 interface TripTileProps {
     trip: Trip;

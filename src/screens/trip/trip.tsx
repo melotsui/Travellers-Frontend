@@ -10,6 +10,7 @@ import apis from "../../api/api_service";
 import CustomText from "../../components/atoms/text";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { useFocusEffect } from "@react-navigation/native";
+import { Trip } from "../../models/trip";
 
 const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
     const [searchText, setSearchText] = useState('');

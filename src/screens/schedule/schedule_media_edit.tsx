@@ -1,9 +1,8 @@
 import React, { ReactNode, useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { screenHeight, screenWidth } from "../../constants/screen_dimension";
 import CustomHeader from "../../components/molecules/header";
-import PartnerTile from "../../components/organisms/partner_tile";
 import g_THEME from "../../theme/theme";
 import CustomText from "../../components/atoms/text";
 import g_STYLE from "../../styles/styles";
@@ -15,26 +14,38 @@ import SeparateLine from "../../components/atoms/separate_line";
 import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
 import { useBottomSheet } from "../../context/bottom_sheet_context";
 import { RootProps } from "../../navigation/screen_navigation_props";
+import { openCamera, openGallery } from "../../utils/image_picker";
+import { Image } from "react-native";
+import { Asset } from "react-native-image-picker";
+import apis from "../../api/api_service";
+import { MediaLocalUrl } from "../../models/media";
 
-const NotesMediaScreen: React.FC<RootProps<'NotesMedia'>> = (props) => {
+const ScheduleMediaEditScreen: React.FC<RootProps<'ScheduleMediaEdit'>> = (props) => {
+    const schedule_id = props.route.params.schedule_id;
+    const originalMedia = props.route.params.media;
     const [partner, setPartner] = useState('');
     const [isNew, setIsNew] = useState(false);
-    const {setBottomSheetContent, showBottomSheet} = useBottomSheet();
+    const [media, setMedia] = useState<Asset | null>(null);
+    const { setBottomSheetContent, showBottomSheet } = useBottomSheet();
 
-    const content = () : ReactNode => {
+    const content = (): ReactNode => {
         return <>
-        <BottomSheetTile onPress={handleTakePhoto}>Take Photo</BottomSheetTile>
-        <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
-        <BottomSheetTile onPress={handleGallery}>Select from Gallery</BottomSheetTile>
-        <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
-        <BottomSheetTile onPress={handlePhotoDelete} color={g_THEME.colors.error}>Delete Photo</BottomSheetTile>
+            <BottomSheetTile onPress={handleTakePhoto}>Take Photo</BottomSheetTile>
+            <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
+            <BottomSheetTile onPress={handleGallery}>Select from Gallery</BottomSheetTile>
+            <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
+            <BottomSheetTile onPress={handlePhotoDelete} color={g_THEME.colors.error}>Delete Photo</BottomSheetTile>
         </>
     }
 
-    const handleTakePhoto = () => {
+    const handleTakePhoto = async () => {
+        const media : Asset[] = await openCamera();
+        setMedia(media[0]);
     }
 
-    const handleGallery = () => {
+    const handleGallery = async () => {
+        const media : Asset[] = await openGallery();
+        setMedia(media[0]);
     }
 
     const handlePhotoDelete = () => {
@@ -53,7 +64,19 @@ const NotesMediaScreen: React.FC<RootProps<'NotesMedia'>> = (props) => {
         props.navigation.navigate('NotesAccess');
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        try {
+            console.log("media", media);
+            const promise1: Promise<Schedule> = apis.media.uploadScheduleMedia(media!, schedule_id!);
+            const promise2: Promise<MediaLocalUrl> = apis.media.addLocalMedia(schedule_id!, media!.uri!)
+            await Promise.all([promise1, promise2]);
+            props.navigation.goBack();
+
+        } catch (error) {
+            // Handle any errors that occurred during the API calls
+            console.error('Error:', error);
+        }
+        console.log(media);
     }
 
     const handleDelete = () => {
@@ -66,27 +89,12 @@ const NotesMediaScreen: React.FC<RootProps<'NotesMedia'>> = (props) => {
                 <View style={styles.container}>
                     <View style={styles.mediaContainer}>
                         <View style={styles.media}>
+                            <Image source={{ uri: media ? media?.uri :originalMedia?.media?.media_preview_url }} style={styles.image} />
                             <View style={styles.mediaButton}>
-                            <IconButton icon={"add-a-photo"} size={40} color={'white'} onPress={handleAddMedia} ></IconButton>
+                                <IconButton icon={"add-a-photo"} size={40} color={'white'} onPress={handleAddMedia} ></IconButton>
                             </View>
                         </View>
                     </View>
-                    <View style={[styles.partnerContainer, g_STYLE.row]}>
-                        <CustomText size={25}>Accessible Partners</CustomText>
-                        <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
-                    </View>
-                    <FlatList
-                        scrollEnabled={false}
-                        showsVerticalScrollIndicator={false}
-                        data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
-                        renderItem={({ item }) => (
-                            <PartnerTile
-                                name={"Samoyed Meme"}
-                                uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}
-                                onPress={handleInvitePartner}
-                                isPending={false}></PartnerTile>
-                        )}
-                    />
                     <View style={[styles.saveButton, g_STYLE.row]}>
 
                         <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
@@ -122,6 +130,11 @@ const styles = StyleSheet.create({
         backgroundColor: g_THEME.colors.grey,
         borderRadius: 10,
     },
+    image: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+    },
     mediaButton: {
         position: 'absolute',
         top: '50%',
@@ -144,4 +157,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default NotesMediaScreen;
+export default ScheduleMediaEditScreen;

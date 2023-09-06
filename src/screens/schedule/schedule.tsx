@@ -26,7 +26,7 @@ import { MediaModal } from "../../models/media";
 const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     const { schedule_id } = props.route.params;
     const [schedule, setSchedule] = useState<Schedule | null>(null);
-    const [media, setMedia] = useState<MediaModal[] | null>(null);
+    const [media, setMedia] = useState<MediaModal[]>([]);
     const [scheduleAccess, setScheduleAccess] = useState<ScheduleAccess[] | null>(null);
 
     useEffect(() => {
@@ -42,7 +42,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                 setSchedule(schedule);
                 setMedia(media);
                 setScheduleAccess(scheduleAccess);
-                console.log(typeof media[0].media.media_type);
+                console.log(media);
 
             } catch (error) {
                 // Handle any errors that occurred during the API calls
@@ -57,7 +57,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     }, []);
 
     const handleEdit = () => {
-        props.navigation.navigate('ScheduleEdit', { schedule_id: schedule_id });
+        props.navigation.navigate('ScheduleEdit', { schedule_id: schedule_id, trip_id: schedule?.trip_id! });
     }
 
     const handleNavigation = () => {
@@ -72,7 +72,12 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
 
     const handleAddMedia = () => {
         console.log("add media");
-        props.navigation.navigate('NotesMedia');
+        props.navigation.navigate('ScheduleMediaEdit', { schedule_id: schedule_id, media: null });
+    }
+
+    const handleAllMedia = () => {
+        console.log("all media");
+        props.navigation.navigate('ScheduleMedia', { schedule_id: schedule_id });
     }
 
     const handleDeleteConfirm = () => {
@@ -84,7 +89,9 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
         <PaperProvider>
             { schedule && <View>
                 <CustomHeader title={schedule?.schedule_name}>
-                    <IconButton onPress={handleEdit} icon={"edit"} />
+                <IconButton onPress={handleAllMedia} icon={"description"} />
+                <View style={{ width: 10 }}></View>
+                <IconButton onPress={handleEdit} icon={"edit"} />
                 </CustomHeader>
                 <ScrollView>
                     <View style={[styles.container, g_STYLE.col]}>
@@ -114,12 +121,12 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                 ItemSeparatorComponent={() =>
                                     <View style={{ width: screenWidth * 0.02 }}></View>
                                 }
-                                data={media}
+                                data={[new MediaModal(), ...media]}
                                 renderItem={({ item, index }) => {
                                     if (index == 0) {
                                         return <RoundRectImage type={MediaTypes.OTHER} onPress={handleAddMedia}></RoundRectImage>
                                     } else {
-                                        return <RoundRectImage type={media![index].media.media_type!} uri={media![index].media.media_preview_url}></RoundRectImage>
+                                        return <RoundRectImage type={item.media!.media_type!} uri={item.media!.media_preview_url}></RoundRectImage>
                                     }
                                 }}
                             ></FlatList>
@@ -142,11 +149,11 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                         <View style={styles.deleteButton}>
                             <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDeleteConfirm}>
                                 {[
-                                    <View style={g_STYLE.row}>
+                                    <View style={g_STYLE.row} key={0}>
                                         <MaterialIcons name={"delete-outline"} color={g_THEME.colors.error} size={25} ></MaterialIcons>
                                         <CustomText color={g_THEME.colors.error} size={22}>Delete</CustomText>
                                     </View>,
-                                    <CustomText size={20}>Are you sure to delete this schedule? Everyone will not be able to access the trip again</CustomText>
+                                    <CustomText size={20} key={1}>Are you sure to delete this schedule? Everyone will not be able to access the trip again</CustomText>
                                 ]}
                             </GradientPopupDialog>
                         </View>

@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-import { Linking, Platform } from "react-native";
 import { Share } from "react-native";
 
 

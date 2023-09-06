@@ -31,67 +31,37 @@ class Media {
   }
 }
 
+class MediaLocalUrl {
+  media_local_url_id: number;
+  media_id: number;
+  user_id: number;
+  media_local_url: string;
+  updated_at?: string;
+  created_at?: string;
 
-class MediaModal {
-  media: Media;
-  media_local_url?: string | null;
-
-  constructor(data: Media, localUrl: string | null) {
-    this.media = new Media(data);
-    this.media_local_url = localUrl;
+  constructor(data: MediaLocalUrl
+  ) {
+    this.media_local_url_id = data.media_local_url_id;
+    this.media_id = data.media_id;
+    this.user_id = data.user_id;
+    this.media_local_url = data.media_local_url;
+    this.updated_at = data.updated_at;
+    this.created_at = data.created_at;
   }
-
-  // public getMediaId(): number {
-  //   return this.media.media_id;
-  // }
-
-  // public getScheduleId(): number {
-  //   return this.media.schedule_id;
-  // }
-
-  // public getNoteId(): number | null {
-  //   return this.media.note_id;
-  // }
-
-  // public getMediaType(): string {
-  //   return this.media.media_type;
-  // }
-
-  // public getMediaUrl(): string | null {
-  //   return this.media.media_url;
-  // }
-
-  // public getMediaPreviewUrl(): string | null {
-  //   return this.media.media_preview_url;
-  // }
-
-  // public getLocation(): string | null {
-  //   return this.media.location;
-  // }
-
-  // public getCreatedAt(): string {
-  //   return this.media.created_at;
-  // }
-
-  // public getUpdatedAt(): string {
-  //   return this.media.updated_at;
-  // }
-
-  // public getDeletedAt(): string | null {
-  //   return this.media.deleted_at;
-  // }
-
-  // public getCreatedBy(): number {
-  //   return this.media.created_by;
-  // }
-
-  // public getDeletedBy(): number | null {
-  //   return this.media.deleted_by;
-  // }
-
-  // public getLocalUrl(): string | null {
-  //   return this.media_local_url;
-  // }
 }
 
-export { Media, MediaModal };
+
+class MediaModal {
+  media?: Media | null;
+  media_local_url?: MediaLocalUrl | null;
+
+  constructor(
+    data?: Media | null, 
+    localUrl?: MediaLocalUrl | null) 
+    {
+    this.media = data ? new Media(data) : null;
+    this.media_local_url = localUrl ? new MediaLocalUrl(localUrl) : null;
+  }
+}
+
+export { Media, MediaModal, MediaLocalUrl };

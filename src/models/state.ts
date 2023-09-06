@@ -1,4 +1,4 @@
-import User from "./user";
+import { User } from "./user";
 
 export interface RootState {
     user: User | null;

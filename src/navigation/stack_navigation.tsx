@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigationContainer, useRoute } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import RegisterScreen from '../screens/auth/register';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import EmailVerificationScreen from '../screens/auth/email_verification';
@@ -8,8 +8,7 @@ import TabNavigation from './tab_navigation';
 import ForgetPasswordScreen from '../screens/auth/forget_password';
 import ResetPasswordScreen from '../screens/auth/reset_password';
 import { RootStackParamList } from './screen_navigation_props';
-import { Linking, NativeEventEmitter, NativeModules } from 'react-native';
-import { addDeepLinkListener, getInitialURL } from '../helpers/linking';
+import { getInitialURL } from '../helpers/linking';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

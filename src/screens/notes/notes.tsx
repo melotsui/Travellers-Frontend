@@ -23,19 +23,19 @@ const NotesScreen: React.FC<RootProps<'Notes'>> = (props) => {
 
     const content = () : ReactNode => {
         return <>
-        <BottomSheetTile onPress={handleTextAudioAdd}>Text/Audio</BottomSheetTile>
+        <BottomSheetTile onPress={handleTextAudioAdd} key={0}>Text/Audio</BottomSheetTile>
         <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
-        <BottomSheetTile onPress={handleMediaAdd}>Media</BottomSheetTile>
+        <BottomSheetTile onPress={handleMediaAdd} key={1}>Media</BottomSheetTile>
         </>
     }
 
     const handleTextAudioAdd = () => {
-        props.navigation.navigate('NotesTextAudio');
+        props.navigation.navigate('TextAudio', {schedule_id: null, note_id: null, media_id: null});
         hideBottomSheet();
     }
 
     const handleMediaAdd = () => {
-        props.navigation.navigate('NotesMedia');
+        props.navigation.navigate('Media', {schedule_id: null, note_id: null, media_id: null});
         hideBottomSheet();
     }
 
@@ -62,11 +62,11 @@ const NotesScreen: React.FC<RootProps<'Notes'>> = (props) => {
     }
 
     const handleTextAudio = () => {
-        props.navigation.navigate('NotesTextAudio');
+        props.navigation.navigate('TextAudio', {schedule_id: null, note_id: null, media_id: null});
     }
 
     const handleMedia = () => {
-        props.navigation.navigate('NotesMedia');
+        props.navigation.navigate('Media', {schedule_id: null, note_id: null, media_id: null});
     }
 
     return (

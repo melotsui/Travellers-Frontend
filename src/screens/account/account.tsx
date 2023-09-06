@@ -44,11 +44,11 @@ const AccountScreen: React.FC<RootProps<'Account'>> = (props) => {
     }
     
     const handleLogout = () => {
-        props.navigation.navigate('Login');
+        props.navigation.navigate('Login', {share_id: ''});
     }
 
     const innerContent = (item: string, index: number): ReactNode => {
-        return <View>
+        return <View key={0}>
             <SeparateLine isTextInclude={false} />
             <TouchableOpacity onPress={() => handleTap(index)}>
                 <AccountTile name={item} icon={itemsIcon[index]} />
@@ -74,7 +74,7 @@ const AccountScreen: React.FC<RootProps<'Account'>> = (props) => {
                                 if (index == 5) {
                                     return <GradientPopupDialog isSelect={true} title={'Reminder'} onPress={handleLogout}>
                                         {[innerContent(item, index),
-                                        <CustomText size={20}>Are you sure you want to exit?</CustomText>]}
+                                        <CustomText size={20} key={1}>Are you sure you want to exit?</CustomText>]}
                                     </GradientPopupDialog>
                                 } else {
                                     return <>{innerContent(item, index)}</>

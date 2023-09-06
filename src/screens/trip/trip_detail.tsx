@@ -8,18 +8,17 @@ import SeparateLine from "../../components/atoms/separate_line";
 import CircularImage from "../../components/atoms/circular_image";
 import GradientButton from "../../components/molecules/gradient_button";
 import g_THEME from "../../theme/theme";
-import RoundRectImage from "../../components/atoms/round_rect_image";
 import ScheduleTile from "../../components/organisms/schedule_tile";
-import { ActivityTypes, MediaTypes } from "../../constants/types";
+import { ActivityTypes } from "../../constants/types";
 import CustomHeader from "../../components/molecules/header";
-import IconButton from "../../components/atoms/icon_button";
 import { PaperProvider } from "react-native-paper";
 import GradientPopupMenu from "../../components/molecules/gradient_menu";
 import CustomMenuItem from "../../components/atoms/custom_menu_item";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { RootProps } from "../../navigation/screen_navigation_props";
 import apis from "../../api/api_service";
-import { formatDate, formatTime, getDateFromString, getTimeFromString } from "../../utils/datetime_formatter";
+import { formatDate, formatTime, getDateFromString } from "../../utils/datetime_formatter";
+import { Trip } from "../../models/trip";
 
 const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
     const [trip, setTrip] = useState<Trip | null>(null);
@@ -57,8 +56,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
         props.navigation.navigate('TripEdit', { trip_id: trip_id });
     }
     const handleAddSchedule = () => {
-        console.log("add schdule");
-        //props.navigation.navigate('TripDetail');
+        props.navigation.navigate('ScheduleEdit', { schedule_id: null, trip_id: trip_id });
     }
     const handleMap = () => {
         console.log("map trip");
@@ -74,7 +72,6 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
     }
     const handleAddMedia = () => {
         console.log("add media");
-        props.navigation.navigate('NotesMedia');
     }
     const handleScheduleTileChange = (schedule_id: number) => {
         props.navigation.navigate('Schedule', { schedule_id: schedule_id });
@@ -83,7 +80,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
     return (
         <PaperProvider>
             {trip && <><CustomHeader title={trip!.trip_name}>
-                <IconButton onPress={handleNote} icon={"description"} />
+                {/* <IconButton onPress={handleNote} icon={"description"} /> */}
                 <View style={{ width: 10 }}></View>
                 <GradientPopupMenu>
                     <CustomMenuItem title={"Edit"} onPress={handleEdit} icon={"edit"} />

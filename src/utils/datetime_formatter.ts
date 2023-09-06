@@ -24,9 +24,16 @@ export function formatTime(date: Date): string {
     return `${hours}:${minutes}`;
 }
 
-export function formatDatetime(date?: Date): string | null {
-    if(!date) return null
-    return `${formatDate(date)} ${formatTime(date)}`;
+export function formatDatetime(datetime?: Date, date?: Date, time?: Date): string | null {
+    if (datetime) {
+        return `${formatDate(datetime)} ${formatTime(datetime)}`;
+    }else{
+        if (date && time) {
+            return `${formatDate(date)} ${formatTime(time)}`;
+        }else{
+            return null;
+        }
+    }
 }
 
 export function getDateFromString(datetime: string): string {

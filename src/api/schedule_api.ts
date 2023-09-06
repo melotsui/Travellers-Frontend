@@ -24,8 +24,8 @@ class ScheduleApi {
                 reject(error);
             }
         });
-    }    
-    
+    }
+
     getScheduleById = async (schedule_id: number): Promise<Schedule> => {
         return new Promise(async (resolve, reject) => {
             try {
@@ -64,28 +64,96 @@ class ScheduleApi {
         });
     }
 
-    updateSchedule = async (
-        schedule_id: number,
-        schedule_name: string, 
+    setScheduleAccess = async (schedule_id: number, schedule_accesses: number[] | null): Promise<ScheduleModal> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let scheduleAccess = [];
+                if (schedule_accesses != null) {
+                    scheduleAccess = schedule_accesses.map((schedule_access) => {
+                        return { "user_id": schedule_access }
+                    })
+                } else {
+                    scheduleAccess = [{ "user_id": null }];
+                }
+                console.log(schedule_id);
+                console.log(scheduleAccess);
+
+                const json = {
+                    "schedule_id": schedule_id,
+                    "schedule_accesses": scheduleAccess
+                }
+
+                await this.schedule.api.post('/schedule_accesses', json)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.schedule);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    createSchedule = async (
+        trip_id: number,
+        schedule_name: string,
         schedule_type_id?: number,
-        schedule_datetime_from?: Date,
-        schedule_datetime_to?: Date,
+        schedule_datetime?: Date,
         schedule_place?: string,
         schedule_remark?: string
-        ): Promise<Schedule> => {
+    ): Promise<Schedule> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const json = {
+                    "schedule": {
+                        "trip_id": trip_id,
+                        "schedule_name": schedule_name,
+                        "schedule_type_id": schedule_type_id,
+                        "schedule_datetime": schedule_datetime!.toISOString(),
+                        "schedule_place": schedule_place,
+                        "schedule_remark": schedule_remark,
+                    }
+                }
+
+                await this.schedule.api.post('/schedules', json)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.schedule);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    updateSchedule = async (
+        schedule_id: number,
+        schedule_name: string,
+        schedule_type_id?: number,
+        schedule_datetime?: Date,
+        schedule_place?: string,
+        schedule_remark?: string
+    ): Promise<Schedule> => {
         return new Promise(async (resolve, reject) => {
             try {
 
                 const json = {
                     "schedule_name": schedule_name,
                     "schedule_type_id": schedule_type_id,
-                    "schedule_datetime_from": schedule_datetime_from,
-                    "schedule_datetime_to": schedule_datetime_to,
+                    "schedule_datetime": schedule_datetime!.toISOString(),
                     "schedule_place": schedule_place,
                     "schedule_remark": schedule_remark,
                 }
 
-                await this.schedule.api.put('/schedules/1', json)// + schedule_id)
+                await this.schedule.api.put('/schedules/' + schedule_id, json)
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data.schedule_accesses);
