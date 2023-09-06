@@ -1,10 +1,14 @@
 export enum ActivityTypes {
-    FOOD = 'food',
-    SIGHTSEEING = 'sightseeing',
-    SHOPPING = 'shopping',
-    SPORT = 'sport',
-    CULTURE = 'culture',
-    NIGHTLIFT = 'nightlife',
+    SIGHTSEEING = 'Sightseeing',
+    SHOPPING = 'Shopping',
+    DINING = 'Dining',
+    RECREATION = 'Recreation',
+    CULTUREHISTORICAL = 'Cultural & Historical',
+    NIGHTLIFT = 'Nightlife',
+    NATUREADVENTURE = 'Nature & Adventure',
+    WELLNESSSPA = 'Wellness & Spa',
+    SPORTSACTIVITIES = 'Sports Activities',
+    WORKSHOP = 'Workshop',
     OTHER = 'other'
 }
 

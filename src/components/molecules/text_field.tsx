@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity, KeyboardTypeOptions } from 'react-native';
 import g_THEME from '../../theme/theme';
 import { screenWidth } from '../../constants/screen_dimension';
 import CustomText from '../atoms/text';
@@ -21,9 +21,10 @@ interface TextFieldProps {
     numberOfLines?: number;
     suffixIconColor?: string;
     multiline?: boolean;
+    keyboardType?: KeyboardTypeOptions;
 }
 
-const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, onPressText, suffixIcon, prefixIcon, error, secure, numberOfLines, suffixIconColor, multiline }) => {
+const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, onPressText, suffixIcon, prefixIcon, error, secure, numberOfLines, suffixIconColor, multiline, keyboardType }) => {
     const [isSecure, setIsSecure] = useState(true);
 
     const handleInputChange = (text: string) => {
@@ -96,6 +97,7 @@ const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, on
                             multiline={numberOfLines != null || multiline}
                             numberOfLines={numberOfLines ?? 1}
                             editable={onPressText == null}
+                            keyboardType={keyboardType != null ? keyboardType : 'default'}
                         />
                         {suffixIcon != null &&
                             <View style={styles.suffix}>

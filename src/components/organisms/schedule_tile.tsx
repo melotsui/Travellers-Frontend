@@ -6,7 +6,7 @@ import { StyleSheet } from "react-native";
 import CustomText from "../atoms/text";
 import React from "react";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import getActivityIcon from "../../helpers/activity_icon";
+import { getActivityIcon } from "../../helpers/activity";
 import SeparateLine from "../atoms/separate_line";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -34,7 +34,7 @@ const ScheduleTile: React.FC<ScheduleTileProps> = ({ step, title, subTitle, date
                         <CustomText>{subTitle}</CustomText>
                     </View>
                     <View style={styles.activity}>
-                        <MaterialIcons color={g_THEME.colors.primary} size={25} name={getActivityIcon(ActivityTypes.FOOD)}></MaterialIcons>
+                        <MaterialIcons color={g_THEME.colors.primary} size={25} name={getActivityIcon(ActivityTypes.DINING)}></MaterialIcons>
                     </View>
                     <View style={styles.dateTimeContainer}>
                         <CustomText>{date}</CustomText>

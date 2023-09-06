@@ -17,13 +17,20 @@ interface GradientPopupDialogProps {
     onPress?: () => void;
     outVisible?: boolean
     onDismiss?: () => void;
+    onOpenPress?: () => void;
+    isDisabled?: boolean;
 }
 
-const GradientPopupDialog: React.FC<GradientPopupDialogProps> = ({ children, isSelect, title, onPress, outVisible, onDismiss }) => {
+const GradientPopupDialog: React.FC<GradientPopupDialogProps> = ({ children, isSelect, title, onPress, outVisible, onDismiss, onOpenPress, isDisabled }) => {
 
     const [visible, setVisible] = React.useState(false);
 
-    const showDialog = () => setVisible(true);
+    const showDialog = () => {
+        if(onOpenPress != null) {
+            onOpenPress();
+        }
+        setVisible(true);
+    }
 
     const hideDialog = () => setVisible(false);
 
@@ -31,12 +38,15 @@ const GradientPopupDialog: React.FC<GradientPopupDialogProps> = ({ children, isS
         if (onPress != null) {
             onPress();
         }
+        if(onDismiss != null) {
+            onDismiss();
+        }
         hideDialog();
     }
 
     return (
         <View>
-            {outVisible == null ? <TouchableOpacity onPress={showDialog}>
+            {outVisible == null ? <TouchableOpacity onPress={showDialog} disabled={isDisabled}>
                 {children[0]}
             </TouchableOpacity> : null}
             <Portal>

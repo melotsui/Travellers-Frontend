@@ -5,7 +5,7 @@ import g_STYLE from "../../styles/styles";
 
 interface ImageTileProps {
     title: string;
-    uri: string;
+    uri?: string;
 }
 
 const ImageTile: React.FC<ImageTileProps> = ({

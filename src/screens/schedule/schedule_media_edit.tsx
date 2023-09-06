@@ -18,7 +18,7 @@ import { openCamera, openGallery } from "../../utils/image_picker";
 import { Image } from "react-native";
 import { Asset } from "react-native-image-picker";
 import apis from "../../api/api_service";
-import { MediaLocalUrl } from "../../models/media";
+import { MediaLocalUrl } from "../../models/media_local_url";
 
 const ScheduleMediaEditScreen: React.FC<RootProps<'ScheduleMediaEdit'>> = (props) => {
     const schedule_id = props.route.params.schedule_id;

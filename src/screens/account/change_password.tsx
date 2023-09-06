@@ -8,31 +8,71 @@ import CustomHeader from "../../components/molecules/header";
 import TextField from "../../components/molecules/text_field";
 import g_THEME from "../../theme/theme";
 import { RootProps } from "../../navigation/screen_navigation_props";
+import apis from "../../api/api_service";
+import { useSelector } from "react-redux";
+import { RootState } from "../../models/state";
+import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 
 const ChangePasswordScreen: React.FC<RootProps<'ChangePassword'>> = (props) => {
+    const user = useSelector((state: RootState) => state.user);
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [oldPasswordError, setOldPasswordError] = useState('');
+    const [newPasswordError, setNewPasswordError] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [isDialogVisible, setDialogVisible] = useState(false);
 
     const handleOldPassword = (value: string) => {
+        setOldPasswordError('');
         setOldPassword(value);
     }
 
     const handleNewPassword = (value: string) => {
+        setNewPasswordError('');
         setNewPassword(value);
     }
 
     const handleConfirmPassword = (value: string) => {
+        setConfirmPasswordError('');
         setConfirmPassword(value);
     }
 
-    const handleSave = () => {
-        //props.navigation.navigate('ChangePassword');
+    const handleSave = async () => {
+        if (oldPassword == '') {
+            setOldPasswordError('Old password cannot be empty');
+            return;
+        }
+        if (newPassword == '') {
+            setNewPasswordError('New password cannot be empty');
+            return;
+        }
+        if (confirmPassword == '') {
+            setConfirmPasswordError('Confirm password cannot be empty');
+            return;
+        }
+        if (newPassword != confirmPassword) {
+            setConfirmPasswordError('Confirm password is not same as new password');
+            return;
+        }
+        setDialogVisible(true);
+        await apis.user.resetPassword(user?.user_id!, oldPassword, newPassword)
+            .then((response) => {
+                console.log('success to reset password', response);
+            })
+            .catch((error) => {
+                console.log('failed to reset password', error);
+                setOldPasswordError(error);
+            });
     }
 
     const handleCancel = () => {
-        console.log('cancel');
+        props.navigation.goBack();
     }
+
+    const hideDialog = () => {
+        setDialogVisible(false);
+    };
 
     return (
         <View>
@@ -41,21 +81,25 @@ const ChangePasswordScreen: React.FC<RootProps<'ChangePassword'>> = (props) => {
                 <View style={[styles.container, g_STYLE.col]}>
 
                     <CustomText size={20}>Old Password</CustomText>
-                    <TextField text={oldPassword} onChange={handleOldPassword}></TextField>
+                    <TextField text={oldPassword} error={oldPasswordError} onChange={handleOldPassword} secure></TextField>
                     <View style={styles.space}></View>
 
                     <CustomText size={20}>New Password</CustomText>
-                    <TextField text={newPassword} onChange={handleNewPassword}></TextField>
+                    <TextField text={newPassword} error={newPasswordError} onChange={handleNewPassword} secure></TextField>
                     <View style={styles.space}></View>
 
                     <CustomText size={20}>Confirm Password</CustomText>
-                    <TextField text={confirmPassword} onChange={handleConfirmPassword}></TextField>
+                    <TextField text={confirmPassword} error={confirmPasswordError} onChange={handleConfirmPassword} secure></TextField>
                     <View style={styles.space}></View>
 
                     <View style={[styles.buttons, g_STYLE.row]}>
                         <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
                         <GradientButton title={"Cancel"} onPress={handleCancel} color={g_THEME.colors.grey}></GradientButton>
                     </View>
+                    <GradientPopupDialog isSelect={false} title={'Reminder'} onPress={handleSave} outVisible={isDialogVisible} onDismiss={hideDialog}>
+                        [ ,
+                        <CustomText size={20}>The password has successfully changed.</CustomText>]
+                    </GradientPopupDialog>
                 </View >
             </ScrollView >
         </View >

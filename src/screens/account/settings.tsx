@@ -51,6 +51,7 @@ const SettingsScreen: React.FC<RootProps<'Settings'>> = (props) => {
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         data={items}
+                        keyExtractor={(index) => index.toString()}
                         renderItem={({ item, index }) => (
                             <View>
                                 {index != 0 ? <SeparateLine isTextInclude={false} /> : null}

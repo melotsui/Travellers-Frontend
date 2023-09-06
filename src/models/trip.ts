@@ -37,19 +37,4 @@ class Trip {
   }
 }
 
-class TripModal {
-  trip: Trip;
-  trip_partner: User[];
-  user: User;
-
-  constructor(
-    trip: Trip,
-    trip_partners: User[],
-    user: User) {
-    this.trip = trip;
-    this.trip_partner = trip_partners;
-    this.user = user;
-  }
-}
-
-export { Trip, TripModal };
+export { Trip };

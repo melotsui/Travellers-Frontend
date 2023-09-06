@@ -12,10 +12,13 @@ import SeparateLine from "../../components/atoms/separate_line";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { PaperProvider } from "react-native-paper";
 import { RootProps } from "../../navigation/screen_navigation_props";
+import { useSelector } from "react-redux";
+import { RootState } from "../../models/state";
 
 const AccountScreen: React.FC<RootProps<'Account'>> = (props) => {
     let items = ['Settings', 'Privacy Policy', 'Terms & Conditions', 'Contact Us', 'Share', 'Logout'];
     let itemsIcon = ['settings', 'assignment', 'handshake', 'call', 'share', 'logout'];
+    const user = useSelector((state: RootState) => state.user);
 
     const handleEdit = () => {
         props.navigation.navigate('Profile');
@@ -64,12 +67,13 @@ const AccountScreen: React.FC<RootProps<'Account'>> = (props) => {
                     <View style={styles.account}>
                         <View style={[styles.profile, g_STYLE.row]}>
                             <CircularImage size={screenWidth * 0.25} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
-                            <CustomText size={25}>Corgi Meme</CustomText>
+                            <CustomText size={25}>{user?.name}</CustomText>
                             <IconButton icon={'edit'} size={25} onPress={handleEdit} />
                         </View>
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             data={items}
+                            keyExtractor={(index) => index.toString()}
                             renderItem={({ item, index }) => {
                                 if (index == 5) {
                                     return <GradientPopupDialog isSelect={true} title={'Reminder'} onPress={handleLogout}>

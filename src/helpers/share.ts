@@ -1,11 +1,13 @@
 import { Share } from "react-native";
 
 
-export async function shareFriend(message: string): Promise<void> {
+export async function shareFriend(message: string, parameters: Map<string, string>): Promise<void> {
 
     try {
-        console.log('shareFriend');
-        let url = 'http://travellers.com?share_id=1';
+        let url = 'http://travellers.com?';
+        let newParameter = '';
+        parameters.forEach((value, key) => {newParameter += `${key}=${value}&`});
+        newParameter = newParameter.substring(0, newParameter.length - 1);
         const appId = 'com.travellers';
         // if (Platform.OS === 'ios') {
         //     url = `https://apps.apple.com/app/travellers/${appId}`
@@ -14,7 +16,7 @@ export async function shareFriend(message: string): Promise<void> {
         // }
 
         const result = await Share.share({
-            message: 'http://travellers.com?share_id=1\n' + message,
+            message: url + newParameter + "\n",
             url: url,
             title: 'Travellers',
         });

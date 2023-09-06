@@ -5,7 +5,7 @@ import CustomText from "./text";
 
 interface CustomMenuItemProps {
     title: string;
-    onPress: () => void;
+    onPress?: () => void;
     icon: string;
 }
 

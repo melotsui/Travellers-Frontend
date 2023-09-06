@@ -15,7 +15,8 @@ import SeparateLine from "../../components/atoms/separate_line";
 import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
 import g_THEME from "../../theme/theme";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { TripPartnerModal } from "../../models/user";
+import { ScheduleAccess } from "../../models/schedule_access";
+import { TripPartner } from "../../models/trip_partner";
 "../../utils/datetime_formatter";
 
 const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
@@ -30,7 +31,9 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     const [date, setDate] = useState<Date>(new Date());
     const [startTime, setStartTime] = useState<Date>(new Date('0000-00-00T00:00:00'));
     const [remarks, setRemarks] = useState('');
-    const [partner, setPartner] = useState<TripPartnerModal | null>(null);
+    const [nameError, setNameError] = useState('');
+    const [typeError, setTypeError] = useState('');
+    const [partner, setPartner] = useState<TripPartner | null>(null);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
 
@@ -74,22 +77,24 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
         };
     }, []);
 
-    const handleTypeOnPress = ( item: ScheduleType) => {
+    const handleTypeOnPress = (item: ScheduleType) => {
         setType(item);
         hideBottomSheet();
     }
 
     const content = (): ReactNode => {
         return <>
-            <View style={{ height: 300 }}>
+            <View style={{ height: 300, width: '100%' }}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item) => item.schedule_type_id.toString()}
                     data={scheduleType}
                     renderItem={({ item, index }) => (
                         <>
-                            <BottomSheetTile onPress={() => { handleTypeOnPress(item) }}>{item.schedule_type}</BottomSheetTile>
-                            {scheduleType!.length - 1 != index && <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>}
+                            <View style={{padding: 0, margin: 0}}>
+                                <BottomSheetTile onPress={() => { handleTypeOnPress(item) }}>{item.schedule_type}</BottomSheetTile>
+                                {scheduleType!.length - 1 != index && <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>}
+                            </View>
                         </>
                     )}>
                 </FlatList></View>
@@ -97,6 +102,7 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     }
 
     const handleName = (value: string) => {
+        setNameError('');
         setName(value);
     }
 
@@ -105,7 +111,7 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     }
 
     const handleType = () => {
-        console.log(scheduleType);
+        setTypeError('');
         setBottomSheetContent(content());
         showBottomSheet();
     }
@@ -147,6 +153,14 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     }
 
     const handleSave = async () => {
+        if (name == '') {
+            setNameError('Schedule name cannot be empty');
+            return;
+        }
+        if(type == null) {
+            setTypeError('Schedule type cannot be empty');
+            return;
+        }
         const datetime = new Date(formatDatetime(undefined, date, startTime)!);
         if (schedule_id) {
             await apis.schedule.updateSchedule(schedule_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
@@ -158,7 +172,7 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                 .catch((error) => {
                     console.log('failed to update schedule');
                 });
-        }else{
+        } else {
             await apis.schedule.createSchedule(trip_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
                 .then((response) => {
                     console.log('success to create schedule', response);
@@ -173,17 +187,17 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
 
     return (
         <View>
-            <CustomHeader title={schedule_id == null ? "Add Schedule": "Edit Schedule"}></CustomHeader>
+            <CustomHeader title={schedule_id == null ? "Add Schedule" : "Edit Schedule"}></CustomHeader>
             <ScrollView>
                 <View style={[styles.container, g_STYLE.col]}>
-                    <CustomText size={25}>Trip Name</CustomText>
-                    <TextField text={name} onChange={handleName}></TextField>
+                    <CustomText size={25}>Schedule Name</CustomText>
+                    <TextField text={name} error={nameError} onChange={handleName}></TextField>
 
                     <CustomText size={25}>Place</CustomText>
                     <TextField text={place} onChange={handlePlace}></TextField>
 
                     <CustomText size={25}>Type</CustomText>
-                    <TextField text={type?.schedule_type ?? 'Please select'} onPressText={handleType}></TextField>
+                    <TextField text={type?.schedule_type ?? 'Please select'} error={typeError} onPressText={handleType}></TextField>
 
                     <View style={[styles.datetimeContainer, g_STYLE.row]}>
                         <View style={[styles.date, g_STYLE.col]}>
@@ -199,11 +213,11 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                         <View style={[styles.date, g_STYLE.col]}>
                             <CustomText size={25}>Date</CustomText>
                             <TextField text={formatTime(startTime)} onPressText={handleStartTimePicker} />
-                        {showStartTimePicker && <RNDateTimePicker
-                            mode="time"
-                            value={startTime}
-                            onChange={handleStartTime}
-                        />}
+                            {showStartTimePicker && <RNDateTimePicker
+                                mode="time"
+                                value={startTime}
+                                onChange={handleStartTime}
+                            />}
                         </View>
                     </View>
 

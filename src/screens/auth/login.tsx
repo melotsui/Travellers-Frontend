@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import GradientButton from '../../components/molecules/gradient_button';
 import SeparateLine from '../../components/atoms/separate_line';
 import TextField from '../../components/molecules/text_field';
-import ThirdPartyLogin from './third_party_login';
+import ThirdPartyLogin from '../../components/organisms/third_party_login';
 import TextButton from '../../components/atoms/text_button';
 import g_STYLE from '../../styles/styles';
 import CustomText from '../../components/atoms/text';
@@ -41,7 +41,7 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
         //     setPasswordError('Password cannot be empty');
         //     return;
         // }
-        await apis.auth.login('melo' , 'Abc123456')//username, password)
+        await apis.auth.login('vincy' , 'Abc123456')//username, password)
             .then((response) => {
                 console.log('success to login');
             })

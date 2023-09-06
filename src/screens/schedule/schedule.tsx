@@ -15,18 +15,19 @@ import IconButton from "../../components/atoms/icon_button";
 import { PaperProvider } from "react-native-paper";
 import RoundButton from "../../components/atoms/round_button";
 import ImageTile from "../../components/molecules/image_tile";
-import getActivityIcon from "../../helpers/activity_icon";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { RootProps } from "../../navigation/screen_navigation_props";
 import apis from "../../api/api_service";
 import { formatDate } from "../../utils/datetime_formatter";
-import { MediaModal } from "../../models/media";
+import { ScheduleAccess } from "../../models/schedule_access";
+import { MediaMediaLocalUrl } from "../../models/media_media_local_url";
+import { getActivityIcon, parseActivityType } from "../../helpers/activity";
 
 const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     const { schedule_id } = props.route.params;
     const [schedule, setSchedule] = useState<Schedule | null>(null);
-    const [media, setMedia] = useState<MediaModal[]>([]);
+    const [media, setMedia] = useState<MediaMediaLocalUrl[]>([]);
     const [scheduleAccess, setScheduleAccess] = useState<ScheduleAccess[] | null>(null);
 
     useEffect(() => {
@@ -35,14 +36,13 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
 
             try {
                 const promise1: Promise<Schedule> = apis.schedule.getScheduleById(schedule_id)
-                const promise2: Promise<MediaModal[]> = apis.media.getScheduleMedia(schedule_id)
+                const promise2: Promise<MediaMediaLocalUrl[]> = apis.media.getScheduleMedia(schedule_id)
                 const promise3: Promise<ScheduleAccess[]> = apis.schedule.getScheduleAccess(schedule_id)
                 const [schedule, media, scheduleAccess] = await Promise.all([promise1, promise2, promise3]);
 
                 setSchedule(schedule);
                 setMedia(media);
                 setScheduleAccess(scheduleAccess);
-                console.log(media);
 
             } catch (error) {
                 // Handle any errors that occurred during the API calls
@@ -80,9 +80,15 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
         props.navigation.navigate('ScheduleMedia', { schedule_id: schedule_id });
     }
 
-    const handleDeleteConfirm = () => {
-        console.log("confirm delete Schdule");
-        //props.navigation.navigate('TripDetail');
+    const handleDeleteConfirm = async () => {
+        await apis.schedule.deleteSchedule(schedule_id)
+            .then((response) => {
+                console.log('success to delete schedule', response);
+                props.navigation.navigate('TripDetail', { trip_id: schedule?.trip_id! });
+            })
+            .catch((error) => {
+                console.log('failed to delete schedule', error);
+            });
     }
 
     return (
@@ -105,7 +111,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                 <View style={styles.rightContainer}>
                                     <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
                                     {/*<Image source={{ uri: 'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80' }} style={styles.image} />*/}
-                                    <RoundButton icon={getActivityIcon(ActivityTypes.FOOD)} title="Food"></RoundButton>
+                                    <RoundButton icon={getActivityIcon(parseActivityType(schedule.schedule_type?.schedule_type!))} title={schedule.schedule_type?.schedule_type!}></RoundButton>
                                 </View>
                             </View>
                             <View style={styles.description}>
@@ -121,7 +127,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                 ItemSeparatorComponent={() =>
                                     <View style={{ width: screenWidth * 0.02 }}></View>
                                 }
-                                data={[new MediaModal(), ...media]}
+                                data={media ? [new MediaMediaLocalUrl(), ...media] : [new MediaMediaLocalUrl()]}
                                 renderItem={({ item, index }) => {
                                     if (index == 0) {
                                         return <RoundRectImage type={MediaTypes.OTHER} onPress={handleAddMedia}></RoundRectImage>
@@ -143,7 +149,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                             }
                             data={scheduleAccess}
                             renderItem={({ item, index }) => (
-                                <ImageTile title={"Samoyed Meme"} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></ImageTile>
+                                <ImageTile title={item.user_id!.toString()} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></ImageTile>
                             )}>
                         </FlatList>
                         <View style={styles.deleteButton}>

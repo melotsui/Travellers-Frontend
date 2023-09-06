@@ -109,7 +109,7 @@ class UserApi {
         });
     }
 
-    resetPassword = async (userId: string, passcode: string, password: string): Promise<string> => {
+    resetPassword = async (userId: number, passcode: string, password: string): Promise<string> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const jsonData = {

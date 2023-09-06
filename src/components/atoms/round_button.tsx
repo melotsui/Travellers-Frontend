@@ -16,7 +16,6 @@ const RoundButton: React.FC<RoundButtonProps> = ({ icon, title, color }) => {
 
     const styles = StyleSheet.create({
         container: {
-            width: screenWidth * 0.2,
             backgroundColor: color ? color : g_THEME.colors.secondary,
             marginVertical: 5,
             paddingHorizontal: 5,
@@ -30,6 +29,7 @@ const RoundButton: React.FC<RoundButtonProps> = ({ icon, title, color }) => {
     return (
         <View style={[styles.container, g_STYLE.row]}>
             <MaterialIcons name={icon} color='white' size={20} ></MaterialIcons>
+            <View style={{ width: 10 }}></View>
             <CustomText color="white">{title}</CustomText>
         </View>
     );

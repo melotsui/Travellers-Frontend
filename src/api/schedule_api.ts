@@ -1,3 +1,4 @@
+import { ScheduleAccess } from '../models/schedule_access';
 import APIs from './api';
 
 class ScheduleApi {
@@ -45,6 +46,24 @@ class ScheduleApi {
         });
     }
 
+    deleteSchedule = async (schedule_id: number): Promise<Schedule> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.schedule.api.delete('/schedules/' + schedule_id)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.schedule);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     getScheduleAccess = async (schedule_id: number): Promise<ScheduleAccess[]> => {
         return new Promise(async (resolve, reject) => {
             try {
@@ -64,7 +83,7 @@ class ScheduleApi {
         });
     }
 
-    setScheduleAccess = async (schedule_id: number, schedule_accesses: number[] | null): Promise<ScheduleModal> => {
+    setScheduleAccess = async (schedule_id: number, schedule_accesses: number[] | null): Promise<ScheduleAccess> => {
         return new Promise(async (resolve, reject) => {
             try {
                 let scheduleAccess = [];

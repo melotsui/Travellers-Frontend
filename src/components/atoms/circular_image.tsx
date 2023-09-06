@@ -4,7 +4,7 @@ import React from "react";
 
 interface CircularImageProps {
     size: number;
-    uri: string;
+    uri?: string;
 }
 
 const CircularImage: React.FC<CircularImageProps> = ({ size, uri }) => {
@@ -13,7 +13,7 @@ const CircularImage: React.FC<CircularImageProps> = ({ size, uri }) => {
         container: {
             width: size,
             height: size,
-            borderWidth: 2,
+            borderWidth: uri ? 2 : 0,
             borderColor: g_THEME.colors.grey,
             borderRadius: size / 2,
             overflow: 'hidden'
@@ -27,7 +27,7 @@ const CircularImage: React.FC<CircularImageProps> = ({ size, uri }) => {
 
     return (
         <View style={styles.container}>
-            <Image source={{ uri: uri }} style={styles.image} />
+            <Image source={ uri ? { uri: uri } : require('../../assets/profile-user.png') } style={styles.image} />
 
         </View>
     );

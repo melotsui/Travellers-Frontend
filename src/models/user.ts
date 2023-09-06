@@ -56,18 +56,4 @@ class User {
   }
 }
 
-class TripPartnerModal{
-  trip_partners: User[];
-  trip_invitations: User[];
-
-  constructor(
-      trip_partners: User[],
-      trip_invitations: User[]
-  ) {
-      this.trip_partners = trip_partners;
-      this.trip_invitations = trip_invitations;
-  }
-
-}
-
-export { User, TripPartnerModal };
+export { User };

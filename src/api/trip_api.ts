@@ -1,5 +1,8 @@
-import { Trip, TripModal } from '../models/trip';
-import { TripPartnerModal } from '../models/user';
+import { Trip } from '../models/trip';
+import { TripInvitation } from '../models/trip_invitation';
+import { TripPartnerInvitation } from '../models/trip_partner_invitation';
+import { TripTripPartnerUserModal } from '../models/trip_trip_partner_user';
+import { User } from '../models/user';
 import { formatDatetime } from '../utils/datetime_formatter';
 import APIs from './api';
 
@@ -46,9 +49,27 @@ class TripApi {
                 reject(error);
             }
         });
-    }  
+    }      
     
-    getTripPartners = async (trip_id: number): Promise<TripPartnerModal> => {
+    deleteTrip = async (trip_id: number): Promise<Trip[]> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.trip.api.delete('/trips/'+ trip_id)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+    
+    getTripPartners = async (trip_id: number): Promise<TripPartnerInvitation> => {
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -66,8 +87,26 @@ class TripApi {
             }
         });
     }
+    
+    deleteTripPartner = async (user_id: number): Promise<User> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.trip.api.delete('/trips/removeTripPartner/' + user_id)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.trip_partner);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
 
-    sendTripInvitation = async (trip_id: number, send_to: number): Promise<Trip> => {
+    sendTripInvitation = async (trip_id: number, send_to: number): Promise<TripInvitation> => {
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -121,7 +160,7 @@ class TripApi {
         trip_datetime_to?: Date,
         trip_destination?: string,
         trip_description?: string,
-    ): Promise<TripModal> => {
+    ): Promise<TripTripPartnerUserModal> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const json = {

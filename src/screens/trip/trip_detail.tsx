@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { screenWidth } from "../../constants/screen_dimension";
+import { screenHeight, screenWidth } from "../../constants/screen_dimension";
 import g_STYLE from "../../styles/styles";
 import CustomText from "../../components/atoms/text";
 import SeparateLine from "../../components/atoms/separate_line";
@@ -66,9 +66,15 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
         console.log("share trip");
         //props.navigation.navigate('TripDetail');
     }
-    const handleDelete = () => {
-        console.log("delete trip");
-        //props.navigation.navigate('TripDetail');
+    const handleDelete = async () => {
+        await apis.trip.deleteTrip(trip_id)
+            .then((response) => {
+                console.log('success to delete trip', response);
+                props.navigation.navigate('TripSearch');
+            })
+            .catch((error) => {
+                console.log('failed to delete trip', error);
+            });
     }
     const handleAddMedia = () => {
         console.log("add media");
@@ -90,7 +96,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
 
                     <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDelete}>
                         {[
-                            <CustomMenuItem title={"Delete"} onPress={handleDelete} icon={"delete-outline"} key={0}/>,
+                            <CustomMenuItem title={"Delete"} icon={"delete-outline"} key={0}/>,
                             <CustomText size={20} key={1}>Are you sure to delete this schedule? Everyone will not be able to access the trip again</CustomText>
                         ]}
                     </GradientPopupDialog>
@@ -106,27 +112,11 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                             </View>
                             <View style={styles.rightContainer}>
                                 <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
-                                {/*<Image source={{ uri: 'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80' }} style={styles.image} />*/}
                             </View>
                         </View>
                         <View style={styles.description}>
                             <CustomText>{trip!.trip_description}</CustomText>
                         </View>
-                        {/*<FlatList
-                            showsHorizontalScrollIndicator={false}
-                            horizontal={true}
-                            ItemSeparatorComponent={() =>
-                                <View style={{ width: screenWidth * 0.02 }}></View>
-                            }
-                            data={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']}
-                            renderItem={({ item, index }) => {
-                                if (index == 0) {
-                                    return <RoundRectImage type={MediaTypes.OTHER} onPress={handleAddMedia}></RoundRectImage>
-                                } else {
-                                    return <RoundRectImage type={MediaTypes.IMAGE} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></RoundRectImage>
-                                }
-                            }}
-                        ></FlatList>*?*/}
                     </View>
                     <View style={styles.space}></View>
                     <SeparateLine isTextInclude={false} />
@@ -137,7 +127,6 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                             <View style={styles.space}></View>
                             <GradientButton size={20} title={"Add Schedule"} radius={35} onPress={handleAddSchedule} />
                         </View>}
-
                     {schedules && <FlatList
                         scrollEnabled={false}
                         showsVerticalScrollIndicator={false}
@@ -157,7 +146,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                                 subTitle={item.schedule_place!}
                                 date={formatDate(new Date(item.schedule_datetime!))}
                                 time={formatTime(new Date(item.schedule_datetime!))}
-                                type={ActivityTypes.FOOD}
+                                type={ActivityTypes.DINING}
                                 transportTime={transportTime}
                                 onPress={() => handleScheduleTileChange(item.schedule_id)}  />
                     }}>
@@ -190,9 +179,9 @@ const styles = StyleSheet.create({
         height: 10,
     },
     lowerContainer: {
+        height: screenHeight * 0.5,
         justifyContent: 'center',
         alignItems: 'center',
-        flexGrow: 1,
     }
 });
 

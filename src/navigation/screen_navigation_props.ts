@@ -1,6 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
-import { MediaModal } from "../models/media";
+import { MediaMediaLocalUrl } from "../models/media_media_local_url";
 
 type ScreenNavigationProp<
   T extends keyof RootStackParamList
@@ -47,13 +47,14 @@ type RootStackParamList = {
   TripSearch: undefined;
   TripDetail: { trip_id: number };
   TripAdd: undefined;
+  TripInvite: { trip_id: number };
   TripEdit: { trip_id: number | null };
 
   //Schedule
   Schedule: { schedule_id: number };
   ScheduleEdit: { schedule_id: number | null; trip_id: number};
   ScheduleMedia: { schedule_id: number };
-  ScheduleMediaEdit: { schedule_id: number, media: MediaModal | null };
+  ScheduleMediaEdit: { schedule_id: number, media: MediaMediaLocalUrl | null };
 
   //notification
   Notification: undefined;

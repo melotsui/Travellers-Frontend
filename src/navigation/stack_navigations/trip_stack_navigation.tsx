@@ -9,6 +9,7 @@ import ScheduleMediaEditScreen from "../../screens/schedule/schedule_media_edit"
 import ScheduleMediaScreen from "../../screens/schedule/schedule_media";
 import MediaScreen from "../../screens/media/media";
 import TextAudioScreen from "../../screens/media/text_audio";
+import TripInviteScreen from "../../screens/trip/trip_invite";
 
 const HomeStack = createStackNavigator<RootStackParamList>();
 
@@ -19,6 +20,7 @@ export const TripStackNavigation = () => {
       headerShown: false
     })} initialRouteName="TripSearch">
       <HomeStack.Screen name="TripSearch" component={TripSearchScreen} />
+      <HomeStack.Screen name="TripInvite" component={TripInviteScreen} />
       <HomeStack.Screen name="TripDetail" component={TripDetailScreen} />
       <HomeStack.Screen name="TripEdit" component={TripEditScreen} />
       <HomeStack.Screen name="Schedule" component={ScheduleScreen} />

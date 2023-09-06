@@ -7,10 +7,12 @@ import ImageTile from '../molecules/image_tile';
 import IconButton from '../atoms/icon_button';
 import RoundButton from '../atoms/round_button';
 import GradientContainer from '../atoms/gradient_container';
+import CustomText from '../atoms/text';
+import SeparateLine from '../atoms/separate_line';
 
 interface PartnerTileProps {
     name: string;
-    uri: string;
+    uri?: string;
     onPress?: () => void;
     isPending: boolean;
     isSelect?: boolean;
@@ -30,6 +32,9 @@ const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending
             justifyContent: 'space-between',
             alignItems: 'center',
             paddingHorizontal: isSelect != null ? 30 : 0,
+        },
+        text: {
+            marginHorizontal: 20,
         },
     });
 
