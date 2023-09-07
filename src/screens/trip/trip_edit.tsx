@@ -15,6 +15,10 @@ import apis from "../../api/api_service";
 import { shareFriend } from "../../helpers/share";
 import { Trip } from "../../models/trip";
 import { TripPartnerInvitation } from "../../models/trip_partner_invitation";
+import { useDispatch } from "react-redux";
+import { DispatchThunk } from "../../store/store";
+import { addSchedules } from "../../actions/schedule_actions";
+import { addTrip, updateTrip } from "../../actions/trip_actions";
 
 const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) => {
     const { trip_id } = props.route.params;
@@ -29,6 +33,7 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     const [partner, setPartner] = useState('');
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+    const dispatch: DispatchThunk = useDispatch();
 
     useEffect(() => {
 
@@ -100,6 +105,7 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     }
 
     const handleInvitePartner = async () => {
+        console.log("g");
     }
 
 
@@ -109,23 +115,26 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
             return;
         }
         if (trip_id == null) {
-            await apis.trip.createTrip(name, startDate, endDate, destination, description)
-                .then((response) => {
-                    console.log('success to create trip');
-                    props.navigation.navigate('TripInvite', { trip_id: response.trip.trip_id });
-                })
-                .catch((error) => {
-                    console.log('failed to create trip');
-                });
+            dispatch(addTrip(name, startDate, endDate, destination, description));
+            // await apis.trip.createTrip(name, startDate, endDate, destination, description)
+            //     .then((response) => {
+            //         console.log('success to create trip');
+            //         props.navigation.navigate('TripInvite', { trip_id: response.trip.trip_id });
+            //     })
+            //     .catch((error) => {
+            //         console.log('failed to create trip');
+            //     });
         } else {
-            await apis.trip.updateTrip(trip_id, name, startDate, endDate, destination, description)
-                .then((response) => {
-                    console.log('success to update trip');
-                })
-                .catch((error) => {
-                    console.log('failed to update trip', error);
-                });
+            dispatch(updateTrip(trip_id, name, startDate, endDate, destination, description));
+            // await apis.trip.updateTrip(trip_id, name, startDate, endDate, destination, description)
+            //     .then((response) => {
+            //         console.log('success to update trip');
+            //     })
+            //     .catch((error) => {
+            //         console.log('failed to update trip', error);
+            //     });
         }
+        
     }
 
     return (

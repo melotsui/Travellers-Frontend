@@ -10,11 +10,11 @@ import g_THEME from "../../theme/theme";
 import { RootProps } from "../../navigation/screen_navigation_props";
 import apis from "../../api/api_service";
 import { useSelector } from "react-redux";
-import { RootState } from "../../models/state";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
+import { userSelector } from "../../slices/user_slice";
 
 const ChangePasswordScreen: React.FC<RootProps<'ChangePassword'>> = (props) => {
-    const user = useSelector((state: RootState) => state.user);
+    const { user } = useSelector(userSelector);
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -56,7 +56,7 @@ const ChangePasswordScreen: React.FC<RootProps<'ChangePassword'>> = (props) => {
             return;
         }
         setDialogVisible(true);
-        await apis.user.resetPassword(user?.user_id!, oldPassword, newPassword)
+        await apis.user.resetPassword(user!.user_id!, oldPassword, newPassword)
             .then((response) => {
                 console.log('success to reset password', response);
             })

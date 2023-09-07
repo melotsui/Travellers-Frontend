@@ -2,12 +2,10 @@ import { Action, configureStore } from '@reduxjs/toolkit';
 import userReducer from '../slices/user_slice';
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { useDispatch } from 'react-redux';
-import { RootState } from '../slices/root_reducers';
+import rootReducer, { RootState } from '../slices/root_reducers';
 
 const store = configureStore({
-    reducer: {
-        user: userReducer,
-    },
+    reducer: rootReducer,
     middleware: [thunk],
 },);
 

@@ -11,11 +11,16 @@ import CustomText from "../../components/atoms/text";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { useFocusEffect } from "@react-navigation/native";
 import { Trip } from "../../models/trip";
+import { useDispatch, useSelector } from "react-redux";
+import { DispatchThunk } from "../../store/store";
+import { tripSelector } from "../../slices/trip_slice";
+import { fetchTrips } from "../../actions/trip_actions";
 
 const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
     const [searchText, setSearchText] = useState('');
-    const [tripList, setTripList] = useState<Trip[] | null>([]);
     const [isDialogVisible, setDialogVisible] = useState(false);
+    const dispatch: DispatchThunk = useDispatch();
+    const { trips } = useSelector(tripSelector);
 
     const backButtonPressCount = useRef(0);
 
@@ -47,19 +52,7 @@ const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
     );
 
     useEffect(() => {
-
-        const fetchTripList = async () => {
-            await apis.trip.getTripList()
-                .then((response) => {
-                    console.log('success to get trip list');
-                    setTripList(response);
-                    console.log(tripList![0]);
-                })
-                .catch((error) => {
-                    console.log('failed to get trip list');
-                });
-        }
-        fetchTripList();
+        dispatch(fetchTrips());
         return () => {
             // Perform any cleanup tasks here if necessary
         };
@@ -70,7 +63,7 @@ const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
     }
 
     const handleTripTilePress = (trip_id: number) => {
-        props.navigation.navigate('TripDetail', {'trip_id': trip_id});
+        props.navigation.navigate('TripDetail', { 'trip_id': trip_id });
     }
 
     const handleLogout = () => {
@@ -94,7 +87,7 @@ const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
                 </View>
                 <FlatList
                     showsVerticalScrollIndicator={false}
-                    data={tripList}
+                    data={trips}
                     keyExtractor={(trip: Trip) => trip.trip_id.toString()}
                     renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => handleTripTilePress(item.trip_id)}>

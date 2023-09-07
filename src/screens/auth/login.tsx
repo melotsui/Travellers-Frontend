@@ -12,7 +12,7 @@ import apis from '../../api/api_service';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootProps } from '../../navigation/screen_navigation_props';
 import { userSelector } from '../../slices/user_slice';
-import { fetchUsers } from '../../actions/userActions';
+import { fetchUser } from '../../actions/user_actions';
 import { DispatchThunk } from '../../store/store';
 
 
@@ -53,7 +53,7 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
                 setPasswordError(error);
             });
 
-            dispatch(fetchUsers());
+            dispatch(fetchUser());
 
 
         // await apis.auth.getMyProfile().then((response) => {
@@ -67,8 +67,6 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
         // );
     }
     
-    console.log(user);
-
     const handleForgetPassword = () => {
         props.navigation.navigate('ForgetPassword');
     };

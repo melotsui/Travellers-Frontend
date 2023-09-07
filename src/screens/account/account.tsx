@@ -16,9 +16,9 @@ import { useSelector } from "react-redux";
 import { userSelector } from "../../slices/user_slice";
 
 const AccountScreen: React.FC<RootProps<'Account'>> = (props) => {
-    let items = ['Settings', 'Privacy Policy', 'Terms & Conditions', 'Contact Us', 'Share', 'Logout'];
-    let itemsIcon = ['settings', 'assignment', 'handshake', 'call', 'share', 'logout'];
-    const { users, loading, error } = useSelector(userSelector);
+    let items = ['Personal Information', 'Settings', 'Privacy Policy', 'Terms & Conditions', 'Contact Us', 'Share', 'Logout'];
+    let itemsIcon = ['account-circle','settings', 'assignment', 'handshake', 'call', 'share', 'logout'];
+    const { user, loading, error } = useSelector(userSelector);
 
     const handleEdit = () => {
         props.navigation.navigate('Profile');
@@ -27,18 +27,21 @@ const AccountScreen: React.FC<RootProps<'Account'>> = (props) => {
     const handleTap = (index: number) => {
         switch (index) {
             case 0:
-                props.navigation.navigate('Settings');
+                props.navigation.navigate('PersonalInformation');
                 break;
             case 1:
-                props.navigation.navigate('PrivacyPolicy');
+                props.navigation.navigate('Settings');
                 break;
             case 2:
-                props.navigation.navigate('TermsConditions');
+                props.navigation.navigate('PrivacyPolicy');
                 break;
             case 3:
-                props.navigation.navigate('ContactUs');
+                props.navigation.navigate('TermsConditions');
                 break;
             case 4:
+                props.navigation.navigate('ContactUs');
+                break;
+            case 5:
                 props.navigation.navigate('Share');
                 break;
             default:
@@ -66,8 +69,11 @@ const AccountScreen: React.FC<RootProps<'Account'>> = (props) => {
                 <View style={styles.container}>
                     <View style={styles.account}>
                         <View style={[styles.profile, g_STYLE.row]}>
-                            <CircularImage size={screenWidth * 0.25} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
-                            <CustomText size={25}>{users[0].name}</CustomText>
+                            <CircularImage size={screenWidth * 0.25} uri={user?.user_icon_url} />
+                            <View>
+                            <CustomText size={25}>{user?.name}</CustomText>
+                            <View style={{marginLeft: 5}}><CustomText size={15}>{user?.username}</CustomText></View>
+                            </View>
                             <IconButton icon={'edit'} size={25} onPress={handleEdit} />
                         </View>
                         <FlatList
@@ -75,7 +81,7 @@ const AccountScreen: React.FC<RootProps<'Account'>> = (props) => {
                             data={items}
                             keyExtractor={(index) => index.toString()}
                             renderItem={({ item, index }) => {
-                                if (index == 5) {
+                                if (index == 6) {
                                     return <GradientPopupDialog isSelect={true} title={'Reminder'} onPress={handleLogout}>
                                         {[innerContent(item, index),
                                         <CustomText size={20} key={1}>Are you sure you want to exit?</CustomText>]}

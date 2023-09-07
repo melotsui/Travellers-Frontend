@@ -1,7 +1,7 @@
 import { Asset } from 'react-native-image-picker';
 import APIs from './api';
-import { MediaMediaLocalUrlModal } from '../models/media_media_local_url';
 import { MediaLocalUrl } from '../models/media_local_url';
+import { MediaMediaLocalUrl } from '../models/media_media_local_url';
 
 class MediaApi {
     private media: APIs;
@@ -10,7 +10,7 @@ class MediaApi {
         this.media = trip;
     }
 
-    getScheduleMedia = async ( schedule_id: number ): Promise<MediaMediaLocalUrlModal[]> => {
+    getScheduleMedia = async ( schedule_id: number ): Promise<MediaMediaLocalUrl[]> => {
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -20,7 +20,7 @@ class MediaApi {
                         if (result.data.length === 0) {
                             resolve([]);
                         }
-                        const mediaList: MediaMediaLocalUrlModal[] = result.data.map((media: MediaMediaLocalUrlModal) => { return new MediaMediaLocalUrlModal(media.media, media.media_local_url ?? null); });
+                        const mediaList: MediaMediaLocalUrl[] = result.data.map((media: MediaMediaLocalUrl) => { return new MediaMediaLocalUrl(media.media, media.media_local_url ?? null); });
                         resolve(mediaList);
                     })
                     .catch((error) => {

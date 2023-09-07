@@ -13,8 +13,7 @@ import g_THEME from "../../theme/theme";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { PaperProvider } from "react-native-paper";
 import { RootProps } from "../../navigation/screen_navigation_props";
-import { RootState } from "../../models/state";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { validateEmail } from "../../utils/validation";
 import { useBottomSheet } from "../../context/bottom_sheet_context";
 import SeparateLine from "../../components/atoms/separate_line";
@@ -23,9 +22,15 @@ import apis from "../../api/api_service";
 import IconButton from "../../components/atoms/icon_button";
 import { Asset } from "react-native-image-picker";
 import { openCamera, openGallery } from "../../utils/image_picker";
+import { RootState } from "../../slices/root_reducers";
+import { DispatchThunk } from "../../store/store";
+import { userSelector } from "../../slices/user_slice";
+import { fetchUser, updateUser } from "../../actions/user_actions";
+import { formatGender } from "../../helpers/gender";
 
 const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
-    const user = useSelector((state: RootState) => state.user);
+    const { user, loading, error } = useSelector(userSelector);
+    const dispatch: DispatchThunk = useDispatch();
     const [icon, setIcon] = useState<Asset | null>(null);
     const [username, setUsername] = useState(user?.username ?? '');
     const [name, setName] = useState(user?.name ?? '');
@@ -37,6 +42,19 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
     const [ageError, setAgeError] = useState('');
     const [seconds, setSeconds] = useState(0);
     let isVerify = false;
+
+    useEffect(() => {
+
+        dispatch(fetchUser());
+
+        return () => {
+
+        }
+    }, []);
+
+    useEffect(() => {
+        setEmail(user?.email ?? '');
+    }, [user]);
 
     const {setBottomSheetContent, showBottomSheet, hideBottomSheet} = useBottomSheet();
 
@@ -95,9 +113,8 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
         setName(value);
     }
 
-    const handleEmail = (value: string) => {
-        setEmailError('');
-        setEmail(value);
+    const handleEmail = () => {
+        props.navigation.navigate('PersonalInformation');
     }
 
     const handleEmailVerification = async () => {
@@ -138,12 +155,12 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
     }
 
     const handleSave = () => {
-        if(!validateEmail(email)){
-            setEmailError('Invalid email');
-        }
         if(age < 0 || age > 150) {
             setAgeError('Invalid age');
+            return;
         }
+        
+        dispatch(updateUser(username, name, nationality, formatGender(gender), age, icon ?? undefined));
     }
 
     return (
@@ -159,7 +176,7 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
                             </View>
                     </View>
 
-                    <CustomText size={20}>Username</CustomText>
+                    <CustomText size={20}>Username*</CustomText>
                     <TextField text={username} onChange={handleName}></TextField>
                     <View style={styles.space}></View>
 
@@ -167,25 +184,25 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
                     <TextField text={name} onChange={handleName}></TextField>
                     <View style={styles.space}></View>
 
-                    <View style={g_STYLE.row}>
+                     <View style={g_STYLE.row}>
                         <CustomText size={20}>Email</CustomText>
                         <View style={styles.horizontalSpace}></View>
-                        {isVerify ?
+                        {user?.email_verified_at ?
                             <MaterialIcons name={"check-circle-outline"} size={20} color={'green'} /> :
                             <MaterialIcons name={"error-outline"} size={20} color={g_THEME.colors.error} />}
                     </View>
                     <View style={g_STYLE.row}>
                         <View style={styles.verifyButton}>
-                            <TextField text={email} error={emailError} onChange={handleEmail}></TextField>
+                            <TextField text={email} error={emailError} onPressText={user?.email_verified_at ? () => {} : handleEmail}></TextField>
                         </View>
-                        <GradientPopupDialog isSelect={false} title="Reminder" onOpenPress={handleEmailVerification} isDisabled = {seconds > 0}>
+                        {/* <GradientPopupDialog isSelect={false} title="Reminder" onOpenPress={handleEmailVerification} isDisabled = {seconds > 0}>
                             {[
                                 <GradientButton title={"Verify"} color={seconds > 0 ? g_THEME.colors.grey : undefined} width={0.2} size={20}></GradientButton>,
                                 <CustomText size={20}>Verification link is sent to your email</CustomText>
                             ]}
-                        </GradientPopupDialog>
+                        </GradientPopupDialog> */}
                     </View>
-                    <View style={styles.space}></View>
+                    <View style={styles.space}></View> 
 
                     <CustomText size={20}>Nationality</CustomText>
                     <TextField text={nationality} onChange={handleNationality}></TextField>

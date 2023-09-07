@@ -1,4 +1,6 @@
+import { Asset } from 'react-native-image-picker';
 import { VerificationType } from '../constants/types';
+import { User } from '../models/user';
 import { validateEmail } from '../utils/validation';
 import APIs from './api';
 
@@ -122,6 +124,64 @@ class UserApi {
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    updateProfile = async (
+        username: string,
+        name?: string,
+        nationality?: string,
+        gender?: string,
+        age?: number
+        ): Promise<User> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const jsonData = {
+                    "username": username,
+                    "name": name,
+                    "nationality": nationality,
+                    "gender": gender,
+                    "age": age
+                };
+
+                await this.user.api.put('/users', jsonData)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.user);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    uploadUserIcon = async ( icon: Asset ): Promise<User> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const formData = new FormData();
+                formData.append('icon', {
+                    uri: icon.uri,
+                    type: icon.type,
+                    name: icon.fileName,
+                });
+
+                await this.user.api.post('/users/uploadUserIcon', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+                    .then((response) => {
+                        const result = response.data;
+                        const user: User = result.data.user;
+                        resolve(user);
                     })
                     .catch((error) => {
                         const result = error.response.data;

@@ -10,3 +10,16 @@ export function setNavigationRef(ref: NavigationContainerRef<RootStackParamList>
 export function navigate(name: string, params?: object) {
   navigationRef?.dispatch(CommonActions.navigate(name, params));
 }
+
+export function navigateBack() {
+  navigationRef?.dispatch(CommonActions.goBack());
+}
+
+export function navigateAndReset(name: string, params?: object) {
+  navigationRef?.dispatch(
+    CommonActions.reset({
+      index: 0,
+      routes: [{ name, params }],
+    })
+  );
+}

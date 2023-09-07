@@ -29,6 +29,7 @@ type RootStackParamList = {
   Account: undefined;
   Profile: undefined;
   ChangePassword: undefined;
+  PersonalInformation: undefined;
   Settings: undefined;
   PrivacyPolicy: undefined;
   TermsConditions: undefined;
@@ -62,6 +63,7 @@ type RootStackParamList = {
   //stack
   TripStack: undefined;
   NotesStack: undefined;
+  AddTripStack: undefined;
   AccountStack: undefined;
 };
 

@@ -98,6 +98,7 @@ const TextField: React.FC<TextFieldProps> = ({ text, onChange, hint, onPress, on
                             numberOfLines={numberOfLines ?? 1}
                             editable={onPressText == null}
                             keyboardType={keyboardType != null ? keyboardType : 'default'}
+                        
                         />
                         {suffixIcon != null &&
                             <View style={styles.suffix}>

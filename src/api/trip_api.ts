@@ -51,7 +51,7 @@ class TripApi {
         });
     }      
     
-    deleteTrip = async (trip_id: number): Promise<Trip[]> => {
+    deleteTrip = async (trip_id: number): Promise<Trip> => {
         return new Promise(async (resolve, reject) => {
             try {
                 await this.trip.api.delete('/trips/'+ trip_id)
@@ -205,10 +205,10 @@ class TripApi {
                     "trip_description": trip_description,
                 };
 
-                await this.trip.api.put('/trips', json)
+                await this.trip.api.put('/trips/' + trip_id, json)
                     .then((response) => {
                         const result = response.data;
-                        resolve(result.data);
+                        resolve(result.data.trip);
                     })
                     .catch((error) => {
                         const result = error.response.data;

@@ -23,39 +23,29 @@ import { formatDate } from "../../utils/datetime_formatter";
 import { ScheduleAccess } from "../../models/schedule_access";
 import { MediaMediaLocalUrl } from "../../models/media_media_local_url";
 import { getActivityIcon, parseActivityType } from "../../helpers/activity";
+import { useDispatch, useSelector } from "react-redux";
+import { scheduleSelector } from "../../slices/schedule_slice";
+import { DispatchThunk } from "../../store/store";
+import { deleteSchedule, fetchSchedule, fetchScheduleAccesses, fetchSchedules } from "../../actions/schedule_actions";
+import { fetchMedia } from "../../actions/media_actions";
+import { mediaSelector } from "../../slices/media_slice";
 
 const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     const { schedule_id } = props.route.params;
-    const [schedule, setSchedule] = useState<Schedule | null>(null);
-    const [media, setMedia] = useState<MediaMediaLocalUrl[]>([]);
-    const [scheduleAccess, setScheduleAccess] = useState<ScheduleAccess[] | null>(null);
+    const { schedule, scheduleAccesses } = useSelector(scheduleSelector);
+    const { media } = useSelector(mediaSelector);
+    const dispatch: DispatchThunk = useDispatch();
 
     useEffect(() => {
 
-        const fetchData = async () => {
+        dispatch(fetchSchedule(schedule_id));
+        dispatch(fetchMedia(schedule_id));
+        dispatch(fetchScheduleAccesses(schedule_id));
 
-            try {
-                const promise1: Promise<Schedule> = apis.schedule.getScheduleById(schedule_id)
-                const promise2: Promise<MediaMediaLocalUrl[]> = apis.media.getScheduleMedia(schedule_id)
-                const promise3: Promise<ScheduleAccess[]> = apis.schedule.getScheduleAccess(schedule_id)
-                const [schedule, media, scheduleAccess] = await Promise.all([promise1, promise2, promise3]);
-
-                setSchedule(schedule);
-                setMedia(media);
-                setScheduleAccess(scheduleAccess);
-
-            } catch (error) {
-                // Handle any errors that occurred during the API calls
-                console.error('Error:', error);
-            }
-        }
-
-        fetchData();
         return () => {
             // Perform any cleanup tasks here if necessary
         };
     }, []);
-
     const handleEdit = () => {
         props.navigation.navigate('ScheduleEdit', { schedule_id: schedule_id, trip_id: schedule?.trip_id! });
     }
@@ -81,23 +71,24 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     }
 
     const handleDeleteConfirm = async () => {
-        await apis.schedule.deleteSchedule(schedule_id)
-            .then((response) => {
-                console.log('success to delete schedule', response);
-                props.navigation.navigate('TripDetail', { trip_id: schedule?.trip_id! });
-            })
-            .catch((error) => {
-                console.log('failed to delete schedule', error);
-            });
+        dispatch(deleteSchedule(schedule_id));
+        // await apis.schedule.deleteSchedule(schedule_id)
+        //     .then((response) => {
+        //         console.log('success to delete schedule', response);
+        //         props.navigation.navigate('TripDetail', { trip_id: newSchedule?.trip_id! });
+        //     })
+        //     .catch((error) => {
+        //         console.log('failed to delete schedule', error);
+        //     });
     }
 
     return (
         <PaperProvider>
-            { schedule && <View>
-                <CustomHeader title={schedule?.schedule_name}>
-                <IconButton onPress={handleAllMedia} icon={"description"} />
-                <View style={{ width: 10 }}></View>
-                <IconButton onPress={handleEdit} icon={"edit"} />
+            {schedule && <View>
+                <CustomHeader title={schedule.schedule_name}>
+                    <IconButton onPress={handleAllMedia} icon={"description"} />
+                    <View style={{ width: 10 }}></View>
+                    <IconButton onPress={handleEdit} icon={"edit"} />
                 </CustomHeader>
                 <ScrollView>
                     <View style={[styles.container, g_STYLE.col]}>
@@ -106,7 +97,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                 <View style={[g_STYLE.col, styles.leftContainer]}>
                                     <CustomText size={25}>{schedule?.schedule_place}</CustomText>
                                     <CustomText>Sushiro</CustomText>
-                                    <CustomText>{formatDate(new Date(schedule?.schedule_datetime!))} 10:00 - 12:00 (2hrs)</CustomText>
+                                    <CustomText>{formatDate(new Date(schedule.schedule_datetime!))} 10:00 - 12:00 (2hrs)</CustomText>
                                 </View>
                                 <View style={styles.rightContainer}>
                                     <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
@@ -115,7 +106,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                 </View>
                             </View>
                             <View style={styles.description}>
-                                <CustomText>{schedule?.schedule_remark}</CustomText>
+                                <CustomText>{schedule.schedule_remark}</CustomText>
                             </View>
                             <View style={[styles.buttonContainer, g_STYLE.row]}>
                                 <GradientButton title={"Navigate Now"} onPress={handleNavigation} width={0.43} size={20}></GradientButton>
@@ -147,9 +138,9 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                             ItemSeparatorComponent={() =>
                                 <View style={{ height: 5 }}></View>
                             }
-                            data={scheduleAccess}
+                            data={scheduleAccesses}
                             renderItem={({ item, index }) => (
-                                <ImageTile title={item.user_id!.toString()} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></ImageTile>
+                                <ImageTile title={(item.user_id ?? "").toString()} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></ImageTile>
                             )}>
                         </FlatList>
                         <View style={styles.deleteButton}>

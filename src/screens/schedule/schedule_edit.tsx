@@ -17,6 +17,9 @@ import g_THEME from "../../theme/theme";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { ScheduleAccess } from "../../models/schedule_access";
 import { TripPartner } from "../../models/trip_partner";
+import { useDispatch } from "react-redux";
+import { addSchedules, updateSchedule } from "../../actions/schedule_actions";
+import { DispatchThunk } from "../../store/store";
 "../../utils/datetime_formatter";
 
 const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
@@ -36,6 +39,7 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     const [partner, setPartner] = useState<TripPartner | null>(null);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
+    const dispatch: DispatchThunk = useDispatch();
 
     useEffect(() => {
 
@@ -163,25 +167,28 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
         }
         const datetime = new Date(formatDatetime(undefined, date, startTime)!);
         if (schedule_id) {
-            await apis.schedule.updateSchedule(schedule_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
-                .then((response) => {
-                    console.log('success to update schedule');
-                    apis.schedule.setScheduleAccess(schedule_id, null);
-                    props.navigation.goBack();
-                })
-                .catch((error) => {
-                    console.log('failed to update schedule');
-                });
+            dispatch(updateSchedule(schedule_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks));
+            // await apis.schedule.updateSchedule(schedule_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
+            //     .then((response) => {
+            //         console.log('success to update schedule');
+            //         apis.schedule.setScheduleAccess(schedule_id, null);
+            //         props.navigation.goBack();
+            //     })
+            //     .catch((error) => {
+            //         console.log('failed to update schedule');
+            //     });
         } else {
-            await apis.schedule.createSchedule(trip_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
-                .then((response) => {
-                    console.log('success to create schedule', response);
-                    apis.schedule.setScheduleAccess(response?.schedule_id!, null);
-                    props.navigation.goBack();
-                })
-                .catch((error) => {
-                    console.log('failed to create schedule', error);
-                });
+            
+            dispatch(addSchedules(trip_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks));
+            // await apis.schedule.createSchedule(trip_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
+            //     .then((response) => {
+            //         console.log('success to create schedule', response);
+            //         apis.schedule.setScheduleAccess(response?.schedule_id!, null);
+            //         props.navigation.goBack();
+            //     })
+            //     .catch((error) => {
+            //         console.log('failed to create schedule', error);
+            //     });
         }
     }
 

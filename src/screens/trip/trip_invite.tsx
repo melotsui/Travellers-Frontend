@@ -56,7 +56,7 @@ const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: a
     }
 
     const handleContinue = () => {
-        props.navigation.navigate('TripEdit', { trip_id: trip_id });
+        props.navigation.navigate('TripDetail', { trip_id: trip_id });
     }
 
     return (

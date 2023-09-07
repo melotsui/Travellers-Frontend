@@ -105,7 +105,7 @@ class ScheduleApi {
                 await this.schedule.api.post('/schedule_accesses', json)
                     .then((response) => {
                         const result = response.data;
-                        resolve(result.data.schedule);
+                        resolve(result.data.schedule_accesses);
                     })
                     .catch((error) => {
                         const result = error.response.data;
@@ -175,13 +175,15 @@ class ScheduleApi {
                 await this.schedule.api.put('/schedules/' + schedule_id, json)
                     .then((response) => {
                         const result = response.data;
-                        resolve(result.data.schedule_accesses);
+                        resolve(result.data.schedule);
                     })
                     .catch((error) => {
+                        console.log('updateSchedule ', error);
                         const result = error.response.data;
                         reject(result.message);
                     });
             } catch (error) {
+                console.log('updateSchedule ', error);
                 reject(error);
             }
         });

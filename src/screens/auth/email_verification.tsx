@@ -10,12 +10,12 @@ import g_THEME from '../../theme/theme';
 import apis from '../../api/api_service';
 import { useSelector } from 'react-redux';
 import { RootProps } from '../../navigation/screen_navigation_props';
-import { RootState } from '../../slices/root_reducers';
+import { userSelector } from '../../slices/user_slice';
 
 const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props) => {
-    const user = useSelector((state: RootState) => state.user);
+    const { user } = useSelector(userSelector);
     const [seconds, setSeconds] = useState(0);
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(user?.email);
     const [code, setCode] = useState('');
     const [emailError, setEmailError] = useState('');
     const [codeError, setCodeError] = useState('');
@@ -49,7 +49,7 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
             setEmailError('Username cannot be empty');
             return;
         }
-        await apis.user.sendVerifyEmail(email)
+        await apis.user.sendVerifyEmail(email!)
             .then((response) => {
                 setSeconds(20);
                 console.log('success to send code');
@@ -71,7 +71,7 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
             return;
         }
 
-        await apis.user.verifyEmail(user!.users[0].user_id.toString(), code, email)
+        await apis.user.verifyEmail(user!.user_id.toString(), code, email!)
             .then((response) => {
                 console.log('success to verify');
                 props.navigation.navigate('HomeBottomBarNavigation');
@@ -99,7 +99,7 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
                 <CustomText size={22}>Bind your email to Travellers</CustomText>
                 <View style={styles.text}>
                     <View style={styles.space} />
-                    <TextField hint={'email'} text={email} error={emailError} onChange={handleEmailChange}></TextField>
+                    <TextField hint={'email'} text={email!} error={emailError} onChange={handleEmailChange}></TextField>
                     <View style={styles.space} />
                     <SendVerificationCode hint={'verification code'} text={code} color={seconds > 0 ? g_THEME.colors.grey : undefined} error={codeError} onChange={handleCodeChange} onPress={handleSendCode} />
                     {seconds > 0 && <><View style={styles.longSpace} />
@@ -111,7 +111,7 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
                     title="Confirm"
                     onPress={handleEmailVerification}
                 />
-                <TextButton onPress={handleSkip} color={g_THEME.colors.grey} size={22}>Skip</TextButton>
+                {!user && <TextButton onPress={handleSkip} color={g_THEME.colors.grey} size={22}>Skip</TextButton>}
             </View>
         </ScrollView>
     );

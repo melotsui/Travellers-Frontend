@@ -19,36 +19,28 @@ import { RootProps } from "../../navigation/screen_navigation_props";
 import apis from "../../api/api_service";
 import { formatDate, formatTime, getDateFromString } from "../../utils/datetime_formatter";
 import { Trip } from "../../models/trip";
+import { useDispatch, useSelector } from "react-redux";
+import { tripSelector } from "../../slices/trip_slice";
+import { DispatchThunk } from "../../store/store";
+import { deleteTrip, fetchTrip } from "../../actions/trip_actions";
+import { fetchSchedules } from "../../actions/schedule_actions";
+import { scheduleSelector } from "../../slices/schedule_slice";
 
 const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
-    const [trip, setTrip] = useState<Trip | null>(null);
-    const [schedules, setSchedules] = useState<Schedule[] | null>([]);
     const { trip_id } = props.route.params;
+    const dispatch: DispatchThunk = useDispatch();
+    const { trip } = useSelector(tripSelector);
+    const { schedules } = useSelector(scheduleSelector);
 
     useEffect(() => {
 
-        const fetchData = async () => {
-
-            try {
-                const promise1: Promise<Trip> = apis.trip.getTripById(trip_id);
-                const promise2: Promise<Schedule[]> = apis.schedule.getScheduleListById(trip_id);
-
-                const [trip, schedule] = await Promise.all([promise1, promise2]);
-
-                setTrip(trip);
-                setSchedules(schedule);
-
-            } catch (error) {
-                // Handle any errors that occurred during the API calls
-                console.error('Error:', error);
-            }
-        }
-        fetchData();
+        dispatch(fetchTrip(trip_id));
+        dispatch(fetchSchedules(trip_id));
         return () => {
             // Perform any cleanup tasks here if necessary
         };
     }, []);
-
+        
     const handleNote = () => {
         props.navigation.navigate('Notes');
     }
@@ -67,14 +59,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
         //props.navigation.navigate('TripDetail');
     }
     const handleDelete = async () => {
-        await apis.trip.deleteTrip(trip_id)
-            .then((response) => {
-                console.log('success to delete trip', response);
-                props.navigation.navigate('TripSearch');
-            })
-            .catch((error) => {
-                console.log('failed to delete trip', error);
-            });
+        dispatch(deleteTrip(trip_id));
     }
     const handleAddMedia = () => {
         console.log("add media");

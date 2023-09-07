@@ -3,13 +3,13 @@ import { User } from '../models/user';
 import { RootState } from './root_reducers';
 
 interface UserState {
-  users: User[];
+  user: User | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: UserState = {
-  users: [],
+  user: null,
   loading: false,
   error: null,
 };
@@ -18,26 +18,46 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    getUsersStart: (state) => {
+    // get user
+    getUserStart: (state) => {
       state.loading = true;
       state.error = null;
     },
-    getUsersSuccess: (state, action: PayloadAction<User[]>) => {
-      state.users = action.payload;
+    getUserSuccess: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
       state.loading = false;
       state.error = null;
     },
-    getUsersFailure: (state, action: PayloadAction<string>) => {
+    getUserFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
+
+    // update user
+    updateUserStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    updateUserSuccess: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    updateUserFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
   },
 });
 
 export const {
-  getUsersStart,
-  getUsersSuccess,
-  getUsersFailure,
+  getUserStart,
+  getUserSuccess,
+  getUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
 } = userSlice.actions;
 
 export const userSelector = (state: RootState) => state.user;
