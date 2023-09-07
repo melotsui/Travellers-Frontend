@@ -1,6 +1,7 @@
 import { User } from '../models/user';
 import { Response } from '../models/reponse';
 import APIs from './api';
+import { AppThunk } from '../store/store';
 
 class AuthApi {
     private auth: APIs;

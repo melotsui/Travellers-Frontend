@@ -9,8 +9,8 @@ import SendVerificationCode from '../../components/molecules/send_verification_c
 import g_THEME from '../../theme/theme';
 import apis from '../../api/api_service';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../models/state';
 import { RootProps } from '../../navigation/screen_navigation_props';
+import { RootState } from '../../slices/root_reducers';
 
 const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props) => {
     const user = useSelector((state: RootState) => state.user);
@@ -71,7 +71,7 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
             return;
         }
 
-        await apis.user.verifyEmail(user!.user_id.toString(), code, email)
+        await apis.user.verifyEmail(user!.users[0].user_id.toString(), code, email)
             .then((response) => {
                 console.log('success to verify');
                 props.navigation.navigate('HomeBottomBarNavigation');

@@ -9,13 +9,16 @@ import g_STYLE from '../../styles/styles';
 import CustomText from '../../components/atoms/text';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';
-import { updateUser } from '../../actions/user_actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootProps } from '../../navigation/screen_navigation_props';
+import { userSelector } from '../../slices/user_slice';
+import { fetchUsers } from '../../actions/userActions';
+import { DispatchThunk } from '../../store/store';
 
 
 const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
-    const dispatch = useDispatch();
+    const dispatch: DispatchThunk = useDispatch();
+  const { user, loading, error } = useSelector(userSelector);
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -49,17 +52,23 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
                 console.log('failed to login');
                 setPasswordError(error);
             });
-        await apis.auth.getMyProfile().then((response) => {
-            console.log('success to get profile');
-            dispatch(updateUser(response));
-            props.navigation.navigate('HomeBottomBarNavigation');
+
+            dispatch(fetchUsers());
+
+
+        // await apis.auth.getMyProfile().then((response) => {
+        //     console.log('success to get profile');
+        //     //dispatch(updateUser(response));
+        //     props.navigation.navigate('HomeBottomBarNavigation');
             
-        }).catch((error) => {
-            console.log('failed to get profile');
-        }
-        );
+        // }).catch((error) => {
+        //     console.log('failed to get profile');
+        // }
+        // );
     }
     
+    console.log(user);
+
     const handleForgetPassword = () => {
         props.navigation.navigate('ForgetPassword');
     };

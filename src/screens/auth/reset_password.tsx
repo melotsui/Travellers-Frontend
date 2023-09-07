@@ -41,10 +41,10 @@ const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
             return;
         }
 
-        await apis.user.resetPassword('', '', password)
+        await apis.user.resetPassword(0, '', password)
             .then((response) => {
                 console.log('success to reset password');
-                props.navigation.navigate('Login');
+                props.navigation.navigate('Login', {share_id: ''});
             })
             .catch((error) => {
                 console.log('failed to reset password');

@@ -123,7 +123,7 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                     console.log('success to update trip');
                 })
                 .catch((error) => {
-                    console.log('failed to update trip');
+                    console.log('failed to update trip', error);
                 });
         }
     }
