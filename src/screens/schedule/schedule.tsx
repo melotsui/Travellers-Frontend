@@ -56,13 +56,12 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     }
 
     const handleReminder = () => {
-        console.log("set reminder");
-        //props.navigation.navigate('TripDetail');
+        props.navigation.navigate('ScheduleReminder', { schedule_id: schedule_id });
     }
 
     const handleAddMedia = () => {
         console.log("add media");
-        props.navigation.navigate('ScheduleMediaEdit', { schedule_id: schedule_id, media: null });
+        props.navigation.navigate('Media', { schedule_id: schedule_id, note_id: null, media: null });
     }
 
     const handleAllMedia = () => {

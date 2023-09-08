@@ -52,7 +52,7 @@ const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
             .catch((error) => {
                 setUsernameError(error.message);
             });
-        await apis.notification.addFCMToken();
+        apis.notification.addFCMToken();
         await apis.auth.getMyProfile().then((response) => {
             console.log('success to get profile');
             //dispatch(updateUser(response));

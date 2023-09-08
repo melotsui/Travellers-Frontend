@@ -52,7 +52,7 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
                 setPasswordError(error);
             });
 
-        await apis.notification.addFCMToken();
+        apis.notification.addFCMToken();
 
 
         dispatch(fetchUser());

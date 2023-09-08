@@ -207,6 +207,25 @@ class ScheduleApi {
             }
         });
     }
+
+    getScheduleReminders = async (schedule_id: string): Promise<ScheduleReminder> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                await this.schedule.api.get('/schedule_reminders/' + schedule_id)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.schedule_reminders[0]);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
 }
 
 export default ScheduleApi;

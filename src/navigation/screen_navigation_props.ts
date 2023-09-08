@@ -55,6 +55,7 @@ type RootStackParamList = {
   Schedule: { schedule_id: number };
   ScheduleEdit: { schedule_id: number | null; trip_id: number };
   ScheduleMedia: { schedule_id: number };
+  ScheduleReminder: { schedule_id: number };
 
   //notification
   Notification: undefined;
