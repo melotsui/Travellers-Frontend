@@ -46,15 +46,17 @@ class MediaApi {
                     }
                 })
                     .then((response) => {
+                        const fileName = response.headers["content-disposition"].split("filename=")[1];
+                        
                         // Convert binary data to base64
                         const base64 = Buffer.from(response.data, 'binary').toString('base64');
 
                         // Define a file path to save on the device
-                        const path = `${RNFS.DocumentDirectoryPath}/downloaded_image.jpg`;
+                        const path = `${RNFS.DocumentDirectoryPath}/${fileName}`;
 
                         // Write the file
                         RNFS.writeFile(path, base64, 'base64').then(() => {
-                            resolve(path)
+                            resolve("file:///" + path)
                         });
 
 
@@ -86,7 +88,28 @@ class MediaApi {
                 await this.media.api.post('/media/schedule', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
                     .then((response) => {
                         const result = response.data;
-                        const media: Media = result.data;
+                        const media: Media = result.data.media;
+                        resolve(media);
+                    })
+                    .catch((error) => {
+                        console.log("uploadScheduleMedia error ", error);
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                console.log("uploadScheduleMedia error ", error);
+                reject(error);
+            }
+        });
+    }
+
+    deleteScheduleMedia = async (media_id: number): Promise<Media> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.media.api.delete('/media/' + media_id )
+                    .then((response) => {
+                        const result = response.data;
+                        const media: Media = result.data.media;
                         resolve(media);
                     })
                     .catch((error) => {
@@ -112,7 +135,7 @@ class MediaApi {
                 await this.media.api.post('/media_local_url', json)
                     .then((response) => {
                         const result = response.data;
-                        const localUrl: MediaLocalUrl = result.data;
+                        const localUrl: MediaLocalUrl = result.data.media_local_url;
                         resolve(localUrl);
                     })
                     .catch((error) => {

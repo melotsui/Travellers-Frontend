@@ -22,7 +22,7 @@ import apis from "../../api/api_service";
 import { MediaLocalUrl } from "../../models/media_local_url";
 import { DispatchThunk } from "../../store/store";
 import { useDispatch } from "react-redux";
-import { addMedia, fetchMedia } from "../../actions/media_actions";
+import { addMedia, deleteMedia, fetchMedia } from "../../actions/media_actions";
 
 const MediaScreen: React.FC<RootProps<'Media'>> = (props) => {
     const { schedule_id } = props.route.params;
@@ -82,6 +82,8 @@ const MediaScreen: React.FC<RootProps<'Media'>> = (props) => {
     }
 
     const handleDelete = () => {
+        if(!rMedia?.media?.media_id) return;
+        dispatch(deleteMedia(rMedia?.media?.media_id));
     }
 
     return (
@@ -91,7 +93,7 @@ const MediaScreen: React.FC<RootProps<'Media'>> = (props) => {
                 <View style={styles.container}>
                     <View style={styles.mediaContainer}>
                         <View style={styles.media}>
-                            <Image source={{ uri: rMedia?.media?.media_preview_url ?? media?.uri }} style={styles.image} />
+                            <Image source={{ uri: rMedia?.media_local_url?.media_local_url ?? rMedia?.media?.media_preview_url ?? media?.uri }} style={styles.image} />
                             <View style={styles.mediaButton}>
                                 <IconButton icon={"add-a-photo"} size={40} color={'white'} onPress={handleAddMedia} ></IconButton>
                             </View>
@@ -117,7 +119,7 @@ const MediaScreen: React.FC<RootProps<'Media'>> = (props) => {
 
                         <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
                         {!isNew ?
-                            <GradientPopupDialog isSelect={true} title={'Reminder'}>
+                            <GradientPopupDialog isSelect={true} title={'Reminder'} onPress={handleDelete}>
                                 {[
                                     <GradientButton title={"Delete"} color={g_THEME.colors.error}></GradientButton>,
                                     <CustomText size={20}>Are you sure to delete? You can no longer undo your note</CustomText>

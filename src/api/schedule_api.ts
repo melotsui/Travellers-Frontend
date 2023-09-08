@@ -1,4 +1,5 @@
 import { ScheduleAccess } from '../models/schedule_access';
+import ScheduleReminder from '../models/schedule_reminder';
 import APIs from './api';
 
 class ScheduleApi {

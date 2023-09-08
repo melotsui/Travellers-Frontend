@@ -12,54 +12,66 @@ import SeparateLine from "../../components/atoms/separate_line";
 import { RootProps } from "../../navigation/screen_navigation_props";
 import apis from "../../api/api_service";
 import { MediaMediaLocalUrl } from "../../models/media_media_local_url";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DispatchThunk } from "../../store/store";
-import { downloadMedia } from "../../actions/media_actions";
+import { downloadMedia, fetchMedia } from "../../actions/media_actions";
+import ImageViewer from "../../components/organisms/image_viewer";
+import { mediaSelector } from "../../slices/media_slice";
+import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
 
 const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
     const { schedule_id } = props.route.params;
+    const dispatch: DispatchThunk = useDispatch();
     const [media, setMedia] = useState<MediaMediaLocalUrl[]>([]);
+    const rMedia = useSelector(mediaSelector).media;
     const [searchText, setSearchText] = useState('');
     const [isTextAudio, setIsTextAudio] = useState(true);
     const [numColumns, setNumColumns] = useState(4);
-    const { showBottomSheet, hideBottomSheet ,setBottomSheetContent } = useBottomSheet();
-    const dispatch: DispatchThunk = useDispatch();
-    
+    const { showBottomSheet, hideBottomSheet, setBottomSheetContent } = useBottomSheet();
+
     useEffect(() => {
 
-        const fetchData = async () => {
+        dispatch(fetchMedia(schedule_id));
+        // const fetchData = async () => {
 
-                await apis.media.getScheduleMedia(schedule_id)
-                .then((media) => {
-                    console.log(media);
-                    setMedia(media);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        }
+        //         await apis.media.getScheduleMedia(schedule_id)
+        //         .then((media) => {
+        //             console.log(media);
+        //             setMedia(media);
+        //         })
+        //         .catch((error) => {
+        //             console.error('Error:', error);
+        //         });
+        // }
 
-        fetchData();
+        rMedia.forEach((media) => {
+        console.log(media.media_local_url);
+        })
         return () => {
             // Perform any cleanup tasks here if necessary
         };
     }, []);
 
-    const content = () : ReactNode => {
+    useEffect(() => {
+        setMedia(rMedia);
+    }, [rMedia]);
+
+
+    const content = (): ReactNode => {
         return <>
-        <BottomSheetTile onPress={handleAudioAdd}>Audio</BottomSheetTile>
-        <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
-        <BottomSheetTile onPress={handleMediaAdd}>Media</BottomSheetTile>
+            <BottomSheetTile onPress={handleAudioAdd}>Audio</BottomSheetTile>
+            <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
+            <BottomSheetTile onPress={handleMediaAdd}>Media</BottomSheetTile>
         </>
     }
 
     const handleAudioAdd = () => {
-        props.navigation.navigate('TextAudio', {schedule_id: schedule_id, note_id: null, media_id: null});
+        props.navigation.navigate('TextAudio', { schedule_id: schedule_id, note_id: null, media_id: null });
         hideBottomSheet();
     }
 
     const handleMediaAdd = () => {
-        props.navigation.navigate('Media', {schedule_id: schedule_id, note_id: null, media: null});
+        props.navigation.navigate('Media', { schedule_id: schedule_id, note_id: null, media: null });
         hideBottomSheet();
     }
 
@@ -85,16 +97,21 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
     }
 
     const handleAudio = (media_id: number) => {
-        props.navigation.navigate('TextAudio', {schedule_id: null, note_id: null, media_id: media_id});
+        props.navigation.navigate('TextAudio', { schedule_id: null, note_id: null, media_id: media_id });
     }
 
     const handleMedia = (media: MediaMediaLocalUrl) => {
-        //props.navigation.navigate('Media', {schedule_id: schedule_id, note_id: null, media: media});
-        dispatch(downloadMedia(media.media?.media_id!));
+        if (media.media_local_url == null) {
+            dispatch(downloadMedia(media.media?.media_id!));
+        }
+    }
+
+    const handleEditMedia = (media: MediaMediaLocalUrl) => {
+        props.navigation.navigate('Media', {schedule_id: schedule_id, note_id: null, media: media});
     }
 
     return (
-       
+
         <View>
             <CustomHeader title={"Schedule Media"}>
                 <IconButton onPress={handleAdd} icon={"add"} />
@@ -106,23 +123,32 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
                     {/* <View style={styles.text}>
                         <TextField hint={"Trip title, type and place"} text={searchText} onChange={handleSearchTextChange} suffixIcon={'search'} />
                     </View> */}
-                    
-                        <FlatList
-                            numColumns={numColumns}
-                            key={numColumns} // Use numColumns as the key prop
-                            keyExtractor={(item) => item.media!.media_id.toString()}
-                            showsVerticalScrollIndicator={false}
-                            data={media}
-                            renderItem={({ item }) => (
-                                <View style={styles.image}>
+
+                    <FlatList
+                        numColumns={numColumns}
+                        key={numColumns} // Use numColumns as the key prop
+                        keyExtractor={(item) => item.media!.media_id.toString()}
+                        showsVerticalScrollIndicator={false}
+                        data={media}
+                        renderItem={({ item }) => (
+                            <View style={styles.image}>
+                                {item.media_local_url != null ?
+                                    <ImageViewer media={[item]} onPress={() => handleEditMedia(item)}>
+                                        <RoundRectImage
+                                            type={item.media?.media_type!}
+                                            uri={item.media_local_url.media_local_url}></RoundRectImage>
+                                    </ImageViewer> :
                                     <RoundRectImage
                                         type={item.media?.media_type!}
                                         onPress={() => handleMedia(item)}
-                                        uri={item.media_local_url? item.media_local_url.media_local_url : item.media?.media_preview_url}></RoundRectImage>
+                                        uri={item.media?.media_preview_url}></RoundRectImage>
 
-                                </View>
-                            )}
-                        />
+
+                                }
+
+                            </View>
+                        )}
+                    />
                 </View>
             </View>
         </View>

@@ -27,8 +27,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { scheduleSelector } from "../../slices/schedule_slice";
 import { DispatchThunk } from "../../store/store";
 import { deleteSchedule, fetchSchedule, fetchScheduleAccesses, fetchSchedules } from "../../actions/schedule_actions";
-import { fetchMedia } from "../../actions/media_actions";
+import { downloadMedia, fetchMedia } from "../../actions/media_actions";
 import { mediaSelector } from "../../slices/media_slice";
+import ImageViewer from "../../components/organisms/image_viewer";
 
 const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     const { schedule_id } = props.route.params;
@@ -81,6 +82,16 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
         //     });
     }
 
+    const handleMedia = (media: MediaMediaLocalUrl) => {
+        if (media.media_local_url == null) {
+            dispatch(downloadMedia(media.media?.media_id!));
+        }
+    }
+
+    const handleEditMedia = (media: MediaMediaLocalUrl) => {
+        props.navigation.navigate('Media', {schedule_id: schedule_id, note_id: null, media: media});
+    }
+    
     return (
         <PaperProvider>
             {schedule && <View>
@@ -122,7 +133,20 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                     if (index == 0) {
                                         return <RoundRectImage type={MediaTypes.OTHER} onPress={handleAddMedia}></RoundRectImage>
                                     } else {
-                                        return <RoundRectImage type={item.media!.media_type!} uri={item.media!.media_preview_url}></RoundRectImage>
+                                        //return <RoundRectImage type={item.media!.media_type!} uri={item.media_local_url?.media_local_url ?? item.media!.media_preview_url}></RoundRectImage>
+                                        return <>{item.media_local_url != null ?
+                                            <ImageViewer media={[item]} onPress={() => handleEditMedia(item)}>
+                                                <RoundRectImage
+                                                    type={item.media?.media_type!}
+                                                    uri={item.media_local_url.media_local_url}></RoundRectImage>
+                                            </ImageViewer> :
+                                            <RoundRectImage
+                                                type={item.media?.media_type!}
+                                                onPress={() => handleMedia(item)}
+                                                uri={item.media?.media_preview_url}></RoundRectImage>
+        
+        
+                                        }</>
                                     }
                                 }}
                             ></FlatList>

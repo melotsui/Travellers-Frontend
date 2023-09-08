@@ -1,6 +1,7 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
 import { MediaMediaLocalUrl } from "../models/media_media_local_url";
+import { Media } from "../models/media";
 
 type ScreenNavigationProp<
   T extends keyof RootStackParamList

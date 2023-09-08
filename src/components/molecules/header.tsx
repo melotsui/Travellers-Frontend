@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     back: {
         width: 60,
         height: 60,
-        left: 10,
+        left: 25,
         top: 15,
         position: 'absolute'
     },

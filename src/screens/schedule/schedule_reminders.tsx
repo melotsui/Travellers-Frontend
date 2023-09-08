@@ -24,7 +24,7 @@ const ScheduleReminderScreen: React.FC<RootProps<'ScheduleReminder'>> = (props) 
         props.navigation.goBack();
     }
 
-    const ITEM_HEIGHT = 25; // Adjust as needed
+    const ITEM_HEIGHT = 22.5; // Adjust as needed
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const contentOffset = event.nativeEvent.contentOffset;
@@ -44,22 +44,22 @@ const ScheduleReminderScreen: React.FC<RootProps<'ScheduleReminder'>> = (props) 
                     </View>
 
                     <CustomText size={25}>Before schedule</CustomText>
-                    <View style={{ height: 20 }}></View>
+                    <View style={{ height: 15 }}></View>
                     <Container>
                         <GradientContainer>
                             <View style={[g_STYLE.row, styles.timeSelect]}>
                                 <FlatList
-                                    data={['', '', ...data, '', '']}
+                                    data={['', ...data, '']}
                                     keyExtractor={(item, index) => index.toString()}
                                     onScroll={handleScroll}
                                     scrollEventThrottle={16} // Adjust as needed
-                                    initialScrollIndex={5}
+                                    initialScrollIndex={1}
                                     getItemLayout={(_, index) => ({
                                         length: ITEM_HEIGHT,
                                         offset: ITEM_HEIGHT * index,
                                         index,
                                     })}
-                                    renderItem={({ item }) => <CustomText size={20} color={scrollValue == item ? 'white' : g_THEME.colors.shadowBlue} textAlign="center" >{item}</CustomText>}
+                                    renderItem={({ item }) => <CustomText size={scrollValue == item ? 30 : 20} color={scrollValue == item ? 'white' : g_THEME.colors.shadowBlue} textAlign="center" >{item}</CustomText>}
                                 />
                                 <View style={{ width: 20 }}></View>
                                 <CustomText color={'white'} size={25}>mins</CustomText>

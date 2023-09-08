@@ -1,6 +1,6 @@
 import { Asset } from 'react-native-image-picker';
 import apis from '../api/api_service';
-import { getMediaStart, getMediaSuccess, getMediaFailure, addMediaStart, addMediaFailure, addMediaSuccess, downloadMediaStart, downloadMediaFailure, downloadMediaSuccess } from '../slices/media_slice';
+import { getMediaStart, getMediaSuccess, getMediaFailure, addMediaStart, addMediaFailure, addMediaSuccess, downloadMediaStart, downloadMediaFailure, downloadMediaSuccess, deleteMediaFailure, deleteMediaStart, deleteMediaSuccess } from '../slices/media_slice';
 import { AppThunk } from '../store/store';
 import { MediaMediaLocalUrl } from '../models/media_media_local_url';
 import { navigateBack } from '../navigation/navigation_service';
@@ -22,6 +22,7 @@ export const addMedia = (media: Asset, schedule_id: number): AppThunk => async (
         dispatch(addMediaStart());
 
         const rMedia = await apis.media.uploadScheduleMedia(media, schedule_id);
+        console.log(rMedia);
         const rMediaLocalUrl = await apis.media.addLocalMedia(rMedia.media_id, media.uri ?? "");
         const response = new MediaMediaLocalUrl(rMedia, rMediaLocalUrl);
 
@@ -30,6 +31,19 @@ export const addMedia = (media: Asset, schedule_id: number): AppThunk => async (
 
     } catch (error) {
         dispatch(addMediaFailure(error as string));
+    }
+};
+
+export const deleteMedia = (media_id: number): AppThunk => async (dispatch) => {
+    try {
+        dispatch(deleteMediaStart());
+        const response = await apis.media.deleteScheduleMedia(media_id);
+        dispatch(deleteMediaSuccess(response));
+        
+        navigateBack();
+
+    } catch (error) {
+        dispatch(deleteMediaFailure(error as string));
     }
 };
 

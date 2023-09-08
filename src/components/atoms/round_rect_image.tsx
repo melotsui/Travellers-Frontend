@@ -18,7 +18,15 @@ const RoundRectImage: React.FC<RoundRectImageProps> = ({ uri, type, onPress }) =
             onPress();
         }
     }
-    
+
+    const checkLocal = () => {
+        if (uri && uri.includes('file://')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     const styles = StyleSheet.create({
         container: {
             width: screenWidth * 0.21,
@@ -49,9 +57,15 @@ const RoundRectImage: React.FC<RoundRectImageProps> = ({ uri, type, onPress }) =
         <TouchableOpacity onPress={handleMedia}>
             <View style={styles.container}>
                 {uri != null ? <Image source={{ uri: uri }} style={styles.image} /> : null}
-                {type != MediaTypes.IMAGE && <View style={styles.iconContainer}>
-                    <MaterialIcons name={getMediaIcons(type)} size={30} color={getMediaIconColors(type)} />
-                </View>}
+                {!checkLocal() && type != MediaTypes.OTHER ?
+                    <View style={styles.iconContainer}>
+                        <MaterialIcons name={'download'} size={30} color={'white'} />
+                    </View>
+                    :
+                    type != MediaTypes.IMAGE &&
+                    <View style={styles.iconContainer}>
+                        <MaterialIcons name={getMediaIcons(type)} size={30} color={getMediaIconColors(type)} />
+                    </View>}
             </View>
         </TouchableOpacity>
     );
