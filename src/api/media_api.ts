@@ -74,8 +74,6 @@ class MediaApi {
     uploadScheduleMedia = async (media: Asset, schedule_id: number): Promise<Media> => {
         return new Promise(async (resolve, reject) => {
             try {
-                console.log("asset ", media);
-                console.log("schedule_id ", schedule_id);
                 const formData = new FormData();
                 formData.append('media', {
                     uri: media.uri,

@@ -100,9 +100,9 @@ const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: a
                 )}>
             </FlatList>
             </View>
-            { trip_id == null && <View style={styles.saveButton}>
+            <View style={styles.saveButton}>
                 <GradientButton title={"Continue"} width={0.4} onPress={handleContinue}></GradientButton>
-            </View>}
+            </View>
             {/* outapp invite */}
             <View style={styles.shareContainer}>
                 <CustomText size={16} textAlign="center"> Your friends don't have the account? here's way to share your trip!</CustomText>
