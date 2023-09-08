@@ -18,12 +18,20 @@ import { RootProps } from "../../navigation/screen_navigation_props";
 import { openCamera, openGallery } from "../../utils/image_picker";
 import { Image } from "react-native";
 import { Asset } from "react-native-image-picker";
+import apis from "../../api/api_service";
+import { MediaLocalUrl } from "../../models/media_local_url";
+import { DispatchThunk } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { addMedia, fetchMedia } from "../../actions/media_actions";
 
 const MediaScreen: React.FC<RootProps<'Media'>> = (props) => {
+    const { schedule_id } = props.route.params;
+    const rMedia = props.route.params.media;
     const [partner, setPartner] = useState('');
     const [isNew, setIsNew] = useState(false);
     const [media, setMedia] = useState<Asset | null>(null);
     const { setBottomSheetContent, showBottomSheet } = useBottomSheet();
+    const dispatch: DispatchThunk = useDispatch();
 
     const content = (): ReactNode => {
         return <>
@@ -62,17 +70,15 @@ const MediaScreen: React.FC<RootProps<'Media'>> = (props) => {
     }
 
     const handleSave = async () => {
-    //     try {
-    //         const promise1: Promise<Schedule> = apis.media.uploadScheduleMedia(media!, schedule_id!);
-    //         const promise2: Promise<MediaLocalUrl> = apis.media.addLocalMedia(schedule_id!, media!.uri!)
-    //         await Promise.all([promise1, promise2]);
-    //         props.navigation.goBack();
+        try {
+            if(!media || !schedule_id) return;
+            dispatch(addMedia(media, schedule_id));
 
-    //     } catch (error) {
-    //         // Handle any errors that occurred during the API calls
-    //         console.error('Error:', error);
-    //     }
-    //     console.log(media);
+        } catch (error) {
+            // Handle any errors that occurred during the API calls
+            console.error('Error:', error);
+        }
+        console.log(media);
     }
 
     const handleDelete = () => {
@@ -85,13 +91,13 @@ const MediaScreen: React.FC<RootProps<'Media'>> = (props) => {
                 <View style={styles.container}>
                     <View style={styles.mediaContainer}>
                         <View style={styles.media}>
-                            <Image source={{ uri: media?.uri }} style={styles.image} />
+                            <Image source={{ uri: rMedia?.media?.media_preview_url ?? media?.uri }} style={styles.image} />
                             <View style={styles.mediaButton}>
                                 <IconButton icon={"add-a-photo"} size={40} color={'white'} onPress={handleAddMedia} ></IconButton>
                             </View>
                         </View>
                     </View>
-                    <View style={[styles.partnerContainer, g_STYLE.row]}>
+                    {!schedule_id && <><View style={[styles.partnerContainer, g_STYLE.row]}>
                         <CustomText size={25}>Accessible Partners</CustomText>
                         <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
                     </View>
@@ -106,7 +112,7 @@ const MediaScreen: React.FC<RootProps<'Media'>> = (props) => {
                                 onPress={handleInvitePartner}
                                 isPending={false}></PartnerTile>
                         )}
-                    />
+                    /></>}
                     <View style={[styles.saveButton, g_STYLE.row]}>
 
                         <GradientButton title={"Save"} onPress={handleSave}></GradientButton>

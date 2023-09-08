@@ -2,6 +2,9 @@ import { Asset } from 'react-native-image-picker';
 import APIs from './api';
 import { MediaLocalUrl } from '../models/media_local_url';
 import { MediaMediaLocalUrl } from '../models/media_media_local_url';
+import { Media } from '../models/media';
+import RNFS from 'react-native-fs';
+import { Buffer } from 'buffer';
 
 class MediaApi {
     private media: APIs;
@@ -10,11 +13,11 @@ class MediaApi {
         this.media = trip;
     }
 
-    getScheduleMedia = async ( schedule_id: number ): Promise<MediaMediaLocalUrl[]> => {
+    getScheduleMedia = async (schedule_id: number): Promise<MediaMediaLocalUrl[]> => {
         return new Promise(async (resolve, reject) => {
             try {
 
-                await this.media.api.get('/media/schedule/'+ schedule_id)
+                await this.media.api.get('/media/schedule/' + schedule_id)
                     .then((response) => {
                         const result = response.data;
                         if (result.data.length === 0) {
@@ -33,7 +36,42 @@ class MediaApi {
         });
     }
 
-    uploadScheduleMedia = async ( media: Asset, schedule_id: number ): Promise<Schedule> => {
+    downloadScheduleMedia = async (media_id: number): Promise<string> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.media.api.get('/media/' + media_id, {
+                    responseType: 'arraybuffer',  // important for binary data
+                    headers: {
+                        'Accept': 'application/octet-stream'
+                    }
+                })
+                    .then((response) => {
+                        // Convert binary data to base64
+                        const base64 = Buffer.from(response.data, 'binary').toString('base64');
+
+                        // Define a file path to save on the device
+                        const path = `${RNFS.DocumentDirectoryPath}/downloaded_image.jpg`;
+
+                        // Write the file
+                        RNFS.writeFile(path, base64, 'base64').then(() => {
+                            resolve(path)
+                        });
+
+
+                    })
+                    .catch((error) => {
+                        console.log("uploadScheduleMedia error ", error);
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                console.log("uploadScheduleMedia error ", error);
+                reject(error);
+            }
+        });
+    }
+
+    uploadScheduleMedia = async (media: Asset, schedule_id: number): Promise<Media> => {
         return new Promise(async (resolve, reject) => {
             try {
                 console.log("asset ", media);
@@ -43,27 +81,29 @@ class MediaApi {
                     uri: media.uri,
                     type: media.type,
                     name: media.fileName,
-                } 
+                }
                 );
                 formData.append('schedule_id', schedule_id);
 
-                await this.media.api.post('/media/schedule', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+                await this.media.api.post('/media/schedule', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
                     .then((response) => {
                         const result = response.data;
-                        const schedule: Schedule = result.data;
-                        resolve(schedule);
+                        const media: Media = result.data;
+                        resolve(media);
                     })
                     .catch((error) => {
+                        console.log("uploadScheduleMedia error ", error);
                         const result = error.response.data;
                         reject(result.message);
                     });
             } catch (error) {
+                console.log("uploadScheduleMedia error ", error);
                 reject(error);
             }
         });
     }
 
-    addLocalMedia = async ( media_id: number, media_local_url: string ): Promise<MediaLocalUrl> => {
+    addLocalMedia = async (media_id: number, media_local_url: string): Promise<MediaLocalUrl> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const json = {
@@ -78,10 +118,12 @@ class MediaApi {
                         resolve(localUrl);
                     })
                     .catch((error) => {
+                        console.log("addLocalMedia error ", error);
                         const result = error.response.data;
                         reject(result.message);
                     });
             } catch (error) {
+                console.log("addLocalMedia error ", error);
                 reject(error);
             }
         });

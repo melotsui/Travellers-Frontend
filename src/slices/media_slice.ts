@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './root_reducers';
 import { MediaMediaLocalUrl } from '../models/media_media_local_url';
+import { MediaLocalUrl } from '../models/media_local_url';
 
 interface MediaState {
   media: MediaMediaLocalUrl[];
@@ -33,6 +34,22 @@ const mediaSlice = createSlice({
       state.error = action.payload;
     },
 
+    // download media
+    downloadMediaStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    downloadMediaSuccess: (state, action: PayloadAction<MediaLocalUrl>) => {
+      const index = state.media.findIndex((media) => media.media?.media_id === action.payload?.media_id);
+      state.media[index].media_local_url = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    downloadMediaFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
     // add media
     addMediaStart: (state) => {
       state.loading = true;
@@ -54,6 +71,9 @@ export const {
   getMediaStart,
   getMediaSuccess,
   getMediaFailure,
+  downloadMediaStart,
+  downloadMediaSuccess,
+  downloadMediaFailure,
   addMediaStart,
   addMediaSuccess,
   addMediaFailure,

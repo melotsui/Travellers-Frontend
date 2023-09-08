@@ -3,6 +3,7 @@ import { View, StyleSheet, FlatList } from "react-native";
 import { screenHeight, screenWidth } from "../../constants/screen_dimension";
 import CustomHeader from "../../components/molecules/header";
 import g_THEME from "../../theme/theme";
+import { MediaTypes } from "../../constants/types";
 import RoundRectImage from "../../components/atoms/round_rect_image";
 import IconButton from "../../components/atoms/icon_button";
 import { useBottomSheet } from "../../context/bottom_sheet_context";
@@ -10,15 +11,19 @@ import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
 import SeparateLine from "../../components/atoms/separate_line";
 import { RootProps } from "../../navigation/screen_navigation_props";
 import apis from "../../api/api_service";
-import { MediaModal } from "../../models/media";
+import { MediaMediaLocalUrl } from "../../models/media_media_local_url";
+import { useDispatch } from "react-redux";
+import { DispatchThunk } from "../../store/store";
+import { downloadMedia } from "../../actions/media_actions";
 
 const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
     const { schedule_id } = props.route.params;
-    const [media, setMedia] = useState<MediaModal[]>([]);
+    const [media, setMedia] = useState<MediaMediaLocalUrl[]>([]);
     const [searchText, setSearchText] = useState('');
     const [isTextAudio, setIsTextAudio] = useState(true);
     const [numColumns, setNumColumns] = useState(4);
     const { showBottomSheet, hideBottomSheet ,setBottomSheetContent } = useBottomSheet();
+    const dispatch: DispatchThunk = useDispatch();
     
     useEffect(() => {
 
@@ -54,7 +59,7 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
     }
 
     const handleMediaAdd = () => {
-        props.navigation.navigate('Media', {schedule_id: schedule_id, note_id: null, media_id: null});
+        props.navigation.navigate('Media', {schedule_id: schedule_id, note_id: null, media: null});
         hideBottomSheet();
     }
 
@@ -83,8 +88,9 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
         props.navigation.navigate('TextAudio', {schedule_id: null, note_id: null, media_id: media_id});
     }
 
-    const handleMedia = (media: MediaModal) => {
-        props.navigation.navigate('ScheduleMediaEdit', {schedule_id: schedule_id, media: media});
+    const handleMedia = (media: MediaMediaLocalUrl) => {
+        //props.navigation.navigate('Media', {schedule_id: schedule_id, note_id: null, media: media});
+        dispatch(downloadMedia(media.media?.media_id!));
     }
 
     return (

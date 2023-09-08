@@ -18,13 +18,13 @@ type RootProps<T extends keyof RootStackParamList> = {
 
 type RootStackParamList = {
   //auth
-  Login: {share_id: string};
+  Login: { share_id: string };
   Register: undefined;
   EmailVerification: undefined;
   ForgetPassword: undefined;
   ResetPassword: { user_id: string; passcode: string };
   HomeBottomBarNavigation: undefined;
-  
+
   //account
   Account: undefined;
   Profile: undefined;
@@ -41,8 +41,8 @@ type RootStackParamList = {
   NotesAccess: undefined;
 
   //media
-  Media: { schedule_id: number | null ; note_id: number | null; media_id: number | null };
-  TextAudio: { schedule_id: number | null ; note_id: number | null; media_id: number | null };
+  Media: { schedule_id: number | null; note_id: number | null; media: MediaMediaLocalUrl | null };
+  TextAudio: { schedule_id: number | null; note_id: number | null; media_id: number | null };
 
   //trip
   TripSearch: undefined;
@@ -53,9 +53,8 @@ type RootStackParamList = {
 
   //Schedule
   Schedule: { schedule_id: number };
-  ScheduleEdit: { schedule_id: number | null; trip_id: number};
+  ScheduleEdit: { schedule_id: number | null; trip_id: number };
   ScheduleMedia: { schedule_id: number };
-  ScheduleMediaEdit: { schedule_id: number, media: MediaMediaLocalUrl | null };
 
   //notification
   Notification: undefined;
@@ -67,4 +66,4 @@ type RootStackParamList = {
   AccountStack: undefined;
 };
 
-export type { RootProps, RootStackParamList};
+export type { RootProps, RootStackParamList };
