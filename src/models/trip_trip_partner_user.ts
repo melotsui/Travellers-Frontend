@@ -1,7 +1,7 @@
 import { Trip } from "./trip";
 import { User } from "./user";
 
-class TripTripPartnerUserModal {
+class TripTripPartnerUser {
     trip: Trip;
     trip_partner: User[];
     user: User;
@@ -16,4 +16,4 @@ class TripTripPartnerUserModal {
     }
   }
 
-export { TripTripPartnerUserModal };
+export { TripTripPartnerUser };

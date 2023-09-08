@@ -20,6 +20,8 @@ import { TripPartner } from "../../models/trip_partner";
 import { useDispatch } from "react-redux";
 import { addSchedules, updateSchedule } from "../../actions/schedule_actions";
 import { DispatchThunk } from "../../store/store";
+import { TripTripPartnerUser } from "../../models/trip_trip_partner_user";
+import { TripPartnerInvitation } from "../../models/trip_partner_invitation";
 "../../utils/datetime_formatter";
 
 const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
@@ -46,17 +48,15 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
         const fetchData = async () => {
 
             try {
-                await apis.schedule.getScheduleTypeList()
-                    .then((response) => {
-                        setScheduleType(response);
-                    })
-                    .catch((error) => {
-                        console.log('failed to get schedule type list');
-                    });
+                const promise1: Promise<ScheduleType[]> = apis.schedule.getScheduleTypeList()
+                const promise2: Promise<TripPartnerInvitation> = apis.trip.getTripPartners(trip_id)
+                const [scheduleTypes, tripPartners] = await Promise.all([promise1, promise2]);
+                        setScheduleType(scheduleTypes);
+
                 if (schedule_id == null) return;
-                const promise1: Promise<Schedule> = apis.schedule.getScheduleById(schedule_id)
-                const promise2: Promise<ScheduleAccess[]> = apis.schedule.getScheduleAccess(schedule_id)
-                const [schedule, scheduleAccess] = await Promise.all([promise1, promise2]);
+                const promise3: Promise<Schedule> = apis.schedule.getScheduleById(schedule_id)
+                const promise4: Promise<ScheduleAccess[]> = apis.schedule.getScheduleAccess(schedule_id)
+                const [schedule, scheduleAccess] = await Promise.all([promise3, promise4]);
 
                 setScheduleAccess(scheduleAccess);
                 setName(schedule.schedule_name);
@@ -64,8 +64,6 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                 setType(schedule.schedule_type!);
                 setDate(new Date(schedule!.schedule_datetime!));
                 setStartTime(new Date(schedule!.schedule_datetime!));
-                //setDate(parseDate(formatDate(new Date(schedule!.schedule_datetime!))));
-                //setStartTime(parseTime(formatTime(new Date(schedule!.schedule_datetime!))));
                 setRemarks(schedule.schedule_remark ?? '');
 
 

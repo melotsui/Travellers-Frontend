@@ -1,8 +1,8 @@
 import { Trip } from '../models/trip';
 import { TripInvitation } from '../models/trip_invitation';
+import { TripPartner } from '../models/trip_partner';
 import { TripPartnerInvitation } from '../models/trip_partner_invitation';
-import { TripTripPartnerUserModal } from '../models/trip_trip_partner_user';
-import { User } from '../models/user';
+import { TripTripPartnerUser } from '../models/trip_trip_partner_user';
 import { formatDatetime } from '../utils/datetime_formatter';
 import APIs from './api';
 
@@ -88,10 +88,10 @@ class TripApi {
         });
     }
     
-    deleteTripPartner = async (user_id: number): Promise<User> => {
+    deleteTripPartner = async (trip_partner_id: number): Promise<TripPartner> => {
         return new Promise(async (resolve, reject) => {
             try {
-                await this.trip.api.delete('/trips/removeTripPartner/' + user_id)
+                await this.trip.api.delete('/trips/removeTripPartner/' + trip_partner_id)
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data.trip_partner);
@@ -106,7 +106,7 @@ class TripApi {
         });
     }
 
-    sendTripInvitation = async (trip_id: number, send_to: number): Promise<TripInvitation> => {
+    sendTripInvitation = async (trip_id: number, send_to: string): Promise<TripInvitation> => {
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -130,12 +130,12 @@ class TripApi {
         });
     }
 
-    respondTripInvitation = async (trip_id: number, reponse: boolean): Promise<Trip> => {
+    respondTripInvitation = async (trip_invitation_id: number, reponse: boolean): Promise<TripInvitation> => {
         return new Promise(async (resolve, reject) => {
             try {
 
                 const json = {
-                    "trip_id": trip_id,
+                    "trip_invitation_id": trip_invitation_id,
                     "respond": reponse,
                 };
 
@@ -160,7 +160,7 @@ class TripApi {
         trip_datetime_to?: Date,
         trip_destination?: string,
         trip_description?: string,
-    ): Promise<TripTripPartnerUserModal> => {
+    ): Promise<TripTripPartnerUser> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const json = {

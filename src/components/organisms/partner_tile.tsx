@@ -9,6 +9,10 @@ import RoundButton from '../atoms/round_button';
 import GradientContainer from '../atoms/gradient_container';
 import CustomText from '../atoms/text';
 import SeparateLine from '../atoms/separate_line';
+import GradientPopupDialog from '../molecules/gradient_dialog';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { PaperProvider } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface PartnerTileProps {
     name: string;
@@ -17,11 +21,12 @@ interface PartnerTileProps {
     isPending: boolean;
     isSelect?: boolean;
     isAdded?: boolean;
+    isInvited?: boolean;
 }
 
-const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending, isSelect, isAdded }) => {
+const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending, isSelect, isAdded, isInvited }) => {
 
-    const handleInvitePartner = () => {
+    const handlePartner = () => {
         if (onPress != null) {
             onPress();
         }
@@ -41,9 +46,15 @@ const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending
     const InnerContent = () => {
         return <>
             <View style={[styles.container, g_STYLE.row]}>
-                <ImageTile title={name} uri={uri}></ImageTile>
+                <View style={{flex: 1}}><ImageTile title={name} uri={uri} size={16}></ImageTile></View>
                 {isPending ? <RoundButton icon={"update"} title={"Pending"} color='orange'></RoundButton> : null}
-                {isSelect == null && <IconButton onPress={handleInvitePartner} icon={isAdded ? "add" : "close"} color={g_THEME.colors.grey} size={20}></IconButton>}
+                {isSelect == null && isAdded ? <GradientPopupDialog isSelect={true} title="Reminder" onPress={handlePartner}>
+                    {[
+                        <Icon name={"close"} color={g_THEME.colors.grey} size={20}></Icon>,
+                        <CustomText size={20} key={1}>Are you sure to delete this partner? This user cannot see the trip anymore. </CustomText>
+                    ]}
+                </GradientPopupDialog>
+                    : <IconButton onPress={handlePartner} icon={isInvited ? "close" : "add"} color={g_THEME.colors.grey} size={20}></IconButton>}
             </View></>
     }
 

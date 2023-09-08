@@ -15,10 +15,12 @@ import apis from "../../api/api_service";
 import { shareFriend } from "../../helpers/share";
 import { Trip } from "../../models/trip";
 import { TripPartnerInvitation } from "../../models/trip_partner_invitation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DispatchThunk } from "../../store/store";
 import { addSchedules } from "../../actions/schedule_actions";
-import { addTrip, updateTrip } from "../../actions/trip_actions";
+import { addTrip, deleteTripPartner, deleteTripInvitation, fetchTrip, fetchTripPartner, updateTrip } from "../../actions/trip_actions";
+import { tripSelector } from "../../slices/trip_slice";
+import { PaperProvider } from "react-native-paper";
 
 const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) => {
     const { trip_id } = props.route.params;
@@ -33,37 +35,59 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     const [partner, setPartner] = useState('');
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+    const rtrip = useSelector(tripSelector).trip;
+    const rtripPartners = useSelector(tripSelector).tripPartners;
+    const rtripInvitations = useSelector(tripSelector).tripInvitations;
     const dispatch: DispatchThunk = useDispatch();
 
     useEffect(() => {
 
-        const fetchData = async () => {
+        if(trip_id == null) return;
+        dispatch(fetchTrip(trip_id));
+        dispatch(fetchTripPartner(trip_id));
+        
 
-            try {
-                if (trip_id == null) return;
-                const promise1: Promise<Trip> = apis.trip.getTripById(trip_id);
-                const promise2: Promise<TripPartnerInvitation> = apis.trip.getTripPartners(trip_id);
+        // const fetchData = async () => {
 
-                const [trip, trip_partner] = await Promise.all([promise1, promise2]);
+        //     try {
+        //         if (trip_id == null) return;
+        //         const promise1: Promise<Trip> = apis.trip.getTripById(trip_id);
+        //         const promise2: Promise<TripPartnerInvitation> = apis.trip.getTripPartners(trip_id);
 
-                setTrip(trip);
-                setName(trip.trip_name);
-                setStartDate(new Date(trip!.trip_datetime_from ?? ''));
-                setEndDate(new Date(trip!.trip_datetime_to ?? ''));
-                setDescription(trip.trip_description ?? '');
-                setTripPartners(trip_partner);
-                console.log(trip_partner);
+        //         const [trip, trip_partner] = await Promise.all([promise1, promise2]);
 
-            } catch (error) {
-                // Handle any errors that occurred during the API calls
-                console.error('Error:', error);
-            }
-        }
-        fetchData();
+        //         setTrip(trip);
+        //         setName(trip.trip_name);
+        //         setStartDate(new Date(trip!.trip_datetime_from ?? ''));
+        //         setEndDate(new Date(trip!.trip_datetime_to ?? ''));
+        //         setDescription(trip.trip_description ?? '');
+        //         setTripPartners(trip_partner);
+        //         console.log(trip_partner);
+
+        //     } catch (error) {
+        //         // Handle any errors that occurred during the API calls
+        //         console.error('Error:', error);
+        //     }
+        // }
+        // fetchData();
         return () => {
             // Perform any cleanup tasks here if necessary
         };
     }, []);
+
+    useEffect(() => {
+        if (rtrip == null) return;
+        setTrip(rtrip);
+        setName(rtrip.trip_name);
+        setStartDate(new Date(rtrip!.trip_datetime_from ?? ''));
+        setEndDate(new Date(rtrip!.trip_datetime_to ?? ''));
+        setDescription(rtrip.trip_description ?? '');
+    }, [rtrip]);
+
+    useEffect(() => {
+        if (rtripPartners == null) return;
+        setTripPartners(new TripPartnerInvitation(rtripPartners, rtripInvitations));
+    }, [rtripPartners, rtripInvitations]);
 
     const handleName = (value: string) => {
         setNameError('');
@@ -92,10 +116,6 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
         setDescription(value);
     }
 
-    const handlePartner = (value: string) => {
-        setPartner(value);
-    }
-
     const handleStartDatePicker = () => {
         setShowStartDatePicker(true);
     }
@@ -105,9 +125,16 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     }
 
     const handleInvitePartner = async () => {
-        console.log("g");
+        props.navigation.navigate('TripInvite', { trip_id: trip_id });
     }
 
+    const handleDeletePartner = async (trip_partner_id: number) => {
+        dispatch(deleteTripPartner(trip_partner_id));
+    }
+
+    const handleDeleteTripInvitation = async (trip_invitation_id: number) => {
+        dispatch(deleteTripInvitation(trip_invitation_id));
+    }
 
     const handleSave = async () => {
         if (name == '') {
@@ -116,28 +143,14 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
         }
         if (trip_id == null) {
             dispatch(addTrip(name, startDate, endDate, destination, description));
-            // await apis.trip.createTrip(name, startDate, endDate, destination, description)
-            //     .then((response) => {
-            //         console.log('success to create trip');
-            //         props.navigation.navigate('TripInvite', { trip_id: response.trip.trip_id });
-            //     })
-            //     .catch((error) => {
-            //         console.log('failed to create trip');
-            //     });
         } else {
             dispatch(updateTrip(trip_id, name, startDate, endDate, destination, description));
-            // await apis.trip.updateTrip(trip_id, name, startDate, endDate, destination, description)
-            //     .then((response) => {
-            //         console.log('success to update trip');
-            //     })
-            //     .catch((error) => {
-            //         console.log('failed to update trip', error);
-            //     });
         }
         
     }
 
     return (
+        <PaperProvider>
         <View style={{ backgroundColor: 'white', height: '100%' }}>
             <CustomHeader title={trip?.trip_name ?? 'Trip'}></CustomHeader>
             <ScrollView>
@@ -171,27 +184,48 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                     </View>
                     <CustomText size={25}>Description</CustomText>
                     <TextField text={description} onChange={handleDescription} numberOfLines={4}></TextField>
+                    <View style={[styles.partnerContainer, g_STYLE.row]}>
                     <CustomText size={25}>Partners</CustomText>
+                        <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
+                    </View>
+                    {/* <CustomText size={25}>Partners</CustomText>
                     <View style={[styles.partnerContainer, g_STYLE.row]}>
                         <View style={styles.partner}>
                             <TextField text={partner} onChange={handlePartner} hint="Send Invitation"></TextField>
                         </View>
                         <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
-                    </View>
+                    </View> */}
                     <FlatList
                         scrollEnabled={false}
                         showsVerticalScrollIndicator={false}
                         ItemSeparatorComponent={() =>
                             <View style={{ height: 5 }}></View>
                         }
-                        data={tripPartners ? [...tripPartners?.trip_invitations!, ...tripPartners?.trip_partners!] : []}
-                        renderItem={({ item, index }) => (
-                            <PartnerTile
-                                name={"Samoyed Meme"}
-                                uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}
-                                onPress={handleInvitePartner}
-                                isPending={false}></PartnerTile>
-                        )}>
+                        data={tripPartners ? tripPartners?.trip_partners! : []}
+                        renderItem={({ item, index }) => {
+                            return <PartnerTile
+                                name={item.user!.username}
+                                uri={item.user!.user_icon_url}
+                                onPress={() => handleDeletePartner(item.trip_partner_id)}
+                                isPending={false}
+                                isAdded={true}></PartnerTile>
+                        }}>
+                    </FlatList>
+                    <FlatList
+                        scrollEnabled={false}
+                        showsVerticalScrollIndicator={false}
+                        ItemSeparatorComponent={() =>
+                            <View style={{ height: 5 }}></View>
+                        }
+                        data={tripPartners ? tripPartners?.trip_invitations! : []}
+                        renderItem={({ item, index }) => {
+                                return <PartnerTile
+                                name={item.user?.name ?? item.user?.username ?? ""}
+                                uri={item.user?.user_icon_url}
+                                onPress={() => handleDeleteTripInvitation(item.trip_invitation_id)}
+                                isPending={true}
+                                isAdded={true}></PartnerTile>
+                        }}>
                     </FlatList>
                     <View style={styles.saveButton}>
                         <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
@@ -199,6 +233,8 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                 </View>
             </ScrollView>
         </View>
+        
+        </PaperProvider>
     );
 
 }

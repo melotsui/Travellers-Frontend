@@ -6,17 +6,19 @@ import g_STYLE from "../../styles/styles";
 interface ImageTileProps {
     title: string;
     uri?: string;
+    size?: number;
 }
 
 const ImageTile: React.FC<ImageTileProps> = ({
     title,
-    uri }
+    uri,
+    size = 20, }
 ) => {
     return (
         <View style={[styles.menuItem, g_STYLE.row]}>
             <CircularImage size={50} uri={uri}></CircularImage>
             <View style={{ width: 15 }}></View>
-            <CustomText size={20}>{title}</CustomText>
+            <CustomText size={size}>{title}</CustomText>
         </View>
     );
 }

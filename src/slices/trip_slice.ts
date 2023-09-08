@@ -1,10 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './root_reducers';
 import { Trip } from '../models/trip';
+import { TripPartner } from '../models/trip_partner';
+import { TripPartnerInvitation } from '../models/trip_partner_invitation';
+import { TripInvitation } from '../models/trip_invitation';
 
 interface TripState {
   trips: Trip[];
   trip: Trip | null;
+  tripPartners: TripPartner[];
+  tripInvitations: TripInvitation[];
   loading: boolean;
   error: string | null;
 }
@@ -12,6 +17,8 @@ interface TripState {
 const initialState: TripState = {
   trips: [],
   trip: null,
+  tripPartners: [],
+  tripInvitations: [],
   loading: false,
   error: null,
 };
@@ -98,6 +105,69 @@ const tripSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    // get trip partner & invitation
+    getTripPartnerInvitationStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    getTripPartnerInvitationSuccess: (state, action: PayloadAction<TripPartnerInvitation>) => {
+      state.tripPartners = action.payload.trip_partners;
+      state.tripInvitations = action.payload.trip_invitations;
+      state.loading = false;
+      state.error = null;
+    },
+    getTripPartnerInvitationFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    //delete trip partner
+    deleteTripPartnerStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    deleteTripPartnerSuccess: (state, action: PayloadAction<TripPartner>) => {
+      state.tripPartners = state.tripPartners.filter((tripPartner) => tripPartner.user_id !== action.payload.user_id);
+      state.loading = false;
+      state.error = null;
+    },
+    deleteTripPartnerFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    // add trip invitation
+    addTripInvitationStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    addTripInvitationSuccess: (state, action: PayloadAction<TripInvitation>) => {
+      state.tripInvitations.push(action.payload);
+      state.loading = false;
+      state.error = null;
+    },
+    addTripInvitationFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    // delete trip invitation
+    deleteTripInvitationStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    deleteTripInvitationSuccess: (state, action: PayloadAction<TripInvitation>) => {
+      state.tripInvitations = state.tripInvitations.filter((tripInvitation) => tripInvitation.user?.user_id !== action.payload.user?.user_id);
+      state.loading = false;
+      state.error = null;
+    },
+    deleteTripInvitationFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+
   },
 });
 
@@ -116,10 +186,25 @@ export const {
   getTripSuccess,
   getTripFailure,
 
-
   updateTripStart,
   updateTripSuccess,
   updateTripFailure,
+
+  getTripPartnerInvitationStart,
+  getTripPartnerInvitationSuccess,
+  getTripPartnerInvitationFailure,
+
+  deleteTripPartnerStart,
+  deleteTripPartnerSuccess,
+  deleteTripPartnerFailure,
+
+  addTripInvitationStart,
+  addTripInvitationSuccess,
+  addTripInvitationFailure,
+  deleteTripInvitationStart,
+  deleteTripInvitationSuccess,
+  deleteTripInvitationFailure,
+
 } = tripSlice.actions;
 
 export const tripSelector = (state: RootState) => state.trip;
