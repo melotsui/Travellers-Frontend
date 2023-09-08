@@ -18,7 +18,6 @@ import { DispatchThunk } from '../../store/store';
 
 const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
     const dispatch: DispatchThunk = useDispatch();
-  const { user, loading, error } = useSelector(userSelector);
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -44,7 +43,7 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
         //     setPasswordError('Password cannot be empty');
         //     return;
         // }
-        await apis.auth.login('vincy' , 'Abc123456')//username, password)
+        await apis.auth.login('vincy', 'Abc123456')//username, password)
             .then((response) => {
                 console.log('success to login');
             })
@@ -53,20 +52,23 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
                 setPasswordError(error);
             });
 
-            dispatch(fetchUser());
+        await apis.notification.addFCMToken();
+
+
+        dispatch(fetchUser());
 
 
         // await apis.auth.getMyProfile().then((response) => {
         //     console.log('success to get profile');
         //     //dispatch(updateUser(response));
         //     props.navigation.navigate('HomeBottomBarNavigation');
-            
+
         // }).catch((error) => {
         //     console.log('failed to get profile');
         // }
         // );
     }
-    
+
     const handleForgetPassword = () => {
         props.navigation.navigate('ForgetPassword');
     };
@@ -82,11 +84,11 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
             </View>
             <View style={[styles.container, { flex: 2, }]}>
                 <View style={styles.text}>
-                <View style={styles.space} />
-                <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange}></TextField>
-                <View style={styles.space} />
-                <TextField hint={'password'} text={password} error={passwordError} onChange={handlePasswordChange} secure={true}></TextField>
-                <View style={styles.longSpace} />
+                    <View style={styles.space} />
+                    <TextField hint={'username'} text={username} error={usernameError} onChange={handleUsernameChange}></TextField>
+                    <View style={styles.space} />
+                    <TextField hint={'password'} text={password} error={passwordError} onChange={handlePasswordChange} secure={true}></TextField>
+                    <View style={styles.longSpace} />
                 </View>
                 <GradientButton
                     title="Login"

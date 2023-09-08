@@ -4,11 +4,9 @@ import GradientButton from '../../components/molecules/gradient_button';
 import TextField from '../../components/molecules/text_field';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';
-import { useDispatch } from 'react-redux';
 import { RootProps } from '../../navigation/screen_navigation_props';
 
 const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
-    const dispatch = useDispatch();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -54,9 +52,10 @@ const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
             .catch((error) => {
                 setUsernameError(error.message);
             });
+        await apis.notification.addFCMToken();
         await apis.auth.getMyProfile().then((response) => {
             console.log('success to get profile');
-           //dispatch(updateUser(response));
+            //dispatch(updateUser(response));
         });
 
     };
