@@ -57,7 +57,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     }
 
     const handleReminder = () => {
-        props.navigation.navigate('ScheduleReminder', { schedule_id: schedule_id });
+        props.navigation.navigate('ScheduleReminder', { schedule_id: schedule_id, schedule_datetime: schedule?.schedule_datetime! });
     }
 
     const handleAddMedia = () => {
@@ -66,8 +66,8 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     }
 
     const handleAllMedia = () => {
-        console.log("all media");
-        props.navigation.navigate('ScheduleMedia', { schedule_id: schedule_id });
+        console.log("all media"); 
+        props.navigation.navigate('ScheduleMedia', { schedule_id: schedule_id});
     }
 
     const handleDeleteConfirm = async () => {

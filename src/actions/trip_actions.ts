@@ -89,7 +89,7 @@ export const addTripInvitation = (trip_id: number, username: string): AppThunk =
 export const deleteTripInvitation = (trip_invitation_id: number): AppThunk => async (dispatch) => {
     try {
         dispatch(deleteTripInvitationStart());
-        const response = await apis.trip.respondTripInvitation(trip_invitation_id, false);
+        const response = await apis.trip.removeTripInvitation(trip_invitation_id);
         dispatch(deleteTripInvitationSuccess(response));
     } catch (error) {
         dispatch(deleteTripInvitationFailure(error as string));

@@ -14,7 +14,7 @@ class ScheduleReminder {
     ) {
       this.schedule_reminder_id = schedule_reminder_id;
       this.schedule_id = schedule_id;
-      this.schedule_reminder_datetime = schedule_reminder_datetime;
+      this.schedule_reminder_datetime = new Date(schedule_reminder_datetime);
   
       if (created_at) {
         this.created_at = created_at;

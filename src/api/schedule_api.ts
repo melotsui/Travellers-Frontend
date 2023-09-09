@@ -1,5 +1,6 @@
 import { ScheduleAccess } from '../models/schedule_access';
 import ScheduleReminder from '../models/schedule_reminder';
+import { formatDatetime } from '../utils/datetime_formatter';
 import APIs from './api';
 
 class ScheduleApi {
@@ -209,7 +210,7 @@ class ScheduleApi {
         });
     }
 
-    getScheduleReminders = async (schedule_id: string): Promise<ScheduleReminder> => {
+    getScheduleReminders = async (schedule_id: number): Promise<ScheduleReminder> => {
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -217,6 +218,70 @@ class ScheduleApi {
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data.schedule_reminders[0]);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    addScheduleReminders = async (schedule_id: number, schedule_datetime: string): Promise<ScheduleReminder> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const json = {
+                    "schedule_id": schedule_id,
+                    "schedule_reminder_datetime": schedule_datetime,
+                }
+
+                await this.schedule.api.post('/schedule_reminders', json)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.schedule_reminder);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    updateScheduleReminders = async (schedule_reminder_id: number, schedule_datetime: string): Promise<ScheduleReminder> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const json = {
+                    "schedule_reminder_datetime": schedule_datetime,
+                };
+
+                await this.schedule.api.put('/schedule_reminders/' + schedule_reminder_id, json)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.schedule_reminder);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    deleteScheduleReminders = async (schedule_reminder_id: number): Promise<ScheduleReminder> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                await this.schedule.api.delete('/schedule_reminders/' + schedule_reminder_id)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.schedule_reminders);
                     })
                     .catch((error) => {
                         const result = error.response.data;

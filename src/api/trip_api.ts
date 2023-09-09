@@ -130,6 +130,25 @@ class TripApi {
         });
     }
 
+    removeTripInvitation = async (trip_invitation_id: number): Promise<TripInvitation> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                await this.trip.api.delete('/trips/respondTripInvitation/' + trip_invitation_id)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.trip_invitation);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     respondTripInvitation = async (trip_invitation_id: number, reponse: boolean): Promise<TripInvitation> => {
         return new Promise(async (resolve, reject) => {
             try {
