@@ -21,7 +21,7 @@ type UserState = {
 }
 
 const ScheduleAccessScreen: React.FC<RootProps<'ScheduleAccess'>> = (props) => {
-    const { schedule_id } = props.route.params;
+    const { schedule_id, isEdit } = props.route.params;
     const [partners, setPartners] = useState<UserState[]>([]);
     const [isAll, setIsAll] = useState<boolean>(false);
     const dispatch: DispatchThunk = useDispatch();
@@ -30,8 +30,15 @@ const ScheduleAccessScreen: React.FC<RootProps<'ScheduleAccess'>> = (props) => {
         const fetchData = async () => {
             await apis.schedule.getScheduleAccess(schedule_id)
                 .then((res) => {
-                    const result: UserState[] = Array.from(res).map((item) => ({ user: item, isSelected: item.is_active as boolean }));
-                    setPartners(result);
+                    if (res.all) {
+                        setIsAll(true);
+                        const result: UserState[] = Array.from(res.users).map((item) => ({ user: item, isSelected: false }));
+                        setPartners(result);
+                        
+                    } else {
+                        const result: UserState[] = Array.from(res.users).map((item) => ({ user: item, isSelected: item.is_active as boolean }));
+                        setPartners(result);
+                    }
                 }).catch((err) => {
                     console.log(err);
                 })
@@ -49,7 +56,7 @@ const ScheduleAccessScreen: React.FC<RootProps<'ScheduleAccess'>> = (props) => {
     const handleSelect = (index: number) => {
         partners[index].isSelected = !partners[index].isSelected;
         setPartners([...partners]);
-        if(partners[index].isSelected) {
+        if (partners[index].isSelected) {
             setIsAll(false);
         }
         // let temp = [...partnersSelected];
@@ -59,10 +66,10 @@ const ScheduleAccessScreen: React.FC<RootProps<'ScheduleAccess'>> = (props) => {
 
     const handleSave = () => {
         if (isAll) {
-            dispatch(setSchedulesAccesses(schedule_id, []))
+            dispatch(setSchedulesAccesses(schedule_id, [], undefined, isEdit))
         } else {
             const partnerAccess = partners.filter((item) => item.isSelected).map((item) => item.user.user_id);
-            dispatch(setSchedulesAccesses(schedule_id, partnerAccess));
+            dispatch(setSchedulesAccesses(schedule_id, partnerAccess, undefined, isEdit));
         }
     }
 

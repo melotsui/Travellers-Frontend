@@ -55,7 +55,7 @@ type RootStackParamList = {
   //Schedule
   Schedule: { schedule_id: number };
   ScheduleEdit: { schedule_id: number | null; trip_id: number };
-  ScheduleAccess: { schedule_id: number };
+  ScheduleAccess: { schedule_id: number, isEdit: boolean };
   ScheduleMedia: { schedule_id: number };
   ScheduleReminder: { schedule_id: number, schedule_datetime: Date };
 

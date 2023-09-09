@@ -134,7 +134,7 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
 
     const handlePartner = () => {
         if (schedule_id) {
-            props.navigation.navigate('ScheduleAccess', { schedule_id: schedule_id });
+            props.navigation.navigate('ScheduleAccess', { schedule_id: schedule_id, isEdit: true });
         }
     }
 

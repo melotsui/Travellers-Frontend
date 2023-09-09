@@ -26,7 +26,7 @@ export const addSchedules = (
         dispatch(addSchedulesStart());
         const response = await apis.schedule.createSchedule(trip_id, schedule_name, schedule_type_id, schedule_datetime, schedule_place, schedule_remark);
         dispatch(addSchedulesSuccess(response));
-        dispatch(setSchedulesAccesses(response?.schedule_id!, null, true));
+        dispatch(setSchedulesAccesses(response?.schedule_id!, null, true, false));
 
     } catch (error) {
         dispatch(addSchedulesFailure(error as string));
@@ -62,7 +62,7 @@ export const fetchScheduleAccesses = (trip_id: number): AppThunk => async (dispa
     try {
         dispatch(getScheduleAccessesStart());
         const response = await apis.schedule.getScheduleAccess(trip_id);
-        dispatch(getScheduleAccessesSuccess(response));
+        dispatch(getScheduleAccessesSuccess(response.users));
     } catch (error) {
         dispatch(getScheduleAccessesFailure(error as string));
     }
@@ -71,7 +71,8 @@ export const fetchScheduleAccesses = (trip_id: number): AppThunk => async (dispa
 export const setSchedulesAccesses = (
     schedule_id: number,
     schedule_accesses: number[] | null,
-    isNew?: boolean
+    isNew?: boolean,
+    isEdit?: boolean
 ): AppThunk => async (dispatch) => {
     try {
         dispatch(updateScheduleAccessesStart());
@@ -79,8 +80,10 @@ export const setSchedulesAccesses = (
         dispatch(updateScheduleAccessesSuccess(response));
         if (isNew) {
             navigate('ScheduleAccess', { schedule_id: schedule_id });
-        } else {
+        } else if (isEdit) {
             navigateBack();
+        } else {
+            navigateBackTwoPages();
         }
 
     } catch (error) {
