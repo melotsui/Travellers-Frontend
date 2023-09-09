@@ -22,7 +22,7 @@ import { Trip } from "../../models/trip";
 import { useDispatch, useSelector } from "react-redux";
 import { tripSelector } from "../../slices/trip_slice";
 import { DispatchThunk } from "../../store/store";
-import { deleteTrip, fetchTrip } from "../../actions/trip_actions";
+import { deleteTrip, fetchTrip, fetchTripPartner } from "../../actions/trip_actions";
 import { fetchSchedules } from "../../actions/schedule_actions";
 import { scheduleSelector } from "../../slices/schedule_slice";
 
@@ -36,6 +36,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
 
         dispatch(fetchTrip(trip_id));
         dispatch(fetchSchedules(trip_id));
+        dispatch(fetchTripPartner(trip_id));
         return () => {
             // Perform any cleanup tasks here if necessary
         };

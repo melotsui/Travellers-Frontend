@@ -5,7 +5,7 @@ class TripInvitation {
     trip_invitation_id: number;
     trip_id: number;
     created_by: number;
-    send_to: number;
+    send_to: number | User;
     is_accepted?: boolean;
     created_at?: Date;
     updated_at?: Date;

@@ -32,7 +32,6 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     const [endDate, setEndDate] = useState<Date>(new Date());
     const [description, setDescription] = useState('');
     const [tripPartners, setTripPartners] = useState<TripPartnerInvitation | null>(null);
-    const [partner, setPartner] = useState('');
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const rtrip = useSelector(tripSelector).trip;
@@ -76,16 +75,17 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     }, []);
 
     useEffect(() => {
-        if (rtrip == null) return;
+        if (rtrip == null || !trip_id) return;
         setTrip(rtrip);
         setName(rtrip.trip_name);
+        setDestination(rtrip.trip_destination ?? '');
         setStartDate(new Date(rtrip!.trip_datetime_from ?? ''));
         setEndDate(new Date(rtrip!.trip_datetime_to ?? ''));
         setDescription(rtrip.trip_description ?? '');
     }, [rtrip]);
 
     useEffect(() => {
-        if (rtripPartners == null) return;
+        if (rtripPartners == null || !trip_id) return;
         setTripPartners(new TripPartnerInvitation(rtripPartners, rtripInvitations));
     }, [rtripPartners, rtripInvitations]);
 
@@ -180,21 +180,14 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                             onChange={handleEndDate}
                             minimumDate={new Date()}
                         />}
-                        {/*<IconButton onPress={handleSelectDate} icon={"event"}></IconButton>*/}
                     </View>
                     <CustomText size={25}>Description</CustomText>
                     <TextField text={description} onChange={handleDescription} numberOfLines={4}></TextField>
+                    { trip_id && <>
                     <View style={[styles.partnerContainer, g_STYLE.row]}>
                     <CustomText size={25}>Partners</CustomText>
                         <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
                     </View>
-                    {/* <CustomText size={25}>Partners</CustomText>
-                    <View style={[styles.partnerContainer, g_STYLE.row]}>
-                        <View style={styles.partner}>
-                            <TextField text={partner} onChange={handlePartner} hint="Send Invitation"></TextField>
-                        </View>
-                        <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
-                    </View> */}
                     <FlatList
                         scrollEnabled={false}
                         showsVerticalScrollIndicator={false}
@@ -226,7 +219,7 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                                 isPending={true}
                                 isAdded={true}></PartnerTile>
                         }}>
-                    </FlatList>
+                    </FlatList></>}
                     <View style={styles.saveButton}>
                         <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
                     </View>

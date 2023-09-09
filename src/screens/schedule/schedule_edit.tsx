@@ -15,18 +15,18 @@ import SeparateLine from "../../components/atoms/separate_line";
 import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
 import g_THEME from "../../theme/theme";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { ScheduleAccess } from "../../models/schedule_access";
 import { TripPartner } from "../../models/trip_partner";
-import { useDispatch } from "react-redux";
-import { addSchedules, updateSchedule } from "../../actions/schedule_actions";
+import { useDispatch, useSelector } from "react-redux";
+import { addSchedules, fetchSchedule, fetchScheduleAccesses, fetchScheduleTypes, updateSchedule } from "../../actions/schedule_actions";
 import { DispatchThunk } from "../../store/store";
-import { TripTripPartnerUser } from "../../models/trip_trip_partner_user";
-import { TripPartnerInvitation } from "../../models/trip_partner_invitation";
+import IconButton from "../../components/atoms/icon_button";
+import { User } from "../../models/user";
+import { scheduleSelector } from "../../slices/schedule_slice";
 "../../utils/datetime_formatter";
 
 const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     const { schedule_id, trip_id } = props.route.params;
-    const [scheduleAccess, setScheduleAccess] = useState<ScheduleAccess[] | null>([]);
+    const [users, setUsers] = useState<User[] | null>([]);
     //const [tripAccess, setTripAccess] = useState<TripAccess[] | null>([]);
     const [scheduleType, setScheduleType] = useState<ScheduleType[] | null>([]);
     const { showBottomSheet, setBottomSheetContent, hideBottomSheet } = useBottomSheet();
@@ -42,42 +42,37 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
     const dispatch: DispatchThunk = useDispatch();
+    const { schedule, types } = useSelector(scheduleSelector);
+    const rUsers = useSelector(scheduleSelector).users;
 
     useEffect(() => {
-
-        const fetchData = async () => {
-
-            try {
-                const promise1: Promise<ScheduleType[]> = apis.schedule.getScheduleTypeList()
-                const promise2: Promise<TripPartnerInvitation> = apis.trip.getTripPartners(trip_id)
-                const [scheduleTypes, tripPartners] = await Promise.all([promise1, promise2]);
-                        setScheduleType(scheduleTypes);
-
-                if (schedule_id == null) return;
-                const promise3: Promise<Schedule> = apis.schedule.getScheduleById(schedule_id)
-                const promise4: Promise<ScheduleAccess[]> = apis.schedule.getScheduleAccess(schedule_id)
-                const [schedule, scheduleAccess] = await Promise.all([promise3, promise4]);
-
-                setScheduleAccess(scheduleAccess);
-                setName(schedule.schedule_name);
-                setPlace(schedule.schedule_place ?? '');
-                setType(schedule.schedule_type!);
-                setDate(new Date(schedule!.schedule_datetime!));
-                setStartTime(new Date(schedule!.schedule_datetime!));
-                setRemarks(schedule.schedule_remark ?? '');
-
-
-            } catch (error) {
-                // Handle any errors that occurred during the API calls
-                console.error('Error:', error);
-            }
+        dispatch(fetchScheduleTypes());
+        if (schedule_id != null) {
+            dispatch(fetchScheduleAccesses(schedule_id));
+            dispatch(fetchSchedule(schedule_id));
         }
-
-        fetchData();
         return () => {
-            // Perform any cleanup tasks here if necessary
         };
     }, []);
+
+    useEffect(() => {
+        if (schedule_id != null) {
+            setName(schedule?.schedule_name ?? '');
+            setPlace(schedule?.schedule_place ?? '');
+            setType(schedule?.schedule_type!);
+            setDate(schedule?.schedule_datetime ? new Date(schedule.schedule_datetime) : new Date());
+            setStartTime(schedule?.schedule_datetime ? new Date(schedule?.schedule_datetime) : new Date());
+            setRemarks(schedule?.schedule_remark ?? '');
+        }
+    }, [schedule]);
+
+    useEffect(() => {
+        setUsers(rUsers.filter((item) => item.is_active));
+    }, [rUsers]);
+
+    useEffect(() => {
+        setScheduleType(types);
+    }, [types]);
 
     const handleTypeOnPress = (item: ScheduleType) => {
         setType(item);
@@ -93,7 +88,7 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                     data={scheduleType}
                     renderItem={({ item, index }) => (
                         <>
-                            <View style={{padding: 0, margin: 0}}>
+                            <View style={{ padding: 0, margin: 0 }}>
                                 <BottomSheetTile onPress={() => { handleTypeOnPress(item) }}>{item.schedule_type}</BottomSheetTile>
                                 {scheduleType!.length - 1 != index && <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>}
                             </View>
@@ -138,13 +133,15 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     }
 
     const handlePartner = () => {
-        setPartner(null);
+        if (schedule_id) {
+            props.navigation.navigate('ScheduleAccess', { schedule_id: schedule_id });
+        }
     }
 
-    const handleScheduleAccess = (value: ScheduleAccess) => {
-        const updated: ScheduleAccess[] = scheduleAccess?.filter((item) => item.user_id != value.user_id)!;
-        setScheduleAccess(updated);
-    }
+    // const handleScheduleAccess = (value: ScheduleAccess) => {
+    //     const updated: ScheduleAccess[] = scheduleAccess?.filter((item) => item.user_id != value.user_id)!;
+    //     setScheduleAccess(updated);
+    // }
 
     const handleDatePicker = () => {
         setShowDatePicker(true);
@@ -159,7 +156,7 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
             setNameError('Schedule name cannot be empty');
             return;
         }
-        if(type == null) {
+        if (type == null) {
             setTypeError('Schedule type cannot be empty');
             return;
         }
@@ -176,7 +173,7 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
             //         console.log('failed to update schedule');
             //     });
         } else {
-            
+
             dispatch(addSchedules(trip_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks));
             // await apis.schedule.createSchedule(trip_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
             //     .then((response) => {
@@ -228,31 +225,27 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
 
                     <CustomText size={25}>Remarks</CustomText>
                     <TextField text={remarks} onChange={handleRemarks} numberOfLines={4}></TextField>
-                    <CustomText size={25}>Accessible Partners</CustomText>
-                    {/*<View style={[styles.partnerContainer, g_STYLE.row]}>
-                        <View style={styles.partner}>
-                            <TextField text={partner} onChange={handlePartner} hint="Send Invitation"></TextField>
-                        </View>
-                        <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
-                        </View>*/}
-                    <FlatList
-                        scrollEnabled={false}
-                        showsVerticalScrollIndicator={false}
-                        ItemSeparatorComponent={() =>
-                            <View style={{ height: 5 }}></View>
-                        }
-                        data={scheduleAccess}
-                        renderItem={({ item, index }) => (
-                            <PartnerTile
-                                name={"Samoyed Meme"}
-                                uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}
-                                onPress={() => handleScheduleAccess(item)}
-                                isPending={false}
-                                isAdded={true}></PartnerTile>
-                        )}>
-                    </FlatList>
+                    {schedule_id && <><View style={[styles.partnerContainer, g_STYLE.row]}>
+                        <CustomText size={25}>Accessible Partners</CustomText>
+                        <IconButton onPress={handlePartner} icon={"person-add"}></IconButton>
+                    </View>
+                        <FlatList
+                            scrollEnabled={false}
+                            showsVerticalScrollIndicator={false}
+                            ItemSeparatorComponent={() =>
+                                <View style={{ height: 5 }}></View>
+                            }
+                            data={users}
+                            renderItem={({ item, index }) => (
+                                <PartnerTile
+                                    name={item.name ?? ''}
+                                    uri={item.user_icon_url}
+                                    noSuffix
+                                    isPending={false}></PartnerTile>
+                            )}>
+                        </FlatList></>}
                     <View style={styles.saveButton}>
-                        <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
+                        <GradientButton title={schedule_id ? "Save" : "Continue"} onPress={handleSave}></GradientButton>
                     </View>
                 </View>
             </ScrollView>

@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './root_reducers';
 import { ScheduleAccess } from '../models/schedule_access';
+import { User } from '../models/user';
+import { types } from 'web3';
 
 interface ScheduleState {
   schedules: Schedule[];
   schedule: Schedule | null;
   scheduleAccesses: ScheduleAccess[];
+  users: User[];
+  types: ScheduleType[];
   loading: boolean;
   error: string | null;
 }
@@ -14,6 +18,8 @@ const initialState: ScheduleState = {
   schedules: [],
   schedule: null,
   scheduleAccesses: [],
+  users: [],
+  types: [],
   loading: false,
   error: null,
 };
@@ -92,8 +98,8 @@ const scheduleSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    getScheduleAccessesSuccess: (state, action: PayloadAction<ScheduleAccess[]>) => {
-      state.scheduleAccesses = action.payload;
+    getScheduleAccessesSuccess: (state, action: PayloadAction<User[]>) => {
+      state.users = action.payload;
       state.loading = false;
       state.error = null;
     },
@@ -103,16 +109,30 @@ const scheduleSlice = createSlice({
     },
 
     // add schedule accesses
-    addScheduleAccessesStart: (state) => {
+    updateScheduleAccessesStart: (state) => {
       state.loading = true;
       state.error = null;
     },
-    addScheduleAccessesSuccess: (state, action: PayloadAction<ScheduleAccess>) => {
-      state.scheduleAccesses.push(action.payload);
+    updateScheduleAccessesSuccess: (state, action: PayloadAction<ScheduleAccess[]>) => {
+      state.scheduleAccesses = action.payload;
       state.loading = false;
       state.error = null;
     },
-    addScheduleAccessesFailure: (state, action: PayloadAction<string>) => {
+    updateScheduleAccessesFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    getScheduleTypesStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    getScheduleTypesSuccess: (state, action: PayloadAction<ScheduleType[]>) => {
+      state.types = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    getScheduleTypesFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -160,9 +180,13 @@ export const {
   getScheduleAccessesStart,
   getScheduleAccessesSuccess,
   getScheduleAccessesFailure,
-  addScheduleAccessesStart,
-  addScheduleAccessesSuccess,
-  addScheduleAccessesFailure,
+  updateScheduleAccessesStart,
+  updateScheduleAccessesSuccess,
+  updateScheduleAccessesFailure,
+
+  getScheduleTypesStart,
+  getScheduleTypesSuccess,
+  getScheduleTypesFailure,
 
   updateScheduleStart,
   updateScheduleSuccess,

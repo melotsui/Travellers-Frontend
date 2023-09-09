@@ -12,7 +12,7 @@ const GradientContainer: React.FC<GradientContainerProps> = ({
     isLight
 }) => {
     return (
-            <LinearGradient colors={isLight ? g_THEME.gradient.lightColors : g_THEME.gradient.colors} locations={g_THEME.gradient.locations}>
+            <LinearGradient colors={isLight ? g_THEME.gradient.lightColors : g_THEME.gradient.colors} locations={isLight ? g_THEME.gradient.lightLocations : g_THEME.gradient.locations}>
                 {children}
             </LinearGradient>
     );

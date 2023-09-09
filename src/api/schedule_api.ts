@@ -1,5 +1,6 @@
 import { ScheduleAccess } from '../models/schedule_access';
 import ScheduleReminder from '../models/schedule_reminder';
+import { User } from '../models/user';
 import { formatDatetime } from '../utils/datetime_formatter';
 import APIs from './api';
 
@@ -66,14 +67,15 @@ class ScheduleApi {
         });
     }
 
-    getScheduleAccess = async (schedule_id: number): Promise<ScheduleAccess[]> => {
+    getScheduleAccess = async (schedule_id: number): Promise<User[]> => {
         return new Promise(async (resolve, reject) => {
             try {
 
-                await this.schedule.api.get('/schedule_accesses/1')// + schedule_id)
+                await this.schedule.api.get('/schedule_accesses/' + schedule_id)
                     .then((response) => {
                         const result = response.data;
-                        resolve(result.data.schedule_accesses);
+                        console.log('getScheduleAccess ', result.data);
+                        resolve(result.data.users);
                     })
                     .catch((error) => {
                         const result = error.response.data;
@@ -85,7 +87,7 @@ class ScheduleApi {
         });
     }
 
-    setScheduleAccess = async (schedule_id: number, schedule_accesses: number[] | null): Promise<ScheduleAccess> => {
+    setScheduleAccess = async (schedule_id: number, schedule_accesses: number[] | null): Promise<ScheduleAccess[]> => {
         return new Promise(async (resolve, reject) => {
             try {
                 let scheduleAccess = [];
@@ -96,8 +98,6 @@ class ScheduleApi {
                 } else {
                     scheduleAccess = [{ "user_id": null }];
                 }
-                console.log(schedule_id);
-                console.log(scheduleAccess);
 
                 const json = {
                     "schedule_id": schedule_id,

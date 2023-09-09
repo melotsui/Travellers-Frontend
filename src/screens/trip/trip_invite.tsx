@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { tripSelector } from "../../slices/trip_slice";
 import { DispatchThunk } from "../../store/store";
 import { addTrip, addTripInvitation, deleteTripInvitation } from "../../actions/trip_actions";
+import { User } from "../../models/user";
 
 const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: any) => {
     const { trip_id } = props.route.params;
@@ -26,12 +27,13 @@ const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: a
 
     useEffect(() => {
         console.log('error', error);
+        console.log('tripInvitations', tripInvitations);
         setPartner('');
         setTripPartners(tripInvitations);
     }, [tripInvitations]);
 
     useEffect(() => {
-        setPartnerError(error ?? "");
+        setPartnerError(error ?? ""); 
     }, [error]);
 
     const handlePartner = (text: string) => {
@@ -92,7 +94,7 @@ const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: a
                 data={tripPartners}
                 renderItem={({ item }) => (
                     <PartnerTile
-                        name={item.user?.name ?? item.user?.username ?? ''}
+                        name={typeof item.send_to == "object" ?item.send_to.name ?? item.send_to.username : item.user?.name ?? item.user?.username ?? ''}
                         uri={item.user?.user_icon_url}
                         onPress={() => handleDeletePartner(item.trip_invitation_id)}
                         isPending={false}

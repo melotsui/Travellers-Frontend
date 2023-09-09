@@ -8,10 +8,7 @@ import IconButton from '../atoms/icon_button';
 import RoundButton from '../atoms/round_button';
 import GradientContainer from '../atoms/gradient_container';
 import CustomText from '../atoms/text';
-import SeparateLine from '../atoms/separate_line';
 import GradientPopupDialog from '../molecules/gradient_dialog';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { PaperProvider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface PartnerTileProps {
@@ -22,9 +19,10 @@ interface PartnerTileProps {
     isSelect?: boolean;
     isAdded?: boolean;
     isInvited?: boolean;
+    noSuffix?: boolean;
 }
 
-const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending, isSelect, isAdded, isInvited }) => {
+const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending, isSelect, isAdded, isInvited, noSuffix }) => {
 
     const handlePartner = () => {
         if (onPress != null) {
@@ -50,11 +48,11 @@ const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending
                 {isPending ? <RoundButton icon={"update"} title={"Pending"} color='orange'></RoundButton> : null}
                 {isSelect == null && isAdded ? <GradientPopupDialog isSelect={true} title="Reminder" onPress={handlePartner}>
                     {[
-                        <Icon name={"close"} color={g_THEME.colors.grey} size={20}></Icon>,
+                        <Icon name={"close"} color={g_THEME.colors.grey} size={20} key={0}></Icon>,
                         <CustomText size={20} key={1}>Are you sure to delete this partner? This user cannot see the trip anymore. </CustomText>
                     ]}
                 </GradientPopupDialog>
-                    : <IconButton onPress={handlePartner} icon={isInvited ? "close" : "add"} color={g_THEME.colors.grey} size={20}></IconButton>}
+                    : noSuffix == null && <IconButton onPress={handlePartner} icon={isInvited || isSelect ? "close" : "add"} color={g_THEME.colors.grey} size={20}></IconButton>}
             </View></>
     }
 

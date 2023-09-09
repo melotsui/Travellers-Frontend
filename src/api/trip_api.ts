@@ -118,7 +118,7 @@ class TripApi {
                 await this.trip.api.post('/trips/sendTripInvitation', json)
                     .then((response) => {
                         const result = response.data;
-                        resolve(result.data);
+                        resolve(result.data.trip_invitation);
                     })
                     .catch((error) => {
                         const result = error.response.data;
@@ -134,7 +134,7 @@ class TripApi {
         return new Promise(async (resolve, reject) => {
             try {
 
-                await this.trip.api.delete('/trips/respondTripInvitation/' + trip_invitation_id)
+                await this.trip.api.delete('/trips/removeTripInvitation/' + trip_invitation_id)
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data.trip_invitation);

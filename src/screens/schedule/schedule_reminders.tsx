@@ -120,7 +120,7 @@ const ScheduleReminderScreen: React.FC<RootProps<'ScheduleReminder'>> = (props) 
 
                     <View style={styles.saveButton}>
                         <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
-                        <GradientButton title={"Delete"} onPress={handleDelete} color={g_THEME.colors.error}></GradientButton>
+                        {scheduleReminderId != 0 && <GradientButton title={"Delete"} onPress={handleDelete} color={g_THEME.colors.error}></GradientButton>}
                     </View>
                 </View>
             </View>

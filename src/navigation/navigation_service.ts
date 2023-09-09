@@ -1,4 +1,4 @@
-import { NavigationContainerRef, CommonActions } from '@react-navigation/native';
+import { NavigationContainerRef, CommonActions, StackActions } from '@react-navigation/native';
 import { RootStackParamList } from './screen_navigation_props';
 
 let navigationRef: NavigationContainerRef<RootStackParamList> | null;
@@ -22,4 +22,9 @@ export function navigateAndReset(name: string, params?: object) {
       routes: [{ name, params }],
     })
   );
+}
+
+// Function to navigate back two pages
+export function navigateBackTwoPages() {
+  navigationRef?.dispatch(StackActions.pop(2));
 }

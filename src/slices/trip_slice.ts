@@ -158,7 +158,7 @@ const tripSlice = createSlice({
       state.error = null;
     },
     deleteTripInvitationSuccess: (state, action: PayloadAction<TripInvitation>) => {
-      state.tripInvitations = state.tripInvitations.filter((tripInvitation) => tripInvitation.user?.user_id !== action.payload.user?.user_id);
+      state.tripInvitations = state.tripInvitations.filter((tripInvitation) => tripInvitation.trip_id !== action.payload.trip_id);
       state.loading = false;
       state.error = null;
     },

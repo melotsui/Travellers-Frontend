@@ -16,6 +16,7 @@ class User {
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
+  is_active?: boolean;
 
   constructor(
       user_id: number = 0,
@@ -34,7 +35,8 @@ class User {
       provider?: string,
       provider_id?: string,
       updated_at?: Date,
-      deleted_at?: Date
+      deleted_at?: Date,
+      is_active?: boolean
   ) {
       this.user_id = user_id;
       this.username = username;
@@ -53,6 +55,7 @@ class User {
       this.created_at = created_at;
       this.updated_at = updated_at;
       this.deleted_at = deleted_at;
+      this.is_active = is_active;
   }
 }
 

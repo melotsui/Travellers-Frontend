@@ -19,7 +19,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { RootProps } from "../../navigation/screen_navigation_props";
 import apis from "../../api/api_service";
-import { formatDate } from "../../utils/datetime_formatter";
+import { formatDate, formatDatetime, formatTime } from "../../utils/datetime_formatter";
 import { ScheduleAccess } from "../../models/schedule_access";
 import { MediaMediaLocalUrl } from "../../models/media_media_local_url";
 import { getActivityIcon, parseActivityType } from "../../helpers/activity";
@@ -106,8 +106,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                             <View style={g_STYLE.row}>
                                 <View style={[g_STYLE.col, styles.leftContainer]}>
                                     <CustomText size={25}>{schedule?.schedule_place}</CustomText>
-                                    <CustomText>Sushiro</CustomText>
-                                    <CustomText>{formatDate(new Date(schedule.schedule_datetime!))} 10:00 - 12:00 (2hrs)</CustomText>
+                                    <CustomText>{formatDatetime(new Date(schedule.schedule_datetime!))} </CustomText>
                                 </View>
                                 <View style={styles.rightContainer}>
                                     <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
@@ -154,7 +153,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                         <View style={styles.space}></View>
                         <SeparateLine isTextInclude={false} />
                         <View style={styles.space}></View>
-                        <CustomText size={20}>Partners</CustomText>
+                        <CustomText size={20}>Accessible Partners</CustomText>
                         <FlatList
                             scrollEnabled={false}
                             showsVerticalScrollIndicator={false}

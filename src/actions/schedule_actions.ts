@@ -1,6 +1,6 @@
 import apis from '../api/api_service';
-import { navigateBack } from '../navigation/navigation_service';
-import { getSchedulesStart, getSchedulesSuccess, getSchedulesFailure, addSchedulesFailure, addSchedulesStart, addSchedulesSuccess, addScheduleAccessesStart, addScheduleAccessesSuccess, addScheduleAccessesFailure, getScheduleAccessesStart, getScheduleAccessesFailure, getScheduleAccessesSuccess, getScheduleStart, getScheduleFailure, getScheduleSuccess, deleteScheduleFailure, deleteScheduleStart, deleteScheduleSuccess, updateScheduleFailure, updateScheduleStart, updateScheduleSuccess } from '../slices/schedule_slice';
+import { navigate, navigateBack, navigateBackTwoPages } from '../navigation/navigation_service';
+import { getSchedulesStart, getSchedulesSuccess, getSchedulesFailure, addSchedulesFailure, addSchedulesStart, addSchedulesSuccess, getScheduleAccessesStart, getScheduleAccessesFailure, getScheduleAccessesSuccess, getScheduleStart, getScheduleFailure, getScheduleSuccess, deleteScheduleFailure, deleteScheduleStart, deleteScheduleSuccess, updateScheduleFailure, updateScheduleStart, updateScheduleSuccess, updateScheduleAccessesFailure, updateScheduleAccessesStart, updateScheduleAccessesSuccess, getScheduleTypesFailure, getScheduleTypesStart, getScheduleTypesSuccess } from '../slices/schedule_slice';
 import { AppThunk } from '../store/store';
 
 export const fetchSchedules = (trip_id: number): AppThunk => async (dispatch) => {
@@ -26,7 +26,7 @@ export const addSchedules = (
         dispatch(addSchedulesStart());
         const response = await apis.schedule.createSchedule(trip_id, schedule_name, schedule_type_id, schedule_datetime, schedule_place, schedule_remark);
         dispatch(addSchedulesSuccess(response));
-        dispatch(addSchedulesAccesses(response?.schedule_id!, null));
+        dispatch(setSchedulesAccesses(response?.schedule_id!, null, true));
 
     } catch (error) {
         dispatch(addSchedulesFailure(error as string));
@@ -68,19 +68,33 @@ export const fetchScheduleAccesses = (trip_id: number): AppThunk => async (dispa
     }
 };
 
-export const addSchedulesAccesses = (
+export const setSchedulesAccesses = (
     schedule_id: number,
-    schedule_accesses: number[] | null
+    schedule_accesses: number[] | null,
+    isNew?: boolean
 ): AppThunk => async (dispatch) => {
     try {
-        console.log("response");
-        dispatch(addScheduleAccessesStart());
+        dispatch(updateScheduleAccessesStart());
         const response = await apis.schedule.setScheduleAccess(schedule_id, schedule_accesses);
-        dispatch(addScheduleAccessesSuccess(response));
-        navigateBack();
+        dispatch(updateScheduleAccessesSuccess(response));
+        if (isNew) {
+            navigate('ScheduleAccess', { schedule_id: schedule_id });
+        } else {
+            navigateBack();
+        }
 
     } catch (error) {
-        dispatch(addScheduleAccessesFailure(error as string));
+        dispatch(updateScheduleAccessesFailure(error as string));
+    }
+};
+
+export const fetchScheduleTypes = (): AppThunk => async (dispatch) => {
+    try {
+        dispatch(getScheduleTypesStart());
+        const response = await apis.schedule.getScheduleTypeList();
+        dispatch(getScheduleTypesSuccess(response));
+    } catch (error) {
+        dispatch(getScheduleTypesFailure(error as string));
     }
 };
 
