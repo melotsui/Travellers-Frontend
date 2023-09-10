@@ -22,7 +22,7 @@ import { Trip } from "../../models/trip";
 import { useDispatch, useSelector } from "react-redux";
 import { tripSelector } from "../../slices/trip_slice";
 import { DispatchThunk } from "../../store/store";
-import { deleteTrip, fetchTrip, fetchTripPartner } from "../../actions/trip_actions";
+import { deleteTrip, fetchTrip, fetchTripPartner, leaveTrip } from "../../actions/trip_actions";
 import { fetchSchedules } from "../../actions/schedule_actions";
 import { scheduleSelector } from "../../slices/schedule_slice";
 
@@ -59,8 +59,11 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
         console.log("share trip");
         //props.navigation.navigate('TripDetail');
     }
-    const handleDelete = async () => {
-        dispatch(deleteTrip(trip_id));
+    // const handleDelete = async () => {
+    //     dispatch(deleteTrip(trip_id));
+    // }
+    const handleLeave = async () => {
+        dispatch(leaveTrip(trip_id));
     }
     const handleAddMedia = () => {
         console.log("add media");
@@ -79,11 +82,10 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                     <CustomMenuItem title={"Add Schedule"} onPress={handleAddSchedule} icon={"edit-calendar"} />
                     <CustomMenuItem title={"Map"} onPress={handleMap} icon={"pin-drop"} />
                     <CustomMenuItem title={"Share"} onPress={handleShare} icon={"share"} />
-
-                    <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDelete}>
+                    <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleLeave}>
                         {[
-                            <CustomMenuItem title={"Delete"} icon={"delete-outline"} key={0}/>,
-                            <CustomText size={20} key={1}>Are you sure to delete this schedule? Everyone will not be able to access the trip again</CustomText>
+                            <CustomMenuItem title={"Leave Trip"} icon={"delete-outline"} key={0}/>,
+                            <CustomText size={20} key={1}>Are you sure to leave this schedule?</CustomText>
                         ]}
                     </GradientPopupDialog>
                 </GradientPopupMenu>

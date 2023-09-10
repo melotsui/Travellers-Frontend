@@ -17,11 +17,13 @@ import g_THEME from "../../theme/theme";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { TripPartner } from "../../models/trip_partner";
 import { useDispatch, useSelector } from "react-redux";
-import { addSchedules, fetchSchedule, fetchScheduleAccesses, fetchScheduleTypes, updateSchedule } from "../../actions/schedule_actions";
+import { addSchedules, deleteSchedule, fetchSchedule, fetchScheduleAccesses, fetchScheduleTypes, updateSchedule } from "../../actions/schedule_actions";
 import { DispatchThunk } from "../../store/store";
 import IconButton from "../../components/atoms/icon_button";
 import { User } from "../../models/user";
 import { scheduleSelector } from "../../slices/schedule_slice";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 "../../utils/datetime_formatter";
 
 const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
@@ -163,27 +165,15 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
         const datetime = new Date(formatDatetime(undefined, date, startTime)!);
         if (schedule_id) {
             dispatch(updateSchedule(schedule_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks));
-            // await apis.schedule.updateSchedule(schedule_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
-            //     .then((response) => {
-            //         console.log('success to update schedule');
-            //         apis.schedule.setScheduleAccess(schedule_id, null);
-            //         props.navigation.goBack();
-            //     })
-            //     .catch((error) => {
-            //         console.log('failed to update schedule');
-            //     });
         } else {
-
             dispatch(addSchedules(trip_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks));
-            // await apis.schedule.createSchedule(trip_id, name, type?.schedule_type_id ?? undefined, datetime, place, remarks)
-            //     .then((response) => {
-            //         console.log('success to create schedule', response);
-            //         apis.schedule.setScheduleAccess(response?.schedule_id!, null);
-            //         props.navigation.goBack();
-            //     })
-            //     .catch((error) => {
-            //         console.log('failed to create schedule', error);
-            //     });
+
+        }
+    }
+
+    const handleDeleteConfirm = async () => {
+        if (schedule_id) {
+            dispatch(deleteSchedule(schedule_id));
         }
     }
 
@@ -246,6 +236,12 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                         </FlatList></>}
                     <View style={styles.saveButton}>
                         <GradientButton title={schedule_id ? "Save" : "Continue"} onPress={handleSave}></GradientButton>
+                        <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDeleteConfirm}>
+                            {[
+                                <GradientButton title={"Delete"} color={g_THEME.colors.error}></GradientButton>,
+                                <CustomText size={20} key={1}>Are you sure to delete this schedule? Everyone will not be able to access the schedule again</CustomText>
+                            ]}
+                        </GradientPopupDialog>
                     </View>
                 </View>
             </ScrollView>

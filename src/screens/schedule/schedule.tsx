@@ -70,17 +70,9 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
         props.navigation.navigate('ScheduleMedia', { schedule_id: schedule_id});
     }
 
-    const handleDeleteConfirm = async () => {
-        dispatch(deleteSchedule(schedule_id));
-        // await apis.schedule.deleteSchedule(schedule_id)
-        //     .then((response) => {
-        //         console.log('success to delete schedule', response);
-        //         props.navigation.navigate('TripDetail', { trip_id: newSchedule?.trip_id! });
-        //     })
-        //     .catch((error) => {
-        //         console.log('failed to delete schedule', error);
-        //     });
-    }
+    // const handleDeleteConfirm = async () => {
+    //     dispatch(deleteSchedule(schedule_id));
+    // }
 
     const handleMedia = (media: MediaMediaLocalUrl) => {
         if (media.media_local_url == null) {
@@ -165,7 +157,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                 <ImageTile title={(item.user_id ?? "").toString()} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></ImageTile>
                             )}>
                         </FlatList>
-                        <View style={styles.deleteButton}>
+                        {/* <View style={styles.deleteButton}>
                             <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDeleteConfirm}>
                                 {[
                                     <View style={g_STYLE.row} key={0}>
@@ -175,7 +167,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                     <CustomText size={20} key={1}>Are you sure to delete this schedule? Everyone will not be able to access the trip again</CustomText>
                                 ]}
                             </GradientPopupDialog>
-                        </View>
+                        </View> */}
                     </View>
                 </ScrollView>
             </View>}

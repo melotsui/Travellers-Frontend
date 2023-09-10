@@ -72,6 +72,22 @@ const tripSlice = createSlice({
       state.error = action.payload;
     },
 
+    // leave trip
+    leaveTripsStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    leaveTripsSuccess: (state, action: PayloadAction<TripPartner>) => {
+      state.tripPartners = state.tripPartners.filter((tripPartner) => tripPartner.user_id !== action.payload.user_id);
+      state.trips = state.trips.filter((trip) => trip.trip_id !== action.payload.trip_id);
+      state.loading = false;
+      state.error = null;
+    },
+    leaveTripsFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
     // get trip
     getTripStart: (state) => {
       state.loading = true;
@@ -195,6 +211,9 @@ export const {
   deleteTripsStart,
   deleteTripsSuccess,
   deleteTripsFailure,
+  leaveTripsStart,
+  leaveTripsSuccess,
+  leaveTripsFailure,
 
   getTripStart,
   getTripSuccess,

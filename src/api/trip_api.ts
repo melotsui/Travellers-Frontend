@@ -50,6 +50,25 @@ class TripApi {
             }
         });
     }      
+
+    
+    leaveTrip = async (trip_id: number): Promise<TripPartner> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.trip.api.delete('/trips/leaveTrip/'+ trip_id)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.trip_partner);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
     
     deleteTrip = async (trip_id: number): Promise<Trip> => {
         return new Promise(async (resolve, reject) => {

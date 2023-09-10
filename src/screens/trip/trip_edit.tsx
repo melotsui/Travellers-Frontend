@@ -18,9 +18,11 @@ import { TripPartnerInvitation } from "../../models/trip_partner_invitation";
 import { useDispatch, useSelector } from "react-redux";
 import { DispatchThunk } from "../../store/store";
 import { addSchedules } from "../../actions/schedule_actions";
-import { addTrip, deleteTripPartner, deleteTripInvitation, fetchTrip, fetchTripPartner, updateTrip } from "../../actions/trip_actions";
+import { addTrip, deleteTripPartner, deleteTripInvitation, fetchTrip, fetchTripPartner, updateTrip, deleteTrip } from "../../actions/trip_actions";
 import { tripSelector } from "../../slices/trip_slice";
 import { PaperProvider } from "react-native-paper";
+import g_THEME from "../../theme/theme";
+import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 
 const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) => {
     const { trip_id } = props.route.params;
@@ -41,34 +43,10 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
 
     useEffect(() => {
 
-        if(trip_id == null) return;
+        if (trip_id == null) return;
         dispatch(fetchTrip(trip_id));
         dispatch(fetchTripPartner(trip_id));
-        
 
-        // const fetchData = async () => {
-
-        //     try {
-        //         if (trip_id == null) return;
-        //         const promise1: Promise<Trip> = apis.trip.getTripById(trip_id);
-        //         const promise2: Promise<TripPartnerInvitation> = apis.trip.getTripPartners(trip_id);
-
-        //         const [trip, trip_partner] = await Promise.all([promise1, promise2]);
-
-        //         setTrip(trip);
-        //         setName(trip.trip_name);
-        //         setStartDate(new Date(trip!.trip_datetime_from ?? ''));
-        //         setEndDate(new Date(trip!.trip_datetime_to ?? ''));
-        //         setDescription(trip.trip_description ?? '');
-        //         setTripPartners(trip_partner);
-        //         console.log(trip_partner);
-
-        //     } catch (error) {
-        //         // Handle any errors that occurred during the API calls
-        //         console.error('Error:', error);
-        //     }
-        // }
-        // fetchData();
         return () => {
             // Perform any cleanup tasks here if necessary
         };
@@ -146,87 +124,96 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
         } else {
             dispatch(updateTrip(trip_id, name, startDate, endDate, destination, description));
         }
-        
+    }
+
+    const handleDelete = async () => {
+        dispatch(deleteTrip(trip_id));
     }
 
     return (
         <PaperProvider>
-        <View style={{ backgroundColor: 'white', height: '100%' }}>
-            <CustomHeader title={trip?.trip_name ?? 'Trip'}></CustomHeader>
-            <ScrollView>
-                <View style={[styles.container, g_STYLE.col]}>
-                    <CustomText size={25}>Trip Name</CustomText>
-                    <TextField text={name} error={nameError} onChange={handleName}></TextField>
-                    <CustomText size={25}>Destination</CustomText>
-                    <TextField text={destination} onChange={handleDestination}></TextField>
-                    <CustomText size={25}>Date</CustomText>
-                    <View style={[styles.dateContainer, g_STYLE.row]}>
-                        <View style={styles.date}>
-                            <TextField text={formatDate(startDate)} onPressText={handleStartDatePicker} />
+            <View style={{ backgroundColor: 'white', height: '100%' }}>
+                <CustomHeader title={trip?.trip_name ?? 'Trip'}></CustomHeader>
+                <ScrollView>
+                    <View style={[styles.container, g_STYLE.col]}>
+                        <CustomText size={25}>Trip Name</CustomText>
+                        <TextField text={name} error={nameError} onChange={handleName}></TextField>
+                        <CustomText size={25}>Destination</CustomText>
+                        <TextField text={destination} onChange={handleDestination}></TextField>
+                        <CustomText size={25}>Date</CustomText>
+                        <View style={[styles.dateContainer, g_STYLE.row]}>
+                            <View style={styles.date}>
+                                <TextField text={formatDate(startDate)} onPressText={handleStartDatePicker} />
+                            </View>
+                            {showStartDatePicker && <RNDateTimePicker
+                                mode="date"
+                                value={startDate}
+                                onChange={handleStartDate}
+                                minimumDate={new Date()}
+                            />}
+                            <CustomText size={25}>to</CustomText>
+                            <View style={styles.date}>
+                                <TextField text={formatDate(endDate)} onPressText={handleEndDatePicker} />
+                            </View>
+                            {showEndDatePicker && <RNDateTimePicker
+                                mode="date"
+                                value={endDate}
+                                onChange={handleEndDate}
+                                minimumDate={new Date()}
+                            />}
                         </View>
-                        {showStartDatePicker && <RNDateTimePicker
-                            mode="date"
-                            value={startDate}
-                            onChange={handleStartDate}
-                            minimumDate={new Date()}
-                        />}
-                        <CustomText size={25}>to</CustomText>
-                        <View style={styles.date}>
-                            <TextField text={formatDate(endDate)} onPressText={handleEndDatePicker} />
+                        <CustomText size={25}>Description</CustomText>
+                        <TextField text={description} onChange={handleDescription} numberOfLines={4}></TextField>
+                        {trip_id && <>
+                            <View style={[styles.partnerContainer, g_STYLE.row]}>
+                                <CustomText size={25}>Partners</CustomText>
+                                <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
+                            </View>
+                            <FlatList
+                                scrollEnabled={false}
+                                showsVerticalScrollIndicator={false}
+                                ItemSeparatorComponent={() =>
+                                    <View style={{ height: 5 }}></View>
+                                }
+                                data={tripPartners ? tripPartners?.trip_partners! : []}
+                                renderItem={({ item, index }) => {
+                                    return <PartnerTile
+                                        name={item.user!.username}
+                                        uri={item.user!.user_icon_url}
+                                        onPress={() => handleDeletePartner(item.trip_partner_id)}
+                                        isPending={false}
+                                        isAdded={true}></PartnerTile>
+                                }}>
+                            </FlatList>
+                            <FlatList
+                                scrollEnabled={false}
+                                showsVerticalScrollIndicator={false}
+                                ItemSeparatorComponent={() =>
+                                    <View style={{ height: 5 }}></View>
+                                }
+                                data={tripPartners ? tripPartners?.trip_invitations! : []}
+                                renderItem={({ item, index }) => {
+                                    return <PartnerTile
+                                        name={item.user?.name ?? item.user?.username ?? ""}
+                                        uri={item.user?.user_icon_url}
+                                        onPress={() => handleDeleteTripInvitation(item.trip_invitation_id)}
+                                        isPending={true}
+                                        isAdded={true}></PartnerTile>
+                                }}>
+                            </FlatList></>}
+                        <View style={styles.saveButton}>
+                            <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
+                            {trip_id && <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDelete}>
+                                {[
+                                    <GradientButton title={"Delete"} color={g_THEME.colors.error} key={0}></GradientButton>,
+                                    <CustomText size={20} key={1}>Are you sure to delete this schedule? Everyone will not be able to access the trip again</CustomText>
+                                ]}
+                            </GradientPopupDialog>}
                         </View>
-                        {showEndDatePicker && <RNDateTimePicker
-                            mode="date"
-                            value={endDate}
-                            onChange={handleEndDate}
-                            minimumDate={new Date()}
-                        />}
                     </View>
-                    <CustomText size={25}>Description</CustomText>
-                    <TextField text={description} onChange={handleDescription} numberOfLines={4}></TextField>
-                    { trip_id && <>
-                    <View style={[styles.partnerContainer, g_STYLE.row]}>
-                    <CustomText size={25}>Partners</CustomText>
-                        <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
-                    </View>
-                    <FlatList
-                        scrollEnabled={false}
-                        showsVerticalScrollIndicator={false}
-                        ItemSeparatorComponent={() =>
-                            <View style={{ height: 5 }}></View>
-                        }
-                        data={tripPartners ? tripPartners?.trip_partners! : []}
-                        renderItem={({ item, index }) => {
-                            return <PartnerTile
-                                name={item.user!.username}
-                                uri={item.user!.user_icon_url}
-                                onPress={() => handleDeletePartner(item.trip_partner_id)}
-                                isPending={false}
-                                isAdded={true}></PartnerTile>
-                        }}>
-                    </FlatList>
-                    <FlatList
-                        scrollEnabled={false}
-                        showsVerticalScrollIndicator={false}
-                        ItemSeparatorComponent={() =>
-                            <View style={{ height: 5 }}></View>
-                        }
-                        data={tripPartners ? tripPartners?.trip_invitations! : []}
-                        renderItem={({ item, index }) => {
-                                return <PartnerTile
-                                name={item.user?.name ?? item.user?.username ?? ""}
-                                uri={item.user?.user_icon_url}
-                                onPress={() => handleDeleteTripInvitation(item.trip_invitation_id)}
-                                isPending={true}
-                                isAdded={true}></PartnerTile>
-                        }}>
-                    </FlatList></>}
-                    <View style={styles.saveButton}>
-                        <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
-                    </View>
-                </View>
-            </ScrollView>
-        </View>
-        
+                </ScrollView>
+            </View>
+
         </PaperProvider>
     );
 

@@ -1,6 +1,6 @@
 import apis from '../api/api_service';
-import { navigate, navigateBack } from '../navigation/navigation_service';
-import { getTripsStart, getTripsSuccess, getTripsFailure, deleteTripsStart, deleteTripsFailure, deleteTripsSuccess, getTripFailure, getTripStart, getTripSuccess, updateTripFailure, updateTripStart, updateTripSuccess, addTripsFailure, addTripsStart, addTripsSuccess, getTripPartnerInvitationSuccess, getTripPartnerInvitationFailure, getTripPartnerInvitationStart, deleteTripPartnerFailure, deleteTripPartnerStart, deleteTripPartnerSuccess, deleteTripInvitationStart, deleteTripInvitationFailure, deleteTripInvitationSuccess, addTripInvitationFailure, addTripInvitationStart, addTripInvitationSuccess, addTripPartnerFailure, addTripPartnerStart, addTripPartnerSuccess } from '../slices/trip_slice';
+import { navigate, navigateBack, navigateBackTwoPages } from '../navigation/navigation_service';
+import { getTripsStart, getTripsSuccess, getTripsFailure, deleteTripsStart, deleteTripsFailure, deleteTripsSuccess, getTripFailure, getTripStart, getTripSuccess, updateTripFailure, updateTripStart, updateTripSuccess, addTripsFailure, addTripsStart, addTripsSuccess, getTripPartnerInvitationSuccess, getTripPartnerInvitationFailure, getTripPartnerInvitationStart, deleteTripPartnerFailure, deleteTripPartnerStart, deleteTripPartnerSuccess, deleteTripInvitationStart, deleteTripInvitationFailure, deleteTripInvitationSuccess, addTripInvitationFailure, addTripInvitationStart, addTripInvitationSuccess, addTripPartnerFailure, addTripPartnerStart, addTripPartnerSuccess, leaveTripsFailure, leaveTripsStart, leaveTripsSuccess } from '../slices/trip_slice';
 import { AppThunk } from '../store/store';
 
 export const fetchTrips = (): AppThunk => async (dispatch) => {
@@ -21,10 +21,21 @@ export const deleteTrip = (trip_id: number): AppThunk => async (dispatch) => {
 
         const response = await apis.trip.deleteTrip(trip_id);
         dispatch(deleteTripsSuccess(response));
-        navigateBack();
+        navigateBackTwoPages();
 
     } catch (error) {
         dispatch(deleteTripsFailure(error as string));
+    }
+};
+
+export const leaveTrip = (trip_id: number): AppThunk => async (dispatch) => {
+    try {
+        dispatch(leaveTripsStart());
+        const response = await apis.trip.leaveTrip(trip_id);
+        dispatch(leaveTripsSuccess(response));
+        navigateBack();
+    } catch (error) {
+        dispatch(leaveTripsFailure(error as string));
     }
 };
 

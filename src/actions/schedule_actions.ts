@@ -50,7 +50,7 @@ export const deleteSchedule = (schedule_id: number): AppThunk => async (dispatch
         dispatch(deleteScheduleStart());
         const response = await apis.schedule.deleteSchedule(schedule_id);
         dispatch(deleteScheduleSuccess(response));
-        navigateBack();
+        navigateBackTwoPages();
 
     } catch (error) {
         dispatch(deleteScheduleFailure(error as string));
