@@ -1,5 +1,7 @@
 import { AxiosInstance } from "axios";
 import ApiService from "./api";
+import store from "../store/store";
+import { storeData } from "../utils/local_storage";
 
 const refreshToken = async (api: AxiosInstance): Promise<string> => {
     return new Promise<string>(async (resolve, reject) => {
@@ -57,6 +59,7 @@ export const setupInterceptors = (apiService: ApiService) => {
 
                     // Update the authorization header for subsequent requests
                     apiService.setToken(newAccessToken);
+                    storeData('token', newAccessToken);
 
                     // Retry the original request
                     return apiService.api.request(config);

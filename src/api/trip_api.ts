@@ -173,6 +173,24 @@ class TripApi {
         });
     }
 
+    addTripPartner = async (trip_id: number): Promise<TripPartner> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.trip.api.post('/trip_partners/' + trip_id)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.trip_partner);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     createTrip = async (
         trip_name: string,
         trip_datetime_from?: Date,

@@ -16,8 +16,8 @@ export async function shareFriend(message: string, parameters: Map<string, strin
         // }
 
         const result = await Share.share({
-            message: url + newParameter + "\n",
-            url: url,
+            message: encodeURI(url + newParameter) + "\n",
+            url: encodeURI(url + newParameter),
             title: 'Travellers',
         });
 

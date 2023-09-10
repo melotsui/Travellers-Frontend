@@ -49,7 +49,7 @@ type RootStackParamList = {
   TripSearch: undefined;
   TripDetail: { trip_id: number };
   TripAdd: undefined;
-  TripInvite: { trip_id: number };
+  TripInvite: { trip_id: number, trip_name: string };
   TripEdit: { trip_id: number | null };
 
   //Schedule

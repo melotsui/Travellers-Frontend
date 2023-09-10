@@ -122,6 +122,20 @@ const tripSlice = createSlice({
       state.error = action.payload;
     },
 
+    // add trip partner
+    addTripPartnerStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    addTripPartnerSuccess: (state) => {
+      state.loading = false;
+      state.error = null;
+    },
+    addTripPartnerFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
     //delete trip partner
     deleteTripPartnerStart: (state) => {
       state.loading = true;
@@ -194,6 +208,9 @@ export const {
   getTripPartnerInvitationSuccess,
   getTripPartnerInvitationFailure,
 
+  addTripPartnerStart,
+  addTripPartnerSuccess,
+  addTripPartnerFailure,
   deleteTripPartnerStart,
   deleteTripPartnerSuccess,
   deleteTripPartnerFailure,

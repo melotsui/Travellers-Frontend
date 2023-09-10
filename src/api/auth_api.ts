@@ -1,7 +1,7 @@
 import { User } from '../models/user';
 import { Response } from '../models/reponse';
 import APIs from './api';
-import apis from './api_service';
+import { removeData, storeData } from '../utils/local_storage';
 
 class AuthApi {
     private auth: APIs;
@@ -23,6 +23,28 @@ class AuthApi {
                         const result = response.data;
                         resolve(result.data['access_token']);
                         this.auth.setToken(result.data['access_token']);
+                        storeData('token', result.data['access_token']);
+                        storeData('isLogin', true);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    logout = async (): Promise<string> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.auth.api.post('/logout')
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data);
+                        this.auth.setToken('');
+                        removeData('isLogin');
                     })
                     .catch((error) => {
                         const result = error.response.data;

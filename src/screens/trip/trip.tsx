@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DispatchThunk } from "../../store/store";
 import { tripSelector } from "../../slices/trip_slice";
 import { fetchTrips } from "../../actions/trip_actions";
+import { logout } from "../../actions/user_actions";
 
 const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
     const [searchText, setSearchText] = useState('');
@@ -67,7 +68,8 @@ const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
     }
 
     const handleLogout = () => {
-        props.navigation.popToTop();
+        dispatch(logout());
+       // props.navigation.popToTop();
     }
 
     const showDialog = () => {

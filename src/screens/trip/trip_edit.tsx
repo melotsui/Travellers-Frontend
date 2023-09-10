@@ -125,7 +125,7 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     }
 
     const handleInvitePartner = async () => {
-        props.navigation.navigate('TripInvite', { trip_id: trip_id });
+        props.navigation.navigate('TripInvite', { trip_id: trip_id, trip_name: trip?.trip_name });
     }
 
     const handleDeletePartner = async (trip_partner_id: number) => {

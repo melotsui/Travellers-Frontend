@@ -1,7 +1,7 @@
 import { Asset } from 'react-native-image-picker';
 import apis from '../api/api_service';
-import { navigate } from '../navigation/navigation_service';
-import { getUserStart, getUserSuccess, getUserFailure, updateUserFailure, updateUserStart, updateUserSuccess } from '../slices/user_slice';
+import { navigate, navigateAndReset } from '../navigation/navigation_service';
+import { getUserStart, getUserSuccess, getUserFailure, updateUserFailure, updateUserStart, updateUserSuccess, logoutUserStart, logoutUserSuccess, logoutUserFailure } from '../slices/user_slice';
 import { AppThunk } from '../store/store';
 
 export const fetchUser = (): AppThunk => async (dispatch) => {
@@ -40,3 +40,14 @@ export const updateUser = (
         dispatch(updateUserFailure(error as string));
     }
 };
+
+export const logout = (): AppThunk => async (dispatch) => {
+    try {
+        dispatch(logoutUserStart());
+        await apis.auth.logout();
+        dispatch(logoutUserSuccess());
+        navigateAndReset('Login');
+    } catch (error) {
+        dispatch(logoutUserFailure(error as string));
+    }
+}

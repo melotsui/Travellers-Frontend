@@ -12,13 +12,16 @@ import SeparateLine from "../../components/atoms/separate_line";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { PaperProvider } from "react-native-paper";
 import { RootProps } from "../../navigation/screen_navigation_props";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "../../slices/user_slice";
+import { DispatchThunk } from "../../store/store";
+import { logout } from "../../actions/user_actions";
 
 const AccountScreen: React.FC<RootProps<'Account'>> = (props) => {
     let items = ['Personal Information', 'Settings', 'Privacy Policy', 'Terms & Conditions', 'Contact Us', 'Share', 'Logout'];
     let itemsIcon = ['account-circle','settings', 'assignment', 'handshake', 'call', 'share', 'logout'];
     const { user, loading, error } = useSelector(userSelector);
+    const dispatch: DispatchThunk = useDispatch();
 
     const handleEdit = () => {
         props.navigation.navigate('Profile');
@@ -50,7 +53,8 @@ const AccountScreen: React.FC<RootProps<'Account'>> = (props) => {
     }
     
     const handleLogout = () => {
-        props.navigation.navigate('Login', {share_id: ''});
+        dispatch(logout());
+        //props.navigation.navigate('Login', {share_id: ''});
     }
 
     const innerContent = (item: string, index: number): ReactNode => {

@@ -18,7 +18,7 @@ import { addTrip, addTripInvitation, deleteTripInvitation } from "../../actions/
 import { User } from "../../models/user";
 
 const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: any) => {
-    const { trip_id } = props.route.params;
+    const { trip_id, trip_name } = props.route.params;
     const { tripInvitations, error } = useSelector(tripSelector);
     const dispatch: DispatchThunk = useDispatch();
     const [partner, setPartner] = useState<string>();
@@ -43,6 +43,7 @@ const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: a
     const handleShare = () => {
         const trip = new Map();
         trip.set('trip_id', trip_id);
+        trip.set('trip_name', trip_name);
         shareFriend('Join travellers! Let\'s plan your trip together', trip);
     }
 
