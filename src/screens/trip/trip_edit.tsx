@@ -23,6 +23,7 @@ import { tripSelector } from "../../slices/trip_slice";
 import { PaperProvider } from "react-native-paper";
 import g_THEME from "../../theme/theme";
 import GradientPopupDialog from "../../components/molecules/gradient_dialog";
+import { userSelector } from "../../slices/user_slice";
 
 const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) => {
     const { trip_id } = props.route.params;
@@ -36,6 +37,7 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     const [tripPartners, setTripPartners] = useState<TripPartnerInvitation | null>(null);
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+    const { user } = useSelector(userSelector);
     const rtrip = useSelector(tripSelector).trip;
     const rtripPartners = useSelector(tripSelector).tripPartners;
     const rtripInvitations = useSelector(tripSelector).tripInvitations;
@@ -182,7 +184,8 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                                         uri={item.user!.user_icon_url}
                                         onPress={() => handleDeletePartner(item.trip_partner_id)}
                                         isPending={false}
-                                        isAdded={true}></PartnerTile>
+                                        isAdded={true}
+                                        noSuffix={user?.user_id == item.user?.user_id}></PartnerTile>
                                 }}>
                             </FlatList>
                             <FlatList
@@ -198,7 +201,8 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                                         uri={item.user?.user_icon_url}
                                         onPress={() => handleDeleteTripInvitation(item.trip_invitation_id)}
                                         isPending={true}
-                                        isAdded={true}></PartnerTile>
+                                        isAdded={true}
+                                        ></PartnerTile>
                                 }}>
                             </FlatList></>}
                         <View style={styles.saveButton}>

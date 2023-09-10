@@ -29,11 +29,11 @@ import { scheduleSelector } from "../../slices/schedule_slice";
 const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
     const { trip_id } = props.route.params;
     const dispatch: DispatchThunk = useDispatch();
-    const { trip } = useSelector(tripSelector);
+    const { trip, error } = useSelector(tripSelector);
     const { schedules } = useSelector(scheduleSelector);
+    const [isDialogVisible, setDialogVisible] = useState(false);
 
     useEffect(() => {
-
         dispatch(fetchTrip(trip_id));
         dispatch(fetchSchedules(trip_id));
         dispatch(fetchTripPartner(trip_id));
@@ -59,11 +59,26 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
         console.log("share trip");
         //props.navigation.navigate('TripDetail');
     }
-    // const handleDelete = async () => {
-    //     dispatch(deleteTrip(trip_id));
-    // }
     const handleLeave = async () => {
         dispatch(leaveTrip(trip_id));
+    }
+
+    const showDialog = () => {
+        setDialogVisible(true);
+    };
+
+    const hideDialog = () => {
+        setDialogVisible(false);
+    };
+
+    useEffect(() => {
+        if(error){
+            showDialog();
+        }
+    }, [error]);
+
+    const handleDelete = async () => {
+        dispatch(deleteTrip(trip_id));
     }
     const handleAddMedia = () => {
         console.log("add media");
@@ -86,6 +101,12 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                         {[
                             <CustomMenuItem title={"Leave Trip"} icon={"delete-outline"} key={0}/>,
                             <CustomText size={20} key={1}>Are you sure to leave this schedule?</CustomText>
+                        ]}
+                    </GradientPopupDialog>
+                    <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDelete} outVisible={isDialogVisible} onDismiss={hideDialog}>
+                        {[
+                            ,
+                            <CustomText size={20} key={1}>{error}</CustomText>
                         ]}
                     </GradientPopupDialog>
                 </GradientPopupMenu>

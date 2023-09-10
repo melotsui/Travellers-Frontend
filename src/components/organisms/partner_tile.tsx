@@ -34,7 +34,7 @@ const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending
         container: {
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingHorizontal: isSelect != null ? 30 : 0,
+            paddingHorizontal: isSelect ? 30 : 0,
         },
         text: {
             marginHorizontal: 20,
@@ -44,15 +44,16 @@ const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending
     const InnerContent = () => {
         return <>
             <View style={[styles.container, g_STYLE.row]}>
-                <View style={{flex: 1}}><ImageTile title={name} uri={uri} size={16}></ImageTile></View>
+                <View style={{ flex: 1 }}><ImageTile title={name} uri={uri} size={16}></ImageTile></View>
                 {isPending ? <RoundButton icon={"update"} title={"Pending"} color='orange'></RoundButton> : null}
-                {isSelect == null && isAdded ? <GradientPopupDialog isSelect={true} title="Reminder" onPress={handlePartner}>
-                    {[
-                        <Icon name={"close"} color={g_THEME.colors.grey} size={20} key={0}></Icon>,
-                        <CustomText size={20} key={1}>Are you sure to delete this partner? This user cannot see the trip anymore. </CustomText>
-                    ]}
-                </GradientPopupDialog>
-                    : noSuffix == null && <IconButton onPress={handlePartner} icon={isInvited || isSelect ? "close" : "add"} color={g_THEME.colors.grey} size={20}></IconButton>}
+                {noSuffix ? null :
+                    isSelect == null && isAdded ? <GradientPopupDialog isSelect={true} title="Reminder" onPress={handlePartner}>
+                        {[
+                            <Icon name={"close"} color={g_THEME.colors.grey} size={20} key={0}></Icon>,
+                            <CustomText size={20} key={1}>Are you sure to delete this partner? This user cannot see the trip anymore. </CustomText>
+                        ]}
+                    </GradientPopupDialog>
+                        : <IconButton onPress={handlePartner} icon={isInvited || isSelect ? "close" : "add"} color={g_THEME.colors.grey} size={20}></IconButton>}
             </View></>
     }
 

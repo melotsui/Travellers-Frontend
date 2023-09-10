@@ -24,6 +24,7 @@ const ScheduleAccessScreen: React.FC<RootProps<'ScheduleAccess'>> = (props) => {
     const { schedule_id, isEdit } = props.route.params;
     const [partners, setPartners] = useState<UserState[]>([]);
     const [isAll, setIsAll] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
     const dispatch: DispatchThunk = useDispatch();
 
     useEffect(() => {
@@ -65,6 +66,10 @@ const ScheduleAccessScreen: React.FC<RootProps<'ScheduleAccess'>> = (props) => {
     }
 
     const handleSave = () => {
+        if(!isAll && partners.filter((item) => item.isSelected).length == 0) {
+            setError("Please at least choose one partner");
+            return;
+        }
         if (isAll) {
             dispatch(setSchedulesAccesses(schedule_id, [], undefined, isEdit))
         } else {
@@ -110,9 +115,10 @@ const ScheduleAccessScreen: React.FC<RootProps<'ScheduleAccess'>> = (props) => {
                     }}
                 />
             </View>
+            <CustomText size={18} color={g_THEME.colors.error} textAlign="center">{error}</CustomText>
             <View style={[styles.saveButton, g_STYLE.row]}>
                 <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
-                <GradientButton title={"Cancel"} onPress={handleCancel} color={g_THEME.colors.grey}></GradientButton>
+                {isEdit && <GradientButton title={"Cancel"} onPress={handleCancel} color={g_THEME.colors.grey}></GradientButton>}
             </View>
         </ScrollView>
     );

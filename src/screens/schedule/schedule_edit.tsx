@@ -236,12 +236,12 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                         </FlatList></>}
                     <View style={styles.saveButton}>
                         <GradientButton title={schedule_id ? "Save" : "Continue"} onPress={handleSave}></GradientButton>
-                        <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDeleteConfirm}>
+                        {schedule_id && <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDeleteConfirm}>
                             {[
                                 <GradientButton title={"Delete"} color={g_THEME.colors.error}></GradientButton>,
                                 <CustomText size={20} key={1}>Are you sure to delete this schedule? Everyone will not be able to access the schedule again</CustomText>
                             ]}
-                        </GradientPopupDialog>
+                        </GradientPopupDialog>}
                     </View>
                 </View>
             </ScrollView>
