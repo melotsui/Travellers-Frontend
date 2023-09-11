@@ -43,7 +43,7 @@ type RootStackParamList = {
 
   //media
   Media: { schedule_id: number | null; note_id: number | null; media: MediaMediaLocalUrl | null };
-  TextAudio: { schedule_id: number | null; note_id: number | null; media_id: number | null };
+  TextAudio: { schedule_id: number | null; note_id: number | null; media_id: number | null,  audio: MediaMediaLocalUrl | null, content: string | null };
 
   //trip
   TripSearch: undefined;
