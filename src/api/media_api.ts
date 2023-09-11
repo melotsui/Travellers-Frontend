@@ -46,7 +46,7 @@ class MediaApi {
                     }
                 })
                     .then((response) => {
-                        const fileName = response.headers["content-disposition"].split("filename=")[1];
+                        const fileName = response.headers["content-disposition"].split("filename=")[1].replace(/"/g, '');
                         
                         // Convert binary data to base64
                         const base64 = Buffer.from(response.data, 'binary').toString('base64');
@@ -83,6 +83,7 @@ class MediaApi {
                     name: media.fileName,
                 }
                 );
+                console.log(media);
                 formData.append('schedule_id', schedule_id);
 
                 await this.media.api.post('/media/schedule', formData, { headers: { 'Content-Type': 'multipart/form-data' } })

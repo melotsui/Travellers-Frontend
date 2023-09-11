@@ -35,17 +35,17 @@ const MediaScreen: React.FC<RootProps<'Media'>> = (props) => {
 
     const content = (): ReactNode => {
         return <>
-            <BottomSheetTile onPress={() => handleTakePhoto("video")} key={0.1}>Take Video</BottomSheetTile>
-            <SeparateLine isTextInclude={false} color={g_THEME.colors.primary} key={0.2}></SeparateLine>
-            <BottomSheetTile onPress={() => handleTakePhoto("photo")} key={1.1}>Take Photo</BottomSheetTile>
-            <SeparateLine isTextInclude={false} color={g_THEME.colors.primary} key={1.2}></SeparateLine>
-            <BottomSheetTile onPress={handleGallery} key={2.1}>Select from Gallery</BottomSheetTile>
+            <BottomSheetTile onPress={() => handleTakePhoto("video")} key={0}>Take Video</BottomSheetTile>
+            <SeparateLine isTextInclude={false} color={g_THEME.colors.primary} key={1}></SeparateLine>
+            <BottomSheetTile onPress={() => handleTakePhoto("photo")} key={2}>Take Photo</BottomSheetTile>
+            <SeparateLine isTextInclude={false} color={g_THEME.colors.primary} key={3}></SeparateLine>
+            <BottomSheetTile onPress={handleGallery} key={4}>Select from Gallery</BottomSheetTile>
             {rMedia ?
-                <GradientPopupDialog isSelect={true} title={'Reminder'} onPress={handleDelete} key={3.1}>
+                <GradientPopupDialog isSelect={true} title={'Reminder'} onPress={handleDelete} key={5}>
                     {[<>
-                        <SeparateLine isTextInclude={false} color={g_THEME.colors.primary} key={3.2}></SeparateLine>
-                        <BottomSheetTile color={g_THEME.colors.error} key={3.3}>Delete Photo</BottomSheetTile></>,
-                    <CustomText size={20} key={3.4}>Are you sure to delete? You can no longer undo your note</CustomText>
+                        <SeparateLine isTextInclude={false} color={g_THEME.colors.primary} key={6}></SeparateLine>
+                        <BottomSheetTile color={g_THEME.colors.error} key={7}>Delete Photo</BottomSheetTile></>,
+                    <CustomText size={20} key={8}>Are you sure to delete? You can no longer undo your note</CustomText>
                     ]}
                 </GradientPopupDialog>
                 : null}

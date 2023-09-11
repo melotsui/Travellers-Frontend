@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { screenWidth } from "../../constants/screen_dimension";
@@ -30,12 +30,15 @@ import { deleteSchedule, fetchSchedule, fetchScheduleAccesses, fetchSchedules } 
 import { downloadMedia, fetchMedia } from "../../actions/media_actions";
 import { mediaSelector } from "../../slices/media_slice";
 import ImageViewer from "../../components/organisms/image_viewer";
+import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
+import { useBottomSheet } from "../../context/bottom_sheet_context";
 
 const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     const { schedule_id } = props.route.params;
     const { schedule, users } = useSelector(scheduleSelector);
     const { media } = useSelector(mediaSelector);
     const dispatch: DispatchThunk = useDispatch();
+    const { showBottomSheet, hideBottomSheet, setBottomSheetContent } = useBottomSheet();
 
     useEffect(() => {
 
@@ -61,13 +64,32 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     }
 
     const handleAddMedia = () => {
-        console.log("add media");
-        props.navigation.navigate('Media', { schedule_id: schedule_id, note_id: null, media: null });
+        setBottomSheetContent(content());
+        showBottomSheet();
     }
 
+    const content = (): ReactNode => {
+        return <>
+            <BottomSheetTile onPress={handleAudioAdd}>Audio</BottomSheetTile>
+            <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
+            <BottomSheetTile onPress={handleMediaAdd}>Media</BottomSheetTile>
+        </>
+    }
+
+    const handleAudioAdd = () => {
+        props.navigation.navigate('TextAudio', { schedule_id: schedule_id, note_id: null, audio: null, content: null });
+        hideBottomSheet();
+    }
+
+    const handleMediaAdd = () => {
+        props.navigation.navigate('Media', { schedule_id: schedule_id, note_id: null, media: null });
+        hideBottomSheet();
+    }
+
+
     const handleAllMedia = () => {
-        console.log("all media"); 
-        props.navigation.navigate('ScheduleMedia', { schedule_id: schedule_id});
+        console.log("all media");
+        props.navigation.navigate('ScheduleMedia', { schedule_id: schedule_id });
     }
 
     // const handleDeleteConfirm = async () => {
@@ -81,9 +103,13 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     }
 
     const handleEditMedia = (media: MediaMediaLocalUrl) => {
-        props.navigation.navigate('Media', {schedule_id: schedule_id, note_id: null, media: media});
+        if (media.media?.media_type == MediaTypes.AUDIO) {
+            props.navigation.navigate('TextAudio', { schedule_id: null, note_id: null, audio: media, content: null });
+        } else {
+            props.navigation.navigate('Media', { schedule_id: schedule_id, note_id: null, media: media });
+        }
     }
-    
+
     return (
         <PaperProvider>
             {schedule && <View>
@@ -135,8 +161,8 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                                 type={item.media?.media_type!}
                                                 onPress={() => handleMedia(item)}
                                                 uri={item.media?.media_preview_url}></RoundRectImage>
-        
-        
+
+
                                         }</>
                                     }
                                 }}

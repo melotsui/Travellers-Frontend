@@ -55,11 +55,21 @@ const TextAudioScreen: React.FC<RootProps<'TextAudio'>> = (props) => {
             } else {
                 setNote('');
             }
-        } 
-        
+        }
+
         //setIsAudio(!isAudio);
     }
     useEffect(() => {
+        if (rAudio?.media_local_url) {
+            console.log("rAudio.media_local_url.media_local_url");
+            console.log(rAudio.media_local_url.media_local_url);
+            console.log("rAudio.media");
+            audio_controller.getAudioFileInfo(rAudio.media_local_url.media_local_url).then((duration) => {
+                console.log(duration);  
+                setDuration(duration);
+            });
+            setFilePath(rAudio.media_local_url.media_local_url);
+        }
         // Set the listener for audio updates
         audio_controller.setAudioListener({
             onUpdate: (currentDuration: number) => {
@@ -98,9 +108,9 @@ const TextAudioScreen: React.FC<RootProps<'TextAudio'>> = (props) => {
     const handleText = (): string => {
         if (isAudio) {
             if (duration > 0) {
-                if(isRecording){
-                return "Recording... [" + formatDuration(duration) + "]";
-                } else if(isPlaying){
+                if (isRecording) {
+                    return "Recording... [" + formatDuration(duration) + "]";
+                } else if (isPlaying) {
                     return "Playing... [" + formatDuration(duration) + "]";
                 } else {
                     return "Press to Play [" + formatDuration(duration) + "]";
@@ -115,12 +125,12 @@ const TextAudioScreen: React.FC<RootProps<'TextAudio'>> = (props) => {
     }
 
     const handleTextPress = () => {
-        if(isAudio){
-            if(filePath == null){
+        if (isAudio) {
+            if (filePath == null) {
                 return handleStartRecord;
-            } else if(isRecording){
+            } else if (isRecording) {
                 return handleStopRecord;
-            } else if(isPlaying){
+            } else if (isPlaying) {
                 return handleStopPlay;
             } else {
                 return handleStartPlay;
@@ -134,7 +144,9 @@ const TextAudioScreen: React.FC<RootProps<'TextAudio'>> = (props) => {
     }
 
     const handleNoteIcon = (): string | undefined => {
-        if (note.length > 0 || isAudio) {
+        if(rAudio){
+            return undefined;
+        } else if (note.length > 0 || isAudio) {
             return 'close';
         } else {
             return undefined;
@@ -160,12 +172,14 @@ const TextAudioScreen: React.FC<RootProps<'TextAudio'>> = (props) => {
 
     const handleSave = async () => {
         try {
+            if (isRecording) return;
             if (!filePath || !schedule_id) return;
             dispatch(deleteMedia(rAudio?.media?.media_id!, true));
+            audio_controller.extractAudio(filePath);
             const file: Asset = {
-                uri: filePath,
-                fileName: filePath.split('/').pop(),
-                type: 'audio/mp4',
+                uri: filePath.replace('.mp4', '.wav'),
+                fileName: filePath.split('/').pop()!.replace('.mp4', '.wav'),
+                type: 'audio/wav',
             }
             dispatch(addMedia(file, schedule_id));
 
@@ -256,7 +270,7 @@ const TextAudioScreen: React.FC<RootProps<'TextAudio'>> = (props) => {
                         )}
                     /> */}
                     <View style={[styles.saveButton, g_STYLE.row]}>
-                        <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
+                        {!rAudio &&<GradientButton title={"Save"} onPress={handleSave}></GradientButton>}
                         {!isNew ?
                             <GradientPopupDialog isSelect={true} title={'Reminder'} onPress={handleDelete}>
                                 {[

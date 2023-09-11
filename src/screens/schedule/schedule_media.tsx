@@ -45,7 +45,7 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
         // }
 
         rMedia.forEach((media) => {
-        console.log(media.media_local_url);
+            console.log(media.media_local_url);
         })
         return () => {
             // Perform any cleanup tasks here if necessary
@@ -66,7 +66,7 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
     }
 
     const handleAudioAdd = () => {
-        props.navigation.navigate('TextAudio', { schedule_id: schedule_id, note_id: null, media_id: null });
+        props.navigation.navigate('TextAudio', { schedule_id: schedule_id, note_id: null, audio: null, content: null });
         hideBottomSheet();
     }
 
@@ -96,8 +96,7 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
         //props.navigation.navigate('TripDetail');
     }
 
-    const handleAudio = (media_id: number) => {
-        props.navigation.navigate('TextAudio', { schedule_id: null, note_id: null, media_id: media_id });
+    const handleAudio = (media: MediaMediaLocalUrl) => {
     }
 
     const handleMedia = (media: MediaMediaLocalUrl) => {
@@ -107,7 +106,11 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
     }
 
     const handleEditMedia = (media: MediaMediaLocalUrl) => {
-        props.navigation.navigate('Media', {schedule_id: schedule_id, note_id: null, media: media});
+        if (media.media?.media_type == MediaTypes.AUDIO) {
+            props.navigation.navigate('TextAudio', { schedule_id: null, note_id: null, audio: media, content: null });
+        } else {
+            props.navigation.navigate('Media', { schedule_id: schedule_id, note_id: null, media: media });
+        }
     }
 
     return (
