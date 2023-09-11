@@ -7,7 +7,7 @@ import GradientText from '../molecules/gradient_text';
 
 interface BottomSheetTileProps {
     children: React.ReactNode;
-    onPress: () => void;
+    onPress?: () => void;
     color?: string;
 }
 
