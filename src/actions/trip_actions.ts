@@ -1,6 +1,6 @@
 import apis from '../api/api_service';
 import { navigate, navigateBack, navigateBackTwoPages } from '../navigation/navigation_service';
-import { getTripsStart, getTripsSuccess, getTripsFailure, deleteTripsStart, deleteTripsFailure, deleteTripsSuccess, getTripFailure, getTripStart, getTripSuccess, updateTripFailure, updateTripStart, updateTripSuccess, addTripsFailure, addTripsStart, addTripsSuccess, getTripPartnerInvitationSuccess, getTripPartnerInvitationFailure, getTripPartnerInvitationStart, deleteTripPartnerFailure, deleteTripPartnerStart, deleteTripPartnerSuccess, deleteTripInvitationStart, deleteTripInvitationFailure, deleteTripInvitationSuccess, addTripInvitationFailure, addTripInvitationStart, addTripInvitationSuccess, addTripPartnerFailure, addTripPartnerStart, addTripPartnerSuccess, leaveTripsFailure, leaveTripsStart, leaveTripsSuccess } from '../slices/trip_slice';
+import { getTripsStart, getTripsSuccess, getTripsFailure, deleteTripsStart, deleteTripsFailure, deleteTripsSuccess, getTripFailure, getTripStart, getTripSuccess, updateTripFailure, updateTripStart, updateTripSuccess, addTripsFailure, addTripsStart, addTripsSuccess, getTripPartnerInvitationSuccess, getTripPartnerInvitationFailure, getTripPartnerInvitationStart, deleteTripPartnerFailure, deleteTripPartnerStart, deleteTripPartnerSuccess, deleteTripInvitationStart, deleteTripInvitationFailure, deleteTripInvitationSuccess, addTripInvitationFailure, addTripInvitationStart, addTripInvitationSuccess, addTripPartnerFailure, addTripPartnerStart, addTripPartnerSuccess, leaveTripsFailure, leaveTripsStart, leaveTripsSuccess, searchTripsStart, searchTripsFailure, searchTripsSuccess } from '../slices/trip_slice';
 import { AppThunk } from '../store/store';
 
 export const fetchTrips = (): AppThunk => async (dispatch) => {
@@ -12,6 +12,16 @@ export const fetchTrips = (): AppThunk => async (dispatch) => {
 
     } catch (error) {
         dispatch(getTripsFailure(error as string));
+    }
+};
+
+export const fetchTripsByPage = (keyword: string, limit: number, page: number): AppThunk => async (dispatch) => {
+    try {
+        dispatch(searchTripsStart());
+        const response = await apis.trip.searchTrip(keyword, limit, page);
+        dispatch(searchTripsSuccess(response));
+    } catch (error) {
+        dispatch(searchTripsFailure(error as string));
     }
 };
 

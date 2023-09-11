@@ -4,6 +4,7 @@ import { Trip } from '../models/trip';
 import { TripPartner } from '../models/trip_partner';
 import { TripPartnerInvitation } from '../models/trip_partner_invitation';
 import { TripInvitation } from '../models/trip_invitation';
+import { PaginationResponse } from '../models/paging';
 
 interface TripState {
   trips: Trip[];
@@ -12,6 +13,8 @@ interface TripState {
   tripInvitations: TripInvitation[];
   loading: boolean;
   error: string | null;
+  currentPage: number;
+  totalPages: number;
 }
 
 const initialState: TripState = {
@@ -21,6 +24,8 @@ const initialState: TripState = {
   tripInvitations: [],
   loading: false,
   error: null,
+  currentPage: 1,
+  totalPages: 1,
 };
 
 const tripSlice = createSlice({
@@ -38,6 +43,30 @@ const tripSlice = createSlice({
       state.error = null;
     },
     getTripsFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    // clear trips
+    clearTrips: (state) => {
+      state.trips = [];
+      state.currentPage = 1;
+      state.totalPages = 1;
+    },
+
+    // search trips
+    searchTripsStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    searchTripsSuccess: (state, action: PayloadAction<PaginationResponse<Trip>>) => {
+      state.trips.push(...action.payload.data);
+      state.currentPage = action.payload.current_page;
+      state.totalPages = action.payload.total_page;
+      state.loading = false;
+      state.error = null;
+    },
+    searchTripsFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -205,6 +234,10 @@ export const {
   getTripsStart,
   getTripsSuccess,
   getTripsFailure,
+  clearTrips,
+  searchTripsStart,
+  searchTripsSuccess,
+  searchTripsFailure,
   addTripsStart,
   addTripsSuccess,
   addTripsFailure,

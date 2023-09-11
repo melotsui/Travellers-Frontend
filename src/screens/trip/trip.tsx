@@ -13,15 +13,15 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Trip } from "../../models/trip";
 import { useDispatch, useSelector } from "react-redux";
 import { DispatchThunk } from "../../store/store";
-import { tripSelector } from "../../slices/trip_slice";
-import { fetchTrips } from "../../actions/trip_actions";
+import { clearTrips, tripSelector } from "../../slices/trip_slice";
+import { fetchTrips, fetchTripsByPage } from "../../actions/trip_actions";
 import { logout } from "../../actions/user_actions";
 
 const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
     const [searchText, setSearchText] = useState('');
     const [isDialogVisible, setDialogVisible] = useState(false);
     const dispatch: DispatchThunk = useDispatch();
-    const { trips } = useSelector(tripSelector);
+    const { trips, currentPage, totalPages, loading } = useSelector(tripSelector);
 
     const backButtonPressCount = useRef(0);
 
@@ -52,12 +52,26 @@ const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
         }, [])
     );
 
+    // useEffect(() => {
+
+    //     dispatch(fetchTripsByPage(searchText, 5, 0));
+    //     //dispatch(fetchTrips());
+    //     return () => {
+    //         // Perform any cleanup tasks here if necessary
+    //     };
+    // }, []);
+
     useEffect(() => {
-        dispatch(fetchTrips());
-        return () => {
-            // Perform any cleanup tasks here if necessary
-        };
-    }, []);
+        dispatch(clearTrips());
+        dispatch(fetchTripsByPage(searchText, 5, 0));
+    }, [searchText]);
+
+    const loadMore = () => {
+        if (currentPage < totalPages) {
+            if(loading) return;
+            dispatch(fetchTripsByPage(searchText, 5, currentPage + 1));
+        }
+    };
 
     const handleSearchTextChange = (value: string) => {
         setSearchText(value);
@@ -69,7 +83,7 @@ const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
 
     const handleLogout = () => {
         dispatch(logout());
-       // props.navigation.popToTop();
+        // props.navigation.popToTop();
     }
 
     const showDialog = () => {
@@ -91,6 +105,8 @@ const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
                     showsVerticalScrollIndicator={false}
                     data={trips}
                     keyExtractor={(trip: Trip) => trip.trip_id.toString()}
+                    onEndReached={loadMore}
+                    onEndReachedThreshold={0.5} // load more data when the user has scrolled halfway through the current data
                     renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => handleTripTilePress(item.trip_id)}>
                             <TripTile trip={item} />

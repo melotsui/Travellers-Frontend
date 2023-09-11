@@ -1,3 +1,4 @@
+import { PaginationResponse } from '../models/paging';
 import { Trip } from '../models/trip';
 import { TripInvitation } from '../models/trip_invitation';
 import { TripPartner } from '../models/trip_partner';
@@ -21,6 +22,34 @@ class TripApi {
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data.trips);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    searchTrip = async (keyword: string, limit: number, page: number): Promise<PaginationResponse<Trip>> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const json = {
+                    "keyword": keyword,
+                    "limit": limit
+                }
+
+                await this.trip.api.post('/trips/search?page=' + page, json)
+                    .then((response) => {
+                        const result = response.data;
+                        const tripResponse = new PaginationResponse<Trip>({
+                            current_page: result.data.current_page,
+                            total_page: result.data.total_page,
+                            items: result.data.trips
+                          });
+                        resolve(tripResponse);
                     })
                     .catch((error) => {
                         const result = error.response.data;
