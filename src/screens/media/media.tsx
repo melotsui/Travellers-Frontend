@@ -101,7 +101,7 @@ const MediaScreen: React.FC<RootProps<'Media'>> = (props) => {
                 <View style={styles.container}>
                     <View style={styles.mediaContainer}>
                         <View style={styles.media}>
-                            <Image source={{ uri: media?.uri ?? rMedia?.media_local_url?.media_local_url ?? rMedia?.media?.media_preview_url }} style={styles.image} />
+                            { (media || rMedia) && <Image source={{ uri: media?.uri ?? rMedia?.media_local_url?.media_local_url ?? rMedia?.media?.media_preview_url}} style={styles.image} />}
                             <View style={styles.mediaButton}>
                                 <IconButton icon={"add-a-photo"} size={40} color={'white'} onPress={handleAddMedia} ></IconButton>
                             </View>

@@ -59,7 +59,7 @@ class UserApi {
         });
     }
 
-    forgetPassword = async (username: string | null): Promise<string> => {
+    forgetPassword = async (username: string | null): Promise<number> => {
         return new Promise(async (resolve, reject) => {
             let email = null;
             if(validateEmail(username!)){
@@ -75,7 +75,7 @@ class UserApi {
                 await this.user.api.post('/users/forgotPassword', jsonData)
                     .then((response) => {
                         const result = response.data;
-                        resolve(result.data);
+                        resolve(result.data.uesr_id);
                     })
                     .catch((error) => {
                         const result = error.response.data;
@@ -87,7 +87,7 @@ class UserApi {
         });
     }
 
-    verifyForgetPassword = async (userId: string, passcode: string): Promise<string> => {
+    verifyForgetPassword = async (userId: number, passcode: string): Promise<string> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const jsonData = {

@@ -41,7 +41,7 @@ const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
             return;
         }
 
-        await apis.user.resetPassword(0, '', password)
+        await apis.user.resetPassword(user_id, passcode, password)
             .then((response) => {
                 console.log('success to reset password');
                 props.navigation.navigate('Login', {share_id: ''});
@@ -66,9 +66,9 @@ const ResetPasswordScreen: React.FC<RootProps<'ResetPassword'>> = (props) => {
                 <CustomText size={22}>Reset Password</CustomText>
                 <View style={styles.text}>
                     <View style={styles.space} />
-                    <TextField hint={'new password'} text={password} error={passwordError} onChange={handlePasswordChange} />
+                    <TextField hint={'new password'} text={password} error={passwordError} onChange={handlePasswordChange} secure />
                     <View style={styles.space} />
-                    <TextField hint={'confirm new password'} text={confirmPassword} error={confirmPasswordError} onChange={handleConfirmPasswordChange} />
+                    <TextField hint={'confirm new password'} text={confirmPassword} error={confirmPasswordError} onChange={handleConfirmPasswordChange} secure/>
                     <View style={styles.longSpace} />
                 </View>
                 <GradientButton

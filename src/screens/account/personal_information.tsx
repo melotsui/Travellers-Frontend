@@ -26,8 +26,8 @@ const SettingsScreen: React.FC<RootProps<'PersonalInformation'>> = (props) => {
                     <SeparateLine isTextInclude={false} />
                     <GradientPopupDialog isSelect={false} title={"Reminder"}>
                         {[
-                            <AccountTile name={'Phone'} icon={'phone'} />,
-                            <CustomText size={20}>Not Yet Open</CustomText>
+                            <AccountTile name={'Phone'} icon={'phone'} key={0}/>,
+                            <CustomText size={20} key={1}>Not Yet Open</CustomText>
                         ]}
                     </GradientPopupDialog>
 

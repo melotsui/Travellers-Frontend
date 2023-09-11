@@ -23,7 +23,7 @@ type RootStackParamList = {
   Register: undefined;
   EmailVerification: {isEdit: boolean};
   ForgetPassword: undefined;
-  ResetPassword: { user_id: string; passcode: string };
+  ResetPassword: { user_id: number; passcode: string };
   HomeBottomBarNavigation: undefined;
 
   //account

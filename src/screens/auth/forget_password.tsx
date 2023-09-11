@@ -14,8 +14,8 @@ const ForgetPasswordScreen: React.FC<RootProps<'ForgetPassword'>> = (props) => {
     const [seconds, setSeconds] = useState(0);
     const [username, setUsername] = useState('');
     const [code, setCode] = useState('');
-    const [password, setPassword] = useState('');
     const [usernameError, setUsernameError] = useState('');
+    const [userId, setUserId] = useState(0);
     const [codeError, setCodeError] = useState('');
 
     useEffect(() => {
@@ -52,6 +52,7 @@ const ForgetPasswordScreen: React.FC<RootProps<'ForgetPassword'>> = (props) => {
             .then((response) => {
                 setSeconds(20);
                 console.log('success to send code');
+                setUserId(response);
             })
             .catch((error) => {
                 console.log('failed to send code');
@@ -68,10 +69,10 @@ const ForgetPasswordScreen: React.FC<RootProps<'ForgetPassword'>> = (props) => {
             setCodeError('Verification code cannot be empty');
             return;
         }
-        await apis.user.verifyForgetPassword(username, password)
+        await apis.user.verifyForgetPassword(userId, code)
             .then((response) => {
                 console.log('success to reset password');
-                props.navigation.navigate('ResetPassword', {user_id: username, passcode: code});
+                props.navigation.navigate('ResetPassword', {user_id: userId, passcode: code});
             })
             .catch((error) => {
                 console.log('failed to reset password');
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
         padding: screenHeight * 0.02,
     },
     text: {
-        paddingHorizontal: screenWidth * 0.05,
+        paddingHorizontal: screenWidth * 0.17,
     },
     space: {
         height: screenHeight * 0.02,
