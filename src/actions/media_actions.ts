@@ -34,13 +34,13 @@ export const addMedia = (media: Asset, schedule_id: number): AppThunk => async (
     }
 };
 
-export const deleteMedia = (media_id: number): AppThunk => async (dispatch) => {
+export const deleteMedia = (media_id: number, isEdit: boolean): AppThunk => async (dispatch) => {
     try {
         dispatch(deleteMediaStart());
         const response = await apis.media.deleteScheduleMedia(media_id);
         dispatch(deleteMediaSuccess(response));
         
-        navigateBack();
+        if(!isEdit) navigateBack();
 
     } catch (error) {
         dispatch(deleteMediaFailure(error as string));

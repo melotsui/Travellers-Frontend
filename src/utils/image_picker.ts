@@ -1,10 +1,14 @@
-import { Asset, ImagePickerResponse, launchCamera, launchImageLibrary } from "react-native-image-picker";
+import { Asset, ImagePickerResponse, MediaType, launchCamera, launchImageLibrary } from "react-native-image-picker";
+import { Media } from "../models/media";
+import { MediaTypes } from "../constants/types";
 
-const openCamera = (): Promise<Asset[]> => {
+const openCamera = (type: MediaType): Promise<Asset[]> => {
     return new Promise((resolve, reject) => {
         launchCamera(
             {
-                mediaType: 'photo',
+                mediaType: type,
+                videoQuality: 'medium',
+                durationLimit: 60,
                 quality: 0.5,
                 maxWidth: 1000,
                 maxHeight: 1000,

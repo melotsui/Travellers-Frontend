@@ -26,6 +26,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, onPress }) =
   const handleEdit = () => {
     if (onPress != null) {
       onPress();
+      setIsOpen(false);
     }
   }
 
