@@ -188,7 +188,7 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                                         noSuffix={user?.user_id == item.user?.user_id}></PartnerTile>
                                 }}>
                             </FlatList>
-                            <FlatList
+                            {/* <FlatList
                                 scrollEnabled={false}
                                 showsVerticalScrollIndicator={false}
                                 ItemSeparatorComponent={() =>
@@ -204,7 +204,8 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                                         isAdded={true}
                                         ></PartnerTile>
                                 }}>
-                            </FlatList></>}
+                            </FlatList> */}
+                            </>}
                         <View style={styles.saveButton}>
                             <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
                             {trip_id && <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDelete}>

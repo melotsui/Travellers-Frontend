@@ -34,7 +34,7 @@ const PartnerTile: React.FC<PartnerTileProps> = ({ name, uri, onPress, isPending
         container: {
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingHorizontal: isSelect ? 30 : 0,
+            paddingHorizontal: isSelect != null ? 30 : 0,
         },
         text: {
             marginHorizontal: 20,

@@ -7,6 +7,7 @@ import { Media } from '../../models/media';
 import IconButton from '../atoms/icon_button';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MediaMediaLocalUrl } from '../../models/media_media_local_url';
+import Video from 'react-native-video';
 
 interface ImageViewerProps {
   children: React.ReactNode;
@@ -36,14 +37,28 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, onPress }) =
     },
   ];
 
+  function renderMedia() {
+    if (media[0].media?.media_type == 'video') {
+      return (
+        <Video
+          source={{ uri: media[0].media_local_url?.media_local_url! }}
+          style={{ flex: 1 }}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      return <Image source={{ uri: media[0].media_local_url?.media_local_url! }} style={{ flex: 1 }} />;
+    }
+  }
+
   const renderHeaderComponent = (image: ImageObject, currentIndex: number) => {
     return <><View style={styles.back}>
       <IconButton icon={"arrow-back-ios"} color={"white"} onPress={closeGallery}></IconButton>
     </View>
       <CustomText color="white" size={30} textAlign="center">Gallery</CustomText>
       <View style={styles.headerButton}>
-      <IconButton icon={"edit"} color={"white"} onPress={handleEdit}></IconButton>
-    </View>
+        <IconButton icon={"edit"} color={"white"} onPress={handleEdit}></IconButton>
+      </View>
     </>;
   };
 
@@ -52,7 +67,10 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, onPress }) =
       {children}
     </TouchableOpacity>
     <ImageGallery close={closeGallery} isOpen={isOpen} images={images}
-      renderHeaderComponent={renderHeaderComponent} />
+      renderHeaderComponent={renderHeaderComponent}
+      hideThumbs
+      renderCustomImage={renderMedia}
+    />
   </>
   );
 
@@ -69,8 +87,8 @@ const styles = StyleSheet.create({
   },
   headerButton: {
     top: 15,
-      right: 10,
-      position: 'absolute',
+    right: 10,
+    position: 'absolute',
   }
 });
 
