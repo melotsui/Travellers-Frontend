@@ -21,7 +21,7 @@ type RootStackParamList = {
   //auth
   Login: { share_id: string };
   Register: undefined;
-  EmailVerification: undefined;
+  EmailVerification: {isEdit: boolean};
   ForgetPassword: undefined;
   ResetPassword: { user_id: string; passcode: string };
   HomeBottomBarNavigation: undefined;
@@ -49,7 +49,7 @@ type RootStackParamList = {
   TripSearch: undefined;
   TripDetail: { trip_id: number };
   TripAdd: undefined;
-  TripInvite: { trip_id: number, trip_name: string };
+  TripInvite: { trip_id: number, trip_name: string, isEdit: boolean };
   TripEdit: { trip_id: number | null };
 
   //Schedule

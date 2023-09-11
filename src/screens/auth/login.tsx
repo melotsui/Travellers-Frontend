@@ -43,7 +43,7 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
         //     setPasswordError('Password cannot be empty');
         //     return;
         // }
-        await apis.auth.login('vincy', 'Abc123456')//username, password)
+        await apis.auth.login('Tt', 'Tt')//username, password)
             .then((response) => {
                 console.log('success to login');
             })
@@ -55,7 +55,7 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
         apis.notification.addFCMToken();
 
 
-        dispatch(fetchUser());
+        dispatch(fetchUser("HomeBottomBarNavigation"));
 
 
         // await apis.auth.getMyProfile().then((response) => {

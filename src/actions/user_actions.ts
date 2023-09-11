@@ -1,16 +1,16 @@
 import { Asset } from 'react-native-image-picker';
 import apis from '../api/api_service';
-import { navigate, navigateAndReset } from '../navigation/navigation_service';
-import { getUserStart, getUserSuccess, getUserFailure, updateUserFailure, updateUserStart, updateUserSuccess, logoutUserStart, logoutUserSuccess, logoutUserFailure } from '../slices/user_slice';
+import { navigate, navigateAndReset, navigateBack } from '../navigation/navigation_service';
+import { getUserStart, getUserSuccess, getUserFailure, updateUserFailure, updateUserStart, updateUserSuccess, logoutUserStart, logoutUserSuccess, logoutUserFailure, updateUserEmailFailure, updateUserEmailStart, updateUserEmailSuccess } from '../slices/user_slice';
 import { AppThunk } from '../store/store';
 
-export const fetchUser = (): AppThunk => async (dispatch) => {
+export const fetchUser = (nav?: string): AppThunk => async (dispatch) => {
     try {
         dispatch(getUserStart());
         const response = await apis.auth.getMyProfile();
         dispatch(getUserSuccess(response));
 
-        navigate('HomeBottomBarNavigation');
+        if(nav) navigate(nav);
 
     } catch (error) {
         dispatch(getUserFailure(error as string));
@@ -34,10 +34,25 @@ export const updateUser = (
         }
         dispatch(updateUserSuccess(response));
 
-        navigate('HomeBottomBarNavigation');
+        navigateBack();
 
     } catch (error) {
         dispatch(updateUserFailure(error as string));
+    }
+};
+
+export const updateUserEmail = (
+    email: string,
+    code: string,
+): AppThunk => async (dispatch, getState) => {
+    try {
+        dispatch(updateUserEmailStart());
+        const { user } = getState();
+        await apis.user.verifyEmail(user.user?.user_id!, code, email);
+        dispatch(updateUserEmailSuccess(email));
+        navigateAndReset('HomeBottomBarNavigation');
+    } catch (error) {
+        dispatch(updateUserEmailFailure(error as string));
     }
 };
 
@@ -48,6 +63,7 @@ export const logout = (): AppThunk => async (dispatch) => {
         dispatch(logoutUserSuccess());
         navigateAndReset('Login');
     } catch (error) {
+        console.log(error);
         dispatch(logoutUserFailure(error as string));
     }
 }

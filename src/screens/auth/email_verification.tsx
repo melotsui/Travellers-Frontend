@@ -8,28 +8,34 @@ import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import SendVerificationCode from '../../components/molecules/send_verification_code';
 import g_THEME from '../../theme/theme';
 import apis from '../../api/api_service';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootProps } from '../../navigation/screen_navigation_props';
 import { userSelector } from '../../slices/user_slice';
+import { DispatchThunk } from '../../store/store';
+import { updateUserEmail } from '../../actions/user_actions';
 
 const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props) => {
-    const { user } = useSelector(userSelector);
+    const { isEdit } = props.route.params;
+    const { user, error } = useSelector(userSelector);
     const [seconds, setSeconds] = useState(0);
     const [email, setEmail] = useState(user?.email);
     const [code, setCode] = useState('');
     const [emailError, setEmailError] = useState('');
     const [codeError, setCodeError] = useState('');
 
+    const dispatch: DispatchThunk = useDispatch();
+
     useEffect(() => {
         if (seconds > 0) {
-          const timerId = setTimeout(() => {
-            setSeconds(seconds - 1);
-          }, 1000);
-    
-          // Cleanup timer on unmount or when seconds change
-          return () => clearTimeout(timerId);
+            const timerId = setTimeout(() => {
+                setSeconds(seconds - 1);
+            }, 1000);
+
+            // Cleanup timer on unmount or when seconds change
+            return () => clearTimeout(timerId);
         }
-      }, [seconds]);
+    }, [seconds]);
+
 
     const handleEmailChange = (value: string) => {
         setEmail(value);
@@ -45,7 +51,7 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
         if (seconds > 0) {
             return;
         }
-        if (email == '') {
+        if (email == '' || email == undefined) {
             setEmailError('Username cannot be empty');
             return;
         }
@@ -61,29 +67,19 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
     };
 
     const handleEmailVerification = async () => {
-        console.log(user);
         if (email == '') {
-            setEmailError('Username cannot be empty');
+            setEmailError('Email cannot be empty');
             return;
         }
         if (code == '') {
             setCodeError('Verification code cannot be empty');
             return;
         }
-
-        await apis.user.verifyEmail(user!.user_id.toString(), code, email!)
-            .then((response) => {
-                console.log('success to verify');
-                props.navigation.navigate('HomeBottomBarNavigation');
-            })
-            .catch((error) => {
-                console.log('failed to verify');
-                setCodeError(error);
-            });
+        dispatch(updateUserEmail(email!, code));
     };
 
     const handleSkip = () => {
-        props.navigation.navigate('HomeBottomBarNavigation');
+        props.navigation.replace('HomeBottomBarNavigation');
     };
 
     return (
@@ -103,15 +99,16 @@ const EmailVerificationScreen: React.FC<RootProps<'EmailVerification'>> = (props
                     <View style={styles.space} />
                     <SendVerificationCode hint={'verification code'} text={code} color={seconds > 0 ? g_THEME.colors.grey : undefined} error={codeError} onChange={handleCodeChange} onPress={handleSendCode} />
                     {seconds > 0 && <><View style={styles.longSpace} />
-                    <CustomText size={12} color={g_THEME.colors.grey} textAlign={'center'}>Can be re-sent in {seconds} seconds</CustomText></>}
+                        <CustomText size={12} color={g_THEME.colors.grey} textAlign={'center'}>Can be re-sent in {seconds} seconds</CustomText></>}
                     <View style={styles.longSpace} />
                     <View style={styles.longSpace} />
                 </View>
+                <CustomText color='red' size={12} textAlign="center">{error}</CustomText>
                 <GradientButton
                     title="Confirm"
                     onPress={handleEmailVerification}
                 />
-                {!user && <TextButton onPress={handleSkip} color={g_THEME.colors.grey} size={22}>Skip</TextButton>}
+                {!isEdit && <TextButton onPress={handleSkip} color={g_THEME.colors.grey} size={22}>Skip</TextButton>}
             </View>
         </ScrollView>
     );
@@ -127,7 +124,7 @@ const styles = StyleSheet.create({
         padding: screenHeight * 0.02,
     },
     text: {
-        paddingHorizontal: screenWidth * 0.05,
+        paddingHorizontal: screenWidth * 0.17,
     },
     space: {
         height: screenHeight * 0.02,

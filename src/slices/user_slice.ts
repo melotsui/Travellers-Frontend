@@ -63,6 +63,22 @@ const userSlice = createSlice({
       state.error = action.payload;
     },
 
+    // update user email
+    updateUserEmailStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    updateUserEmailSuccess: (state, action: PayloadAction<string>) => {
+      state.user!.email = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    updateUserEmailFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    }
+
+
   },
 });
 
@@ -76,6 +92,9 @@ export const {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  updateUserEmailStart,
+  updateUserEmailSuccess,
+  updateUserEmailFailure,
 } = userSlice.actions;
 
 export const userSelector = (state: RootState) => state.user;

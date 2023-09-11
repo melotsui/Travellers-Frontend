@@ -11,13 +11,10 @@ import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/d
 import { formatDate } from "../../utils/datetime_formatter";
 import PartnerTile from "../../components/organisms/partner_tile";
 import { RootProps } from "../../navigation/screen_navigation_props";
-import apis from "../../api/api_service";
-import { shareFriend } from "../../helpers/share";
 import { Trip } from "../../models/trip";
 import { TripPartnerInvitation } from "../../models/trip_partner_invitation";
 import { useDispatch, useSelector } from "react-redux";
 import { DispatchThunk } from "../../store/store";
-import { addSchedules } from "../../actions/schedule_actions";
 import { addTrip, deleteTripPartner, deleteTripInvitation, fetchTrip, fetchTripPartner, updateTrip, deleteTrip } from "../../actions/trip_actions";
 import { tripSelector } from "../../slices/trip_slice";
 import { PaperProvider } from "react-native-paper";
@@ -33,11 +30,14 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     const [destination, setDestination] = useState('');
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [endDate, setEndDate] = useState<Date>(new Date());
+    const [dateError, setDateError] = useState('');
     const [description, setDescription] = useState('');
     const [tripPartners, setTripPartners] = useState<TripPartnerInvitation | null>(null);
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+    const [error, setError] = useState('');
     const { user } = useSelector(userSelector);
+    const rError = useSelector(tripSelector).error;
     const rtrip = useSelector(tripSelector).trip;
     const rtripPartners = useSelector(tripSelector).tripPartners;
     const rtripInvitations = useSelector(tripSelector).tripInvitations;
@@ -68,6 +68,11 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
         if (rtripPartners == null || !trip_id) return;
         setTripPartners(new TripPartnerInvitation(rtripPartners, rtripInvitations));
     }, [rtripPartners, rtripInvitations]);
+
+    useEffect(() => {
+        if (rError == null) return;
+        setError(rError);
+    }, [rError]);
 
     const handleName = (value: string) => {
         setNameError('');
@@ -105,7 +110,7 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     }
 
     const handleInvitePartner = async () => {
-        props.navigation.navigate('TripInvite', { trip_id: trip_id, trip_name: trip?.trip_name });
+        props.navigation.navigate('TripInvite', { trip_id: trip_id, trip_name: trip?.trip_name, isEdit: true });
     }
 
     const handleDeletePartner = async (trip_partner_id: number) => {
@@ -119,6 +124,10 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
     const handleSave = async () => {
         if (name == '') {
             setNameError('Name cannot be empty');
+            return;
+        }
+        if (startDate > endDate) {
+            setDateError('Start date cannot be later than end date');
             return;
         }
         if (trip_id == null) {
@@ -164,6 +173,9 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                                 minimumDate={new Date()}
                             />}
                         </View>
+                        <View style={{ paddingLeft: 15 }}>
+                            <CustomText color='red' size={12}>{dateError}</CustomText>
+                        </View>
                         <CustomText size={25}>Description</CustomText>
                         <TextField text={description} onChange={handleDescription} numberOfLines={4}></TextField>
                         {trip_id && <>
@@ -205,8 +217,10 @@ const TripEditScreen: React.FC<RootProps<'TripEdit'>> | React.FC = (props: any) 
                                         ></PartnerTile>
                                 }}>
                             </FlatList> */}
-                            </>}
+                        </>}
+                        
                         <View style={styles.saveButton}>
+                            <CustomText color='red' size={12} textAlign="center">{error}</CustomText>
                             <GradientButton title={"Save"} onPress={handleSave}></GradientButton>
                             {trip_id && <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDelete}>
                                 {[

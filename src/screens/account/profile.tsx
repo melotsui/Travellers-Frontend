@@ -56,31 +56,31 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
         setEmail(user?.email ?? '');
     }, [user]);
 
-    const {setBottomSheetContent, showBottomSheet, hideBottomSheet} = useBottomSheet();
+    const { setBottomSheetContent, showBottomSheet, hideBottomSheet } = useBottomSheet();
 
-    const content = () : ReactNode => {
+    const content = (): ReactNode => {
         return <>
-        <BottomSheetTile onPress={() => handleGender("Male")}>Male</BottomSheetTile>
-        <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
-        <BottomSheetTile onPress={() => handleGender("Female")}>Female</BottomSheetTile>
+            <BottomSheetTile onPress={() => handleGender("M")}>Male</BottomSheetTile>
+            <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
+            <BottomSheetTile onPress={() => handleGender("F")}>Female</BottomSheetTile>
         </>
     }
-    
+
     useEffect(() => {
         if (seconds > 0) {
-          const timerId = setTimeout(() => {
-            setSeconds(seconds - 1);
-            setEmailError(`Can be re-sent in ${seconds} seconds`);
-          }, 1000);
-    
-          // Cleanup timer on unmount or when seconds change
-          return () => clearTimeout(timerId);
-        }else{
+            const timerId = setTimeout(() => {
+                setSeconds(seconds - 1);
+                setEmailError(`Can be re-sent in ${seconds} seconds`);
+            }, 1000);
+
+            // Cleanup timer on unmount or when seconds change
+            return () => clearTimeout(timerId);
+        } else {
             setEmailError('');
         }
-      }, [seconds]);
+    }, [seconds]);
 
-      const iconContent = (): ReactNode => {
+    const iconContent = (): ReactNode => {
         return <>
             <BottomSheetTile onPress={handleTakePhoto} key={0}>Take Photo</BottomSheetTile>
             <SeparateLine isTextInclude={false} color={g_THEME.colors.primary}></SeparateLine>
@@ -91,12 +91,12 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
     }
 
     const handleTakePhoto = async () => {
-        const media : Asset[] = await openCamera();
+        const media: Asset[] = await openCamera('photo');
         setIcon(media[0]);
     }
 
     const handleGallery = async () => {
-        const media : Asset[] = await openGallery();
+        const media: Asset[] = await openGallery();
         setIcon(media[0]);
     }
 
@@ -108,6 +108,9 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
         showBottomSheet();
     }
 
+    const handleUsername = (value: string) => {
+        setUsername(value);
+    }
 
     const handleName = (value: string) => {
         setName(value);
@@ -118,17 +121,17 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
     }
 
     const handleEmailVerification = async () => {
-         if (seconds > 0) {
+        if (seconds > 0) {
             return;
         }
         console.log(email);
         await apis.user.sendVerifyEmail(email)
-        .then((response) => {
-            console.log(response);
-            setSeconds(20);
-        }).catch((error) => {
-            console.log(error);
-        });
+            .then((response) => {
+                console.log(response);
+                setSeconds(20);
+            }).catch((error) => {
+                console.log(error);
+            });
     }
 
     const handleNationality = (value: string) => {
@@ -155,12 +158,12 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
     }
 
     const handleSave = () => {
-        if(age < 0 || age > 150) {
+        if (age < 0 || age > 150) {
             setAgeError('Invalid age');
             return;
         }
-        
-        dispatch(updateUser(username, name, nationality, formatGender(gender), age, icon ?? undefined));
+
+        dispatch(updateUser(username, name, nationality, gender, age, icon ?? undefined));
     }
 
     return (
@@ -169,22 +172,22 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
             <ScrollView>
                 <View style={[styles.container, g_STYLE.col]}>
                     <View style={styles.image}>
-                        <CircularImage size={screenWidth * 0.35} uri={icon?.uri ?? user?.user_icon_url ??'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
-                        
+                        <CircularImage size={screenWidth * 0.35} uri={icon?.uri ?? user?.user_icon_url} noDefault={icon?.uri == null && user?.user_icon_url == null} />
+
                         <View style={styles.iconButton}>
-                                <IconButton icon={"add-a-photo"} size={40} color={'white'} onPress={handleIcon} ></IconButton>
-                            </View>
+                            <IconButton icon={"add-a-photo"} size={40} color={'white'} onPress={handleIcon} ></IconButton>
+                        </View>
                     </View>
 
                     <CustomText size={20}>Username*</CustomText>
-                    <TextField text={username} onChange={handleName}></TextField>
+                    <TextField text={username} onChange={handleUsername}></TextField>
                     <View style={styles.space}></View>
 
                     <CustomText size={20}>Name</CustomText>
                     <TextField text={name} onChange={handleName}></TextField>
                     <View style={styles.space}></View>
 
-                     <View style={g_STYLE.row}>
+                    <View style={g_STYLE.row}>
                         <CustomText size={20}>Email</CustomText>
                         <View style={styles.horizontalSpace}></View>
                         {user?.email_verified_at ?
@@ -193,7 +196,7 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
                     </View>
                     <View style={g_STYLE.row}>
                         <View style={styles.verifyButton}>
-                            <TextField text={email} error={emailError} onPressText={user?.email_verified_at ? () => {} : handleEmail}></TextField>
+                            <TextField text={email} error={emailError} onPressText={handleEmail}></TextField>
                         </View>
                         {/* <GradientPopupDialog isSelect={false} title="Reminder" onOpenPress={handleEmailVerification} isDisabled = {seconds > 0}>
                             {[
@@ -202,7 +205,7 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
                             ]}
                         </GradientPopupDialog> */}
                     </View>
-                    <View style={styles.space}></View> 
+                    <View style={styles.space}></View>
 
                     <CustomText size={20}>Nationality</CustomText>
                     <TextField text={nationality} onChange={handleNationality}></TextField>
@@ -221,6 +224,7 @@ const ProfileScreen: React.FC<RootProps<'Profile'>> = (props) => {
                     <View style={styles.space}></View>
 
                     <View style={styles.buttons}>
+                        <CustomText color='red' size={12} textAlign="center">{error}</CustomText>
                         <GradientButton title={"Change Password"} onPress={handleChangePassword} width={0.7}></GradientButton>
                         <GradientButton title={"Save"} onPress={handleSave} width={0.7}></GradientButton>
                     </View>

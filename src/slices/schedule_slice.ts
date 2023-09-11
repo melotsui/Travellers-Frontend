@@ -18,6 +18,7 @@ const initialState: ScheduleState = {
   schedules: [],
   schedule: null,
   scheduleAccesses: [],
+
   users: [],
   types: [],
   loading: false,
@@ -136,7 +137,7 @@ const scheduleSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-
+    
     // update schedule and schedules
     updateScheduleStart: (state) => {
       state.loading = true;
@@ -191,6 +192,7 @@ export const {
   updateScheduleStart,
   updateScheduleSuccess,
   updateScheduleFailure
+
 } = scheduleSlice.actions;
 
 export const scheduleSelector = (state: RootState) => state.schedule;

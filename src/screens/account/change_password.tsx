@@ -55,10 +55,10 @@ const ChangePasswordScreen: React.FC<RootProps<'ChangePassword'>> = (props) => {
             setConfirmPasswordError('Confirm password is not same as new password');
             return;
         }
-        setDialogVisible(true);
-        await apis.user.resetPassword(user!.user_id!, oldPassword, newPassword)
+        await apis.user.changePassword(oldPassword, newPassword)
             .then((response) => {
                 console.log('success to reset password', response);
+                setDialogVisible(true);
             })
             .catch((error) => {
                 console.log('failed to reset password', error);

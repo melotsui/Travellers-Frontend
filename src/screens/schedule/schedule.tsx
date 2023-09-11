@@ -33,7 +33,7 @@ import ImageViewer from "../../components/organisms/image_viewer";
 
 const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
     const { schedule_id } = props.route.params;
-    const { schedule, scheduleAccesses } = useSelector(scheduleSelector);
+    const { schedule, users } = useSelector(scheduleSelector);
     const { media } = useSelector(mediaSelector);
     const dispatch: DispatchThunk = useDispatch();
 
@@ -152,9 +152,9 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                             ItemSeparatorComponent={() =>
                                 <View style={{ height: 5 }}></View>
                             }
-                            data={scheduleAccesses}
+                            data={users}
                             renderItem={({ item, index }) => (
-                                <ImageTile title={(item.user_id ?? "").toString()} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}></ImageTile>
+                                <ImageTile title={(item.name ?? item.username).toString()} uri={item.user_icon_url}></ImageTile>
                             )}>
                         </FlatList>
                         {/* <View style={styles.deleteButton}>

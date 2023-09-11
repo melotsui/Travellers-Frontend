@@ -34,7 +34,7 @@ const ScheduleTile: React.FC<ScheduleTileProps> = ({ step, title, subTitle, date
                         <CustomText>{subTitle}</CustomText>
                     </View>
                     <View style={styles.activity}>
-                        <MaterialIcons color={g_THEME.colors.primary} size={25} name={getActivityIcon(ActivityTypes.DINING)}></MaterialIcons>
+                        <MaterialIcons color={g_THEME.colors.primary} size={25} name={getActivityIcon(type)}></MaterialIcons>
                     </View>
                     <View style={styles.dateTimeContainer}>
                         <CustomText>{date}</CustomText>

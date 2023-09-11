@@ -33,7 +33,7 @@ class UserApi {
         });
     }
 
-    verifyEmail = async (userId: string, passcode: string, email: string): Promise<string> => {
+    verifyEmail = async (userId: number, passcode: string, email: string): Promise<string> => {
         return new Promise(async (resolve, reject) => {
             try {
                 const jsonData = {
@@ -134,6 +134,30 @@ class UserApi {
             }
         });
     }
+
+    changePassword = async (old_password: string, new_password: string): Promise<string> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const jsonData = {
+                    "old_password": old_password,
+                    "new_password": new_password,
+                };
+
+                await this.user.api.post('/users/changePassword', jsonData)
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
 
     updateProfile = async (
         username: string,

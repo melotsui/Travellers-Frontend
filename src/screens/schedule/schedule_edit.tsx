@@ -45,7 +45,9 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
     const dispatch: DispatchThunk = useDispatch();
     const { schedule, types } = useSelector(scheduleSelector);
+    const [error, setError] = useState('');
     const rUsers = useSelector(scheduleSelector).users;
+    const rError = useSelector(scheduleSelector).error;
 
     useEffect(() => {
         dispatch(fetchScheduleTypes());
@@ -67,6 +69,11 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
             setRemarks(schedule?.schedule_remark ?? '');
         }
     }, [schedule]);
+
+    useEffect(() => {
+        if (rError == null) return;
+        setError(rError);
+    }, [rError]);
 
     useEffect(() => {
         setUsers(rUsers.filter((item) => item.is_active));
@@ -235,6 +242,7 @@ const ScheduleEditScreen: React.FC<RootProps<'ScheduleEdit'>> = (props) => {
                             )}>
                         </FlatList></>}
                     <View style={styles.saveButton}>
+                        <CustomText color='red' size={12} textAlign="center">{error}</CustomText>
                         <GradientButton title={schedule_id ? "Save" : "Continue"} onPress={handleSave}></GradientButton>
                         {schedule_id && <GradientPopupDialog isSelect={true} title="Reminder" onPress={handleDeleteConfirm}>
                             {[

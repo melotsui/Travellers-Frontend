@@ -49,7 +49,6 @@ const SendVerificationCode: React.FC<SendVerificationCodeProps> = ({ text, hint,
 
 const styles = StyleSheet.create({
     container: {
-        width: screenWidth * 0.8,
         borderRadius: 25,
         backgroundColor: 'rgba(172, 224, 246, 0.17)',
         borderColor: 'rgba(172, 224, 246, 0.17)',

@@ -12,7 +12,7 @@ import CustomText from "../../components/atoms/text";
 const SettingsScreen: React.FC<RootProps<'PersonalInformation'>> = (props) => {
 
     const handleEmail = () => {
-        props.navigation.navigate('EmailVerification');
+        props.navigation.navigate('EmailVerification', { isEdit: true });
     }
 
     return (

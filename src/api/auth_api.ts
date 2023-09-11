@@ -68,7 +68,10 @@ class AuthApi {
                     .then((response) => {
                         const result = response.data;
                         resolve(result.data['access_token']);
+                        console.log("register", result.data);
                         this.auth.setToken(result.data['access_token']);
+                        storeData('token', result.data['access_token']);
+                        //storeData('isLogin', true);
                     })
                     .catch((error) => {
                         const result = error.response.data;

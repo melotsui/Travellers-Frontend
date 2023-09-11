@@ -25,6 +25,7 @@ import { DispatchThunk } from "../../store/store";
 import { deleteTrip, fetchTrip, fetchTripPartner, leaveTrip } from "../../actions/trip_actions";
 import { fetchSchedules } from "../../actions/schedule_actions";
 import { scheduleSelector } from "../../slices/schedule_slice";
+import { parseActivityType } from "../../helpers/activity";
 
 const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
     const { trip_id } = props.route.params;
@@ -155,7 +156,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                                 subTitle={item.schedule_place!}
                                 date={formatDate(new Date(item.schedule_datetime!))}
                                 time={formatTime(new Date(item.schedule_datetime!))}
-                                type={ActivityTypes.DINING}
+                                type={parseActivityType(item.schedule_type?.schedule_type!)}
                                 transportTime={transportTime}
                                 onPress={() => handleScheduleTileChange(item.schedule_id)}  />
                     }}>

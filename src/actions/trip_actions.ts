@@ -61,7 +61,7 @@ export const addTrip = (
         dispatch(addTripsStart());
         const response = await apis.trip.createTrip(trip_name, trip_datetime_from, trip_datetime_to, trip_destination, trip_description);
         dispatch(addTripsSuccess(response.trip));
-        navigate('TripInvite', { trip_id: response.trip.trip_id, trip_name: response.trip.trip_name });
+        navigate('TripInvite', { trip_id: response.trip.trip_id, trip_name: response.trip.trip_name, isEdit: false });
     } catch (error) {
         dispatch(addTripsFailure(error as string));
     }

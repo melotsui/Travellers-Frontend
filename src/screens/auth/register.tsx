@@ -5,6 +5,12 @@ import TextField from '../../components/molecules/text_field';
 import { screenHeight, screenWidth } from '../../constants/screen_dimension';
 import apis from '../../api/api_service';
 import { RootProps } from '../../navigation/screen_navigation_props';
+import { useDispatch } from 'react-redux/es/hooks/useDispatch';
+import { DispatchThunk } from '../../store/store';
+import { fetchUser } from '../../actions/user_actions';
+import { useSelector } from 'react-redux';
+import { userSelector } from '../../slices/user_slice';
+import CustomText from '../../components/atoms/text';
 
 const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
 
@@ -14,6 +20,9 @@ const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmpasswordError, setConfirmPasswordError] = useState('');
+    const { error } = useSelector(userSelector);
+
+    const dispatch: DispatchThunk = useDispatch();
 
     const handleUsernameChange = (value: string) => {
         setUsername(value);
@@ -46,17 +55,15 @@ const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
         }
         await apis.auth.register(username, password)
             .then((response) => {
+                apis.notification.addFCMToken();
+                dispatch(fetchUser());
                 console.log('success to register');
-                props.navigation.navigate('EmailVerification');
+                props.navigation.navigate('EmailVerification', { isEdit: false });
             })
             .catch((error) => {
-                setUsernameError(error.message);
+                console.log(error);
+                setUsernameError(error);
             });
-        apis.notification.addFCMToken();
-        await apis.auth.getMyProfile().then((response) => {
-            console.log('success to get profile');
-            //dispatch(updateUser(response));
-        });
 
     };
 
@@ -78,6 +85,7 @@ const RegisterScreen: React.FC<RootProps<'Register'>> = (props) => {
                     <TextField hint={'confirm password'} text={confirmPassword} error={confirmpasswordError} onChange={handleConfirmPasswordChange} secure={true} />
                     <View style={styles.longSpace} />
                 </View>
+                <CustomText color='red' size={12} textAlign="center">{error}</CustomText>
                 <GradientButton
                     title="Sign-up"
                     onPress={handleRegister}

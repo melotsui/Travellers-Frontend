@@ -17,8 +17,8 @@ import { DispatchThunk } from "../../store/store";
 import { addTrip, addTripInvitation, deleteTripInvitation } from "../../actions/trip_actions";
 import { User } from "../../models/user";
 
-const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: any) => {
-    const { trip_id, trip_name } = props.route.params;
+const TripInviteScreen: React.FC<RootProps<'TripInvite'>> = (props) => {
+    const { trip_id, trip_name, isEdit } = props.route.params;
     const { tripInvitations, error } = useSelector(tripSelector);
     const dispatch: DispatchThunk = useDispatch();
     const [partner, setPartner] = useState<string>();
@@ -33,7 +33,7 @@ const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: a
     }, [tripInvitations]);
 
     useEffect(() => {
-        setPartnerError(error ?? ""); 
+        setPartnerError(error ?? "");
     }, [error]);
 
     const handlePartner = (text: string) => {
@@ -49,7 +49,7 @@ const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: a
 
     const handleInvitePartner = async () => {
         setPartnerError('');
-        if(partner == null || partner == '') {
+        if (partner == null || partner == '') {
             setPartnerError('Please enter your friend\'s username');
             return;
         }
@@ -72,46 +72,52 @@ const TripInviteScreen: React.FC<RootProps<'TripInvite'>> | React.FC = (props: a
     }
 
     const handleContinue = () => {
-        props.navigation.navigate('TripDetail', { trip_id: trip_id });
+        if (isEdit) {
+            props.navigation.goBack();
+        }
+        else {
+            props.navigation.navigate('TripDetail', { trip_id: trip_id });
+        }
     }
 
     return (
-        <View style={styles.container}>
+        <>
             <CustomHeader title={'Invite Partners'}></CustomHeader>
-            {/* inapp invite */}
-            <CustomText size={22}> Invitation to user </CustomText>
-            <View style={[styles.partnerContainer, g_STYLE.row]}>
-                <View style={styles.partner}>
-                    <TextField text={partner ?? ""} error={partnerError} onChange={handlePartner} hint="Send Invitation"></TextField>
+            <View style={styles.container}>
+                {/* inapp invite */}
+                <CustomText size={22}> Invitation to user </CustomText>
+                <View style={[styles.partnerContainer, g_STYLE.row]}>
+                    <View style={styles.partner}>
+                        <TextField text={partner ?? ""} error={partnerError} onChange={handlePartner} hint="Send Invitation"></TextField>
+                    </View>
+                    <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
                 </View>
-                <IconButton onPress={handleInvitePartner} icon={"person-add"}></IconButton>
-            </View>
-            <View style={{flex: 1}}>
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                ItemSeparatorComponent={() =>
-                    <View style={{ height: 5 }}></View>
-                }
-                data={tripPartners}
-                renderItem={({ item }) => (
-                    <PartnerTile
-                        name={typeof item.send_to == "object" ?item.send_to.name ?? item.send_to.username : item.user?.name ?? item.user?.username ?? ''}
-                        uri={item.user?.user_icon_url}
-                        onPress={() => handleDeletePartner(item.trip_invitation_id)}
-                        isPending={false}
-                        isInvited></PartnerTile>
-                )}>
-            </FlatList>
-            </View>
-            <View style={styles.saveButton}>
-                <GradientButton title={"Continue"} width={0.4} onPress={handleContinue}></GradientButton>
-            </View>
-            {/* outapp invite */}
-            <View style={styles.shareContainer}>
-                <CustomText size={16} textAlign="center"> Your friends don't have the account? here's way to share your trip!</CustomText>
-                <GradientButton title={"Share"} width={0.7} onPress={handleShare}></GradientButton>
-            </View>
-        </View>
+                <View style={{ flex: 1 }}>
+                    <FlatList
+                        showsVerticalScrollIndicator={false}
+                        ItemSeparatorComponent={() =>
+                            <View style={{ height: 5 }}></View>
+                        }
+                        data={tripPartners}
+                        renderItem={({ item }) => (
+                            <PartnerTile
+                                name={typeof item.send_to == "object" ? item.send_to.name ?? item.send_to.username : item.user?.name ?? item.user?.username ?? ''}
+                                uri={item.user?.user_icon_url}
+                                onPress={() => handleDeletePartner(item.trip_invitation_id)}
+                                isPending={false}
+                                isInvited></PartnerTile>
+                        )}>
+                    </FlatList>
+                </View>
+                <View style={styles.saveButton}>
+                    <GradientButton title={"Continue"} width={0.4} onPress={handleContinue}></GradientButton>
+                </View>
+                {/* outapp invite */}
+                <View style={styles.shareContainer}>
+                    <CustomText size={16} textAlign="center"> Your friends don't have the account? here's way to share your trip!</CustomText>
+                    <GradientButton title={"Share"} width={0.7} onPress={handleShare}></GradientButton>
+                </View>
+            </View></>
     );
 
 }

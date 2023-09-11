@@ -21,10 +21,12 @@ export const addSchedules = (
     schedule_datetime?: Date,
     schedule_place?: string,
     schedule_remark?: string
-): AppThunk => async (dispatch) => {
+): AppThunk => async (dispatch, getState) => {
     try {
         dispatch(addSchedulesStart());
         const response = await apis.schedule.createSchedule(trip_id, schedule_name, schedule_type_id, schedule_datetime, schedule_place, schedule_remark);
+        const state = getState();
+        state.schedule.types?.forEach((type) => {type.schedule_type_id === response.schedule_type_id ? response.schedule_type = type : null});
         dispatch(addSchedulesSuccess(response));
         dispatch(setSchedulesAccesses(response?.schedule_id!, null, true, false));
 
@@ -109,11 +111,12 @@ export const updateSchedule = (
     schedule_datetime?: Date,
     schedule_place?: string,
     schedule_remark?: string
-): AppThunk => async (dispatch) => {
+): AppThunk => async (dispatch, getState) => {
     try {
         dispatch(updateScheduleStart());
         const response = await apis.schedule.updateSchedule(schedule_id, schedule_name, schedule_type_id, schedule_datetime, schedule_place, schedule_remark);
-        console.log(response);
+        const state = getState();
+        state.schedule.types?.forEach((type) => {type.schedule_type_id === response.schedule_type_id ? response.schedule_type = type : null});
         dispatch(updateScheduleSuccess(response));
         navigateBack();
 
