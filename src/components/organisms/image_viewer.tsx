@@ -79,7 +79,6 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id,
             duration={duration}
           /></View>
       );
-    //} else if (imagesList[currentIndex].mediaType == 'audio') {
     } else {
       return <Image source={{ uri: media.url }} style={{ flex: 1 }} />;
     }
