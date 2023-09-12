@@ -14,9 +14,10 @@ interface ImageViewerProps {
   children: React.ReactNode;
   media: MediaMediaLocalUrl[];
   schedule_id: number;
+  index: number;
 }
 
-const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id }) => {
+const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id, index }) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const openGallery = () => setIsOpen(true);
@@ -76,6 +77,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id 
             duration={duration}
           /></View>
       );
+    // } else if (imagesList[currentIndex].mediaType == 'audio') {
     } else {
       return <Image source={{ uri: media.url }} style={{ flex: 1 }} />;
     }
@@ -97,6 +99,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id 
       {children}
     </TouchableOpacity>
     <ImageGallery close={closeGallery} isOpen={isOpen} images={imagesList}
+      initialIndex={index}
       renderHeaderComponent={renderHeaderComponent}
       renderCustomImage={renderMedia}
       //hideThumbs

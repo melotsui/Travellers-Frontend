@@ -130,10 +130,10 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
                         keyExtractor={(item) => item.media!.media_id.toString()}
                         showsVerticalScrollIndicator={false}
                         data={media}
-                        renderItem={({ item }) => (
+                        renderItem={({ item, index }) => (
                             <View style={styles.image}>
                                 {item.media_local_url != null ?
-                                    <ImageViewer media={media} schedule_id={schedule_id}>
+                                    <ImageViewer media={media} schedule_id={schedule_id} index={index}>
                                         <RoundRectImage
                                             type={item.media?.media_type!}
                                             uri={handleMediaShow(item.media_local_url.media_local_url, item.media?.media_type!)}></RoundRectImage>

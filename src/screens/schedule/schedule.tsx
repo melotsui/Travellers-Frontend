@@ -148,7 +148,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                     } else {
                                         //return <RoundRectImage type={item.media!.media_type!} uri={item.media_local_url?.media_local_url ?? item.media!.media_preview_url}></RoundRectImage>
                                         return <>{item.media_local_url != null ?
-                                            <ImageViewer media={media} schedule_id={schedule_id}>
+                                            <ImageViewer media={media} schedule_id={schedule_id} index={index-1}>
                                                 <RoundRectImage
                                                     type={item.media?.media_type!}
                                                     uri={item.media_local_url.media_local_url}></RoundRectImage>

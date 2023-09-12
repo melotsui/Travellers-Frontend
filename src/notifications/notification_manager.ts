@@ -33,9 +33,8 @@ class NotificationManager {
     channelId: channelId,
       title: title,
       message: message,
-      bigText:
-        'This is local notification demo in React Native app. Only shown, when expanded.',
-      subText: 'Local Notification Demo',
+      bigText: message,
+      subText: title,
       vibrate: true,
       vibration: 300,
       playSound: true,
