@@ -5,7 +5,7 @@ import CustomText from '../atoms/text';
 import IconButton from '../atoms/icon_button';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MediaMediaLocalUrl } from '../../models/media_media_local_url';
-import Video from 'react-native-video';
+import Video, { VideoProperties } from 'react-native-video';
 import VideoControls from '../molecules/custom_control';
 import { MediaTypes } from '../../constants/types';
 import { navigate } from '../../navigation/navigation_service';
@@ -43,14 +43,15 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id,
 
   const imagesList = media.map((media) => { return {id: media.media?.media_id, url: media.media_local_url?.media_local_url!, mediaType: media.media?.media_type!}});
 
-  const [isPaused, setIsPaused] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const videoRef = useRef<Video>(null);
 
+
   function renderMedia(media: ImageObject, currentIndex: number) {
-    if (imagesList[currentIndex].mediaType == 'video') {
+    if (imagesList[currentIndex].mediaType == 'video' || imagesList[currentIndex].mediaType == 'audio') {
       return (
         <View style={{ flex: 1 }}>
           <Video
@@ -60,7 +61,9 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id,
             resizeMode="contain"
             repeat={true}
             paused={isPaused}
-            onProgress={(data) => setCurrentTime(data.currentTime)}
+            onProgress={(data) => 
+              { 
+                setCurrentTime(data.currentTime)}}
             onLoad={(data) => { 
               setDuration(data.duration);
               setCurrentTime(data.currentTime);
@@ -69,7 +72,6 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id,
           <VideoControls
             onPlayPause={() => setIsPaused(!isPaused)}
             onSliderValueChange={(value) => {
-              console.log(value);
               videoRef.current?.seek(value);
             }} // Assuming you have ref to your Video component
             isPaused={isPaused}
@@ -77,13 +79,14 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id,
             duration={duration}
           /></View>
       );
-    // } else if (imagesList[currentIndex].mediaType == 'audio') {
+    //} else if (imagesList[currentIndex].mediaType == 'audio') {
     } else {
       return <Image source={{ uri: media.url }} style={{ flex: 1 }} />;
     }
   }
 
   const renderHeaderComponent = (image: ImageObject, currentIndex: number) => {
+    console.log(currentIndex);
     return <><View style={styles.back}>
       <IconButton icon={"arrow-back-ios"} color={"white"} onPress={closeGallery}></IconButton>
     </View>
@@ -98,11 +101,11 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id,
     <TouchableOpacity onPress={openGallery}>
       {children}
     </TouchableOpacity>
-    <ImageGallery close={closeGallery} isOpen={isOpen} images={imagesList}
-      initialIndex={index}
+    <ImageGallery close={closeGallery} isOpen={isOpen} images={[imagesList[index]]}
+      //initialIndex={index}
       renderHeaderComponent={renderHeaderComponent}
       renderCustomImage={renderMedia}
-      //hideThumbs
+      hideThumbs
     />
   </>
   );
