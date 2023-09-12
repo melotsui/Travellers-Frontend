@@ -23,7 +23,7 @@ const TripTile: React.FC<TripTileProps> = ({ trip }) => {
                 </View>
                 <View style={styles.rightContainer}>
                     
-                <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
+                {/* <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} /> */}
                     {/*<Image source={{ uri: 'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80' }} style={styles.image} />*/}
                 </View>
             </View>
@@ -37,7 +37,6 @@ const TripTile: React.FC<TripTileProps> = ({ trip }) => {
 
 const styles = StyleSheet.create({
     container: {
-        height: 150,
         width: screenWidth * 0.85,
         marginVertical: 3,
         padding: 10,
@@ -47,12 +46,12 @@ const styles = StyleSheet.create({
         borderRadius: 7,
     },
     leftContainer: {
-        flex: 1,
+        flex: 4,
         justifyContent: 'center',
-        alignItems: 'center',
+        marginLeft: 20,
     },
     rightContainer: {
-        flex: 1,
+        //flex: 1,
         justifyContent: 'space-between',
         alignItems: 'flex-end',
     },

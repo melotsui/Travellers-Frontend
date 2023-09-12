@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, StyleSheet, FlatList, BackHandler } from "react-native";
+import { View, StyleSheet, FlatList, BackHandler, RefreshControl } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TextField from "../../components/molecules/text_field";
 import TripTile from "../../components/organisms/trip_tile";
@@ -22,6 +22,7 @@ const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
     const [isDialogVisible, setDialogVisible] = useState(false);
     const dispatch: DispatchThunk = useDispatch();
     const { trips, currentPage, totalPages, loading } = useSelector(tripSelector);
+    const [refreshing, setRefreshing] = useState(false);
 
     const backButtonPressCount = useRef(0);
 
@@ -94,6 +95,11 @@ const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
         setDialogVisible(false);
     };
 
+    const onRefresh = () => {
+        dispatch(clearTrips());
+        dispatch(fetchTripsByPage(searchText, 5, 0));
+    }
+
     return (
         <View>
             <CustomHeader isLogo={true} title={"Trip"}></CustomHeader>
@@ -102,6 +108,9 @@ const TripSearchScreen: React.FC<RootProps<'TripSearch'>> = (props) => {
                     <TextField hint={"Trip title, type and place"} text={searchText} onChange={handleSearchTextChange} suffixIcon={'search'} />
                 </View>
                 <FlatList
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                  }
                     showsVerticalScrollIndicator={false}
                     data={trips}
                     keyExtractor={(trip: Trip) => trip.trip_id.toString()}
@@ -128,6 +137,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: screenHeight * 0.02,
+        marginBottom: screenHeight * 0.25,
     },
     text: {
         paddingHorizontal: screenWidth * 0.05,

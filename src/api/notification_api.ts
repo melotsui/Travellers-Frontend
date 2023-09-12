@@ -40,9 +40,27 @@ class NotificationApi {
                 await this.notification.api.get('/notifications')
                     .then((response) => {
                         const result = response.data;
-                        resolve(result.data.notifications);
+                        const notification = result.data.notifications;
+                        const notifications: Notification[] = notification.map((notification: any) => {
+                            return new Notification(
+                                notification.notification_id,
+                                notification.user_id,
+                                notification.notification_type,
+                                notification.parameters,
+                                notification.is_responded,
+                                notification.created_by,
+                                notification.created_at,
+                                notification.updated_at,
+                                notification.is_read,
+                                notification.deleted_at,
+                                notification.notification_title,
+                                notification.notification_body
+                            );
+                        });
+                        resolve(notifications);
                     })
                     .catch((error) => {
+                        console.log("here");
                         const result = error.response.data;
                         reject(result.message);
                     });

@@ -22,7 +22,7 @@ const CustomText: React.FC<TextProps> = ({children, size, color, textAlign, numb
     });
 
     return (
-    <Text style={styles.text} numberOfLines={numberOfLines}>
+    <Text style={styles.text} numberOfLines={numberOfLines} >
         {children}
     </Text>
     );

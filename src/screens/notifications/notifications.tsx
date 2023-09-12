@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, RefreshControl } from "react-native";
 import { screenHeight, screenWidth } from "../../constants/screen_dimension";
 import CustomHeader from "../../components/molecules/header";
 import NotificationTile from "../../components/organisms/notification_tile";
@@ -15,10 +15,11 @@ const NotificationsScreen: React.FC = (props) => {
     const dispatch: DispatchThunk = useDispatch();
     const { notifications } = useSelector(NotificationSelector);
     const [notificationList, setNotificationList] = useState<Notification[]>([]);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         dispatch(fetchNotification());
-        console.log(notifications); 
+        console.log(notifications);
     }, []);
 
     useEffect(() => {
@@ -26,37 +27,41 @@ const NotificationsScreen: React.FC = (props) => {
     }, [notifications]);
 
     const handleConfirm = (notification: Notification) => {
-        if(notification.notification_type == NotificationType.TRIPINVITATION){
-            dispatch(respondNotification(notification.parameters['trip_invitation_id'], true));
+        if (notification.notification_type == NotificationType.TRIPINVITATION) {
+            dispatch(respondNotification(notification.parameters['trip_invitation_id'], true, notification.notification_id));
         }
     }
 
     const handleDisapprove = (notification: Notification) => {
-        if(notification.notification_type == NotificationType.TRIPINVITATION){
-            dispatch(respondNotification(notification.parameters['trip_invitation_id'], false));
+        if (notification.notification_type == NotificationType.TRIPINVITATION) {
+            dispatch(respondNotification(notification.parameters['trip_invitation_id'], false, notification.notification_id));
         }
     }
 
+    const onRefresh = () => {
+        dispatch(fetchNotification());
+    }
 
-        
 
     return (
-        <View style={{backgroundColor: 'white'}}>
+        <View style={{ backgroundColor: 'white' }}>
             <CustomHeader title={"Notifications"}></CustomHeader>
             <View style={styles.container}>
                 {notifications && <FlatList
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                     showsVerticalScrollIndicator={false}
                     data={notificationList}
                     renderItem={({ item }) => (
-                            <NotificationTile 
-                            content={item.notification_body.toString() ?? ''} 
-                            name={item.notification_type.toString() ?? ''} 
-                            datetime={formatDatetime(new Date(item.created_at)) ?? ''} 
-                            isRead={item.is_read ?? false} 
-                            isSelect={item.is_responded}
+                        <NotificationTile
+                            content={item.notification_body.toString() ?? ''}
+                            datetime={formatDatetime(new Date(item.created_at)) ?? ''}
+                            isRead={item.is_read ?? false}
+                            isResponded={item.is_responded}
                             onConfirm={() => handleConfirm(item)}
                             onDisapprove={() => handleDisapprove(item)}
-                            />
+                        />
                     )}
                 />}
             </View>
@@ -71,6 +76,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingTop: screenHeight * 0.02,
         marginBottom: screenHeight * 0.15,
+        height: '100%'
     },
     text: {
         paddingHorizontal: screenWidth * 0.05,

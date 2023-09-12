@@ -120,9 +120,9 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                                 <CustomText size={25}>{trip!.trip_destination}</CustomText>
                                 <CustomText>{getDateFromString(trip!.trip_datetime_from!)} - {getDateFromString(trip!.trip_datetime_to!)}</CustomText>
                             </View>
-                            <View style={styles.rightContainer}>
+                            {/* <View style={styles.rightContainer}>
                                 <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
-                            </View>
+                            </View> */}
                         </View>
                         <View style={styles.description}>
                             <CustomText>{trip!.trip_description}</CustomText>
@@ -148,7 +148,7 @@ const TripDetailScreen: React.FC<RootProps<'TripDetail'>> = (props) => {
                         renderItem={({ item, index }) => {
                             let transportTime = undefined;
                             if(index != schedules.length -1){
-                                transportTime = "15 mins"
+                                transportTime = ""//"15 mins"
                             }
                             return <ScheduleTile
                                 step={index}
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     leftContainer: {
-        flex: 3,
+        flex: 4,
         justifyContent: 'flex-end',
     },
     rightContainer: {

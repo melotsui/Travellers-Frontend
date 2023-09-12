@@ -123,7 +123,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                     <CustomText>{formatDatetime(new Date(schedule.schedule_datetime!))} </CustomText>
                                 </View>
                                 <View style={styles.rightContainer}>
-                                    <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} />
+                                    {/* <CircularImage size={screenWidth * 0.15} uri={'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'} /> */}
                                     {/*<Image source={{ uri: 'https://images.unsplash.com/photo-1519098901909-b1553a1190af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80' }} style={styles.image} />*/}
                                     <RoundButton icon={getActivityIcon(parseActivityType(schedule.schedule_type?.schedule_type!))} title={schedule.schedule_type?.schedule_type!}></RoundButton>
                                 </View>
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     rightContainer: {
-        flex: 1,
+        flex: 2,
         alignItems: 'flex-end',
     },
     buttonContainer: {

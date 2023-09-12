@@ -12,20 +12,18 @@ import { NotificationType } from '../../constants/types';
 
 interface NotificationTileProps {
     content: string;
-    name: string;
     datetime: string;
     isRead: boolean;
-    isSelect?: boolean;
+    isResponded: boolean | null;
     onConfirm?: () => void;
     onDisapprove?: () => void;
 }
 
 const NotificationTile: React.FC<NotificationTileProps> = ({
     content,
-    name,
     datetime,
     isRead,
-    isSelect,
+    isResponded,
     onConfirm,
     onDisapprove,
 }) => {
@@ -74,14 +72,13 @@ const NotificationTile: React.FC<NotificationTileProps> = ({
                         <CustomText size={18} numberOfLines={showFull ? 0 : 4}>{content}</CustomText>
                     </View>
                 </View>
-                {isSelect != null &&
+                {isResponded === false &&
                     <View style={[g_STYLE.row, styles.select]}>
                         <GradientButton size={15} title={'Confirm'} onPress={handleConfirm}/>
                         <GradientButton size={15} color={g_THEME.colors.grey} title={'Disapprove'} onPress={handleDisapprove}/>
                     </View>
                 }
                 <View style={styles.bottomContainer}>
-                    <CustomText>{name}</CustomText>
                     <CustomText>{datetime}</CustomText>
                 </View>
             </TouchableOpacity>

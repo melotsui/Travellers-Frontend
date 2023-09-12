@@ -35,15 +35,15 @@ const LoginScreen: React.FC<RootProps<'Login'>> = (props) => {
     };
 
     const handleLogin = async () => {
-        // if (username == '') {
-        //     setUsernameError('Username cannot be empty');
-        //     return;
-        // }
-        // if (password == '') {
-        //     setPasswordError('Password cannot be empty');
-        //     return;
-        // }
-        await apis.auth.login('melo', 'Abc123456')//username, password)
+        if (username == '') {
+            setUsernameError('Username cannot be empty');
+            return;
+        }
+        if (password == '') {
+            setPasswordError('Password cannot be empty');
+            return;
+        }
+        await apis.auth.login(username, password)//'melo', 'Abc123456')
             .then((response) => {
                 console.log('success to login');
             })

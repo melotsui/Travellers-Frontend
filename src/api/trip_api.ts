@@ -197,13 +197,14 @@ class TripApi {
         });
     }
 
-    respondTripInvitation = async (trip_invitation_id: number, reponse: boolean): Promise<TripInvitation> => {
+    respondTripInvitation = async (trip_invitation_id: number, reponse: boolean, notification_id: number ): Promise<TripInvitation> => {
         return new Promise(async (resolve, reject) => {
             try {
 
                 const json = {
                     "trip_invitation_id": trip_invitation_id,
                     "respond": reponse,
+                    "notification_id": notification_id
                 };
 
                 await this.trip.api.post('/trips/respondTripInvitation', json)

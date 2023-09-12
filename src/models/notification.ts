@@ -5,7 +5,7 @@ class Notification {
   user_id: number;
   notification_type: NotificationType;
   parameters: { [key: string]: any };
-  is_responded: boolean;
+  is_responded: boolean | null;
   created_by: number;
   created_at: Date;
   updated_at: Date | null;
@@ -32,7 +32,7 @@ class Notification {
     this.user_id = user_id;
     this.notification_type = notification_type;
     this.parameters = JSON.parse(parameters); // parse the stringified JSON
-    this.is_responded = Boolean(is_responded);
+    this.is_responded = is_responded !== null ? Boolean(is_responded) : null;
     this.created_by = created_by;
     this.created_at = new Date(created_at);
     this.updated_at = updated_at ? new Date(updated_at) : null;
