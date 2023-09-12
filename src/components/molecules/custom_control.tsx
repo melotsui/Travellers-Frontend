@@ -1,7 +1,7 @@
 // VideoControls.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 

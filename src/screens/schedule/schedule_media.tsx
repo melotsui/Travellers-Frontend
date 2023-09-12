@@ -10,14 +10,12 @@ import { useBottomSheet } from "../../context/bottom_sheet_context";
 import BottomSheetTile from "../../components/organisms/bottom_sheet_tile";
 import SeparateLine from "../../components/atoms/separate_line";
 import { RootProps } from "../../navigation/screen_navigation_props";
-import apis from "../../api/api_service";
 import { MediaMediaLocalUrl } from "../../models/media_media_local_url";
 import { useDispatch, useSelector } from "react-redux";
 import { DispatchThunk } from "../../store/store";
 import { downloadMedia, fetchMedia } from "../../actions/media_actions";
 import ImageViewer from "../../components/organisms/image_viewer";
 import { mediaSelector } from "../../slices/media_slice";
-import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
 import { ScrollView } from "react-native-gesture-handler";
 import { generateThumbnail } from "../../utils/media_process";
 
@@ -34,17 +32,6 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
     useEffect(() => {
 
         dispatch(fetchMedia(schedule_id));
-        // const fetchData = async () => {
-
-        //         await apis.media.getScheduleMedia(schedule_id)
-        //         .then((media) => {
-        //             console.log(media);
-        //             setMedia(media);
-        //         })
-        //         .catch((error) => {
-        //             console.error('Error:', error);
-        //         });
-        // }
 
         rMedia.forEach((media) => {
             console.log(media.media_local_url);
@@ -121,13 +108,6 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
         }
     }
 
-    const handleEditMedia = (media: MediaMediaLocalUrl) => {
-        if (media.media?.media_type == MediaTypes.AUDIO) {
-            props.navigation.navigate('TextAudio', { schedule_id: null, note_id: null, audio: media, content: null });
-        } else {
-            props.navigation.navigate('Media', { schedule_id: schedule_id, note_id: null, media: media });
-        }
-    }
 
     return (
 
@@ -144,6 +124,7 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
                     </View> */}
 
                     <FlatList
+                    scrollEnabled={false}
                         numColumns={numColumns}
                         key={numColumns} // Use numColumns as the key prop
                         keyExtractor={(item) => item.media!.media_id.toString()}
@@ -152,7 +133,7 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
                         renderItem={({ item }) => (
                             <View style={styles.image}>
                                 {item.media_local_url != null ?
-                                    <ImageViewer media={[item]} onPress={() => handleEditMedia(item)}>
+                                    <ImageViewer media={media} schedule_id={schedule_id}>
                                         <RoundRectImage
                                             type={item.media?.media_type!}
                                             uri={handleMediaShow(item.media_local_url.media_local_url, item.media?.media_type!)}></RoundRectImage>

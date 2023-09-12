@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { screenWidth } from "../../constants/screen_dimension";
@@ -9,24 +9,20 @@ import CircularImage from "../../components/atoms/circular_image";
 import GradientButton from "../../components/molecules/gradient_button";
 import g_THEME from "../../theme/theme";
 import RoundRectImage from "../../components/atoms/round_rect_image";
-import { ActivityTypes, MediaTypes } from "../../constants/types";
+import { MediaTypes } from "../../constants/types";
 import CustomHeader from "../../components/molecules/header";
 import IconButton from "../../components/atoms/icon_button";
 import { PaperProvider } from "react-native-paper";
 import RoundButton from "../../components/atoms/round_button";
 import ImageTile from "../../components/molecules/image_tile";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import GradientPopupDialog from "../../components/molecules/gradient_dialog";
 import { RootProps } from "../../navigation/screen_navigation_props";
-import apis from "../../api/api_service";
-import { formatDate, formatDatetime, formatTime } from "../../utils/datetime_formatter";
-import { ScheduleAccess } from "../../models/schedule_access";
+import { formatDatetime } from "../../utils/datetime_formatter";
 import { MediaMediaLocalUrl } from "../../models/media_media_local_url";
 import { getActivityIcon, parseActivityType } from "../../helpers/activity";
 import { useDispatch, useSelector } from "react-redux";
 import { scheduleSelector } from "../../slices/schedule_slice";
 import { DispatchThunk } from "../../store/store";
-import { deleteSchedule, fetchSchedule, fetchScheduleAccesses, fetchSchedules } from "../../actions/schedule_actions";
+import { fetchSchedule, fetchScheduleAccesses } from "../../actions/schedule_actions";
 import { downloadMedia, fetchMedia } from "../../actions/media_actions";
 import { mediaSelector } from "../../slices/media_slice";
 import ImageViewer from "../../components/organisms/image_viewer";
@@ -152,7 +148,7 @@ const ScheduleScreen: React.FC<RootProps<'Schedule'>> = (props) => {
                                     } else {
                                         //return <RoundRectImage type={item.media!.media_type!} uri={item.media_local_url?.media_local_url ?? item.media!.media_preview_url}></RoundRectImage>
                                         return <>{item.media_local_url != null ?
-                                            <ImageViewer media={[item]} onPress={() => handleEditMedia(item)}>
+                                            <ImageViewer media={media} schedule_id={schedule_id}>
                                                 <RoundRectImage
                                                     type={item.media?.media_type!}
                                                     uri={item.media_local_url.media_local_url}></RoundRectImage>

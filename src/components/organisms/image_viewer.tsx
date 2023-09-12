@@ -1,23 +1,22 @@
 import React, { useRef, useState } from 'react';
-import { FlatList, Image, StyleSheet, Touchable, View } from 'react-native';
-import { screenWidth } from '../../constants/screen_dimension';
+import { Image, StyleSheet, View } from 'react-native';
 import { ImageGallery, ImageObject } from '@georstat/react-native-image-gallery';
 import CustomText from '../atoms/text';
-import { Media } from '../../models/media';
 import IconButton from '../atoms/icon_button';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MediaMediaLocalUrl } from '../../models/media_media_local_url';
 import Video from 'react-native-video';
-import Slider from '@react-native-community/slider';
 import VideoControls from '../molecules/custom_control';
+import { MediaTypes } from '../../constants/types';
+import { navigate } from '../../navigation/navigation_service';
 
 interface ImageViewerProps {
   children: React.ReactNode;
   media: MediaMediaLocalUrl[];
-  onPress?: () => void;
+  schedule_id: number;
 }
 
-const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, onPress }) => {
+const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id }) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const openGallery = () => setIsOpen(true);
@@ -26,20 +25,22 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, onPress }) =
     setIsOpen(false);
   }
 
-  const handleEdit = () => {
-    if (onPress != null) {
-      onPress();
-      setIsOpen(false);
+  const handleEditMedia = (media: MediaMediaLocalUrl) => {
+    if (media.media?.media_type == MediaTypes.AUDIO) {
+        navigate('TextAudio', { schedule_id: null, note_id: null, audio: media, content: null });
+    } else {
+        navigate('Media', { schedule_id: schedule_id, note_id: null, media: media });
     }
-  }
+    setIsOpen(false);
+}
+  // const handleEdit = () => {
+  //   if (onPress != null) {
+  //     onPress();
+  //     setIsOpen(false);
+  //   }
+  // }
 
-  const images = [
-    {
-      id: 1,
-      url: media[0].media_local_url?.media_local_url!,
-      // any other extra info you want
-    },
-  ];
+  const imagesList = media.map((media) => { return {id: media.media?.media_id, url: media.media_local_url?.media_local_url!, mediaType: media.media?.media_type!}});
 
   const [isPaused, setIsPaused] = useState(true);
   const [showControls, setShowControls] = useState(true);
@@ -47,13 +48,13 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, onPress }) =
   const [duration, setDuration] = useState(0);
   const videoRef = useRef<Video>(null);
 
-  function renderMedia() {
-    if (media[0].media?.media_type == 'video') {
+  function renderMedia(media: ImageObject, currentIndex: number) {
+    if (imagesList[currentIndex].mediaType == 'video') {
       return (
         <View style={{ flex: 1 }}>
           <Video
             ref={videoRef}
-            source={{ uri: media[0].media_local_url?.media_local_url! }}
+            source={{ uri: media.url! }}
             style={{ flex: 1 }}
             resizeMode="contain"
             repeat={true}
@@ -63,7 +64,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, onPress }) =
               setDuration(data.duration);
               setCurrentTime(data.currentTime);
             }} />
-            
+
           <VideoControls
             onPlayPause={() => setIsPaused(!isPaused)}
             onSliderValueChange={(value) => {
@@ -76,7 +77,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, onPress }) =
           /></View>
       );
     } else {
-      return <Image source={{ uri: media[0].media_local_url?.media_local_url! }} style={{ flex: 1 }} />;
+      return <Image source={{ uri: media.url }} style={{ flex: 1 }} />;
     }
   }
 
@@ -86,7 +87,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, onPress }) =
     </View>
       <CustomText color="white" size={30} textAlign="center">Gallery</CustomText>
       <View style={styles.headerButton}>
-        <IconButton icon={"edit"} color={"white"} onPress={handleEdit}></IconButton>
+        <IconButton icon={"edit"} color={"white"} onPress={() => handleEditMedia(media[currentIndex])}></IconButton>
       </View>
     </>;
   };
@@ -95,10 +96,10 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, onPress }) =
     <TouchableOpacity onPress={openGallery}>
       {children}
     </TouchableOpacity>
-    <ImageGallery close={closeGallery} isOpen={isOpen} images={images}
+    <ImageGallery close={closeGallery} isOpen={isOpen} images={imagesList}
       renderHeaderComponent={renderHeaderComponent}
       renderCustomImage={renderMedia}
-      hideThumbs
+      //hideThumbs
     />
   </>
   );
