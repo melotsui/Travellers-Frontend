@@ -24,3 +24,7 @@ export enum VerificationType {
     EMAIL = 'email_verification',
     PASSWORD = 'forgot_password'
 }
+
+export enum NotificationType {
+    TRIPINVITATION = 'trip_invitation'
+}

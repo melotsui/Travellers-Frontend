@@ -1,3 +1,4 @@
+import Notification from '../models/notification';
 import APIs from './api';
 import messaging from '@react-native-firebase/messaging';
 
@@ -32,6 +33,25 @@ class NotificationApi {
             }
         });
     }
+
+    getNotifications = async (): Promise<Notification[]> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.notification.api.get('/notifications')
+                    .then((response) => {
+                        const result = response.data;
+                        resolve(result.data.notifications);
+                    })
+                    .catch((error) => {
+                        const result = error.response.data;
+                        reject(result.message);
+                    });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
 }
 
 export default NotificationApi;
