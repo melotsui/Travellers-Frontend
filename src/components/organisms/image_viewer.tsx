@@ -91,7 +91,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ children, media, schedule_id,
     </View>
       <CustomText color="white" size={30} textAlign="center">Gallery</CustomText>
       <View style={styles.headerButton}>
-        <IconButton icon={"edit"} color={"white"} onPress={() => handleEditMedia(media[currentIndex])}></IconButton>
+        <IconButton icon={"edit"} color={"white"} onPress={() => handleEditMedia(media[index])}></IconButton>
       </View>
     </>;
   };
