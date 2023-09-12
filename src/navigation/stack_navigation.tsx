@@ -25,6 +25,7 @@ const StackNavigation = (): JSX.Element => {
 
   useEffect(() => {
     const fetchIsLogin = async () => {
+      //removeData('isLogin'); // Remove isLogin data to prevent user from being stuck in loading screen
       try {
         const isLoginData = await retrieveData('isLogin');
         setIsLogin(!!isLoginData); // Convert to boolean

@@ -18,6 +18,7 @@ import { downloadMedia, fetchMedia } from "../../actions/media_actions";
 import ImageViewer from "../../components/organisms/image_viewer";
 import { mediaSelector } from "../../slices/media_slice";
 import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
+import { ScrollView } from "react-native-gesture-handler";
 
 const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
     const { schedule_id } = props.route.params;
@@ -121,7 +122,7 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
                 {/* <View style={{ width: 10 }}></View>
                 <IconButton onPress={handleBookmark} icon={"bookmark-outline"} /> */}
             </CustomHeader>
-            <View>
+            <ScrollView>
                 <View style={styles.container}>
                     {/* <View style={styles.text}>
                         <TextField hint={"Trip title, type and place"} text={searchText} onChange={handleSearchTextChange} suffixIcon={'search'} />
@@ -153,7 +154,7 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
                         )}
                     />
                 </View>
-            </View>
+            </ScrollView>
         </View>
     );
 
