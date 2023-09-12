@@ -19,6 +19,7 @@ import ImageViewer from "../../components/organisms/image_viewer";
 import { mediaSelector } from "../../slices/media_slice";
 import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
 import { ScrollView } from "react-native-gesture-handler";
+import { generateThumbnail } from "../../utils/media_process";
 
 const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
     const { schedule_id } = props.route.params;
@@ -100,6 +101,20 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
     const handleAudio = (media: MediaMediaLocalUrl) => {
     }
 
+    const handleMediaShow = (url: string, type: MediaTypes): string => {
+        if (type == MediaTypes.VIDEO) {
+            generateThumbnail(url).then((thumbnail) => {
+                return thumbnail;
+            }).catch((error) => {
+                console.log(error);
+                return url;
+            });
+            return url;
+        }else{
+            return url;
+            }
+    }
+
     const handleMedia = (media: MediaMediaLocalUrl) => {
         if (media.media_local_url == null) {
             dispatch(downloadMedia(media.media?.media_id!));
@@ -140,12 +155,12 @@ const ScheduleMediaScreen: React.FC<RootProps<'ScheduleMedia'>> = (props) => {
                                     <ImageViewer media={[item]} onPress={() => handleEditMedia(item)}>
                                         <RoundRectImage
                                             type={item.media?.media_type!}
-                                            uri={item.media_local_url.media_local_url}></RoundRectImage>
+                                            uri={handleMediaShow(item.media_local_url.media_local_url, item.media?.media_type!)}></RoundRectImage>
                                     </ImageViewer> :
                                     <RoundRectImage
                                         type={item.media?.media_type!}
                                         onPress={() => handleMedia(item)}
-                                        uri={item.media?.media_preview_url}></RoundRectImage>
+                                        uri={handleMediaShow(item.media?.media_preview_url!, item.media?.media_type!)}></RoundRectImage>
 
 
                                 }
